@@ -3,6 +3,7 @@ import { ref, Ref } from 'vue'
 import { Person } from '../myTypes'
 import { wait, shuffleArray, loadMusic } from '../util'
 import DisplayName from './DisplayName.vue'
+const emit = defineEmits(['finishDraw'])
 
 const props = defineProps<{
   winner: Person|null,
@@ -54,8 +55,8 @@ async function draw(time=10*1000,teasing:number|undefined=undefined){
   decidedMusic.play();
   await wait(50);
   isDeciding.value=true;
-  //isDeciding.value=false;
-  console.log(Date.now()-ts)
+  
+  emit("finishDraw");
 }
 
 defineExpose({draw});

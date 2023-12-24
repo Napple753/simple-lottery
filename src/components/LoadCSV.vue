@@ -15,30 +15,39 @@ onMounted(()=>{
       reader.addEventListener("load", () => {
         const res = reader.result;
         if(res==null) return;
-        const rows = (res as string).split("\n");
-        rows.splice(0,1);
-        const persons = rows.map(line=>{
-          const cells = line.split(",");
-          return {
-            id:cells[0],
-            name:cells[1],
-            ruby:cells[2],
-          } as Person
-        })
-        emit("loadNames",persons)
+        loadCSVText(res as string)
       });
       reader.readAsText(file);
     }
   });
 });
 
+function loadSampleCSV(){
+  fetch("./sample.csv").then(res=>res.text()).then(res=>loadCSVText(res));
+}
+
+function loadCSVText(csvText:string){
+  const rows = csvText.split("\n");
+  rows.splice(0,1);
+  const persons = rows.map(line=>{
+    const cells = line.split(",");
+    return {
+      id:cells[0],
+      name:cells[1],
+      ruby:cells[2],
+    } as Person
+  })
+  emit("loadNames",persons)
+}
 
 
 </script>
 
 <template>
   <div>
-    <input type="file" accept="csv">
+    <h2>名簿の読み込み</h2>
+    <p><input type="file" accept="csv"></p>
+    <p>または<input type="button" value="サンプルを使う" @click="loadSampleCSV"></p>
   </div>
 </template>
 

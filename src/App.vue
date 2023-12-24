@@ -3,22 +3,56 @@
 import { ref, Ref } from 'vue'
 //import DisplayName from './components/DisplayName.vue'
 import LoadCSV from './components/LoadCSV.vue'
-import {Person} from './myTypes.ts'
+import ProgramMessage from './components/ProgramMessage.vue'
+import ProgramDisplayWinners from './components/ProgramDisplayWinners.vue'
+import ProgramPrizes from './components/ProgramPrizes.vue'
+import {Person, Program} from './myTypes.ts'
 import { wait, shuffleArray, loadMusic } from './util'
-import PrizeLottery from './components/PrizeLottery.vue'
+import { parse as JSONCParse } from 'jsonc-parser';
 
-const candidates:Ref<Person[]> = ref([]);
-const winners:Ref<Person[]> = ref([])
+const dummy:Ref<Person[]> = ref([]);
+let remainingCandidate:Person[] = [];
+const winners:Ref<Person[]> = ref([]);
 
-function setNames(names:Person[]){
-  winners.value = shuffleArray(names).slice(0,5);
-  candidates.value = names;
+let program_list: Program[] = [];
+let program_number = 0;
+
+const programStarted = ref(false);
+
+const program:Ref<Program|null> = ref(null);
+
+fetch("./setting.jsonc").then(res=>res.text()).then(text=>JSONCParse(text)).then(o=>{
+  program_list=o.program;
+});
+
+function nextPrg(){
+  program.value = program_list[program_number];
+  if(program.value.type=="PRIZE"){
+    const winner_number = program.value.winner_number
+    winners.value = winners.value = shuffleArray(remainingCandidate).slice(0,winner_number);
+  }
+  program_number++;
+}
+
+function setCandidates(names:Person[]){
+  console.log("setCandidates",names);
+  remainingCandidate = shuffleArray(names);
+  dummy.value = structuredClone(names);
+  programStarted.value = true;
+
+  nextPrg();
 }
 </script>
 
 <template>
-  <LoadCSV @load-names="setNames"></LoadCSV>
-  <PrizeLottery :candidates="candidates" :winners="winners" prizeName="Hell Word賞"></PrizeLottery>
+  <LoadCSV @load-names="setCandidates" v-show="!programStarted"></LoadCSV>
+  
+  <ProgramMessage v-if="program && program.type=='MESSAGE'" :program="program" @finish-program="nextPrg"></ProgramMessage>
+  <ProgramPrizes  v-if="program && program.type=='PRIZE'"
+    :candidates="dummy" :winners="winners" :program="program"
+    @finish-program="nextPrg"></ProgramPrizes>
+  <ProgramDisplayWinners v-if="program && program.type=='DISPLAY_WINNERS'" :program="program" @finish-program="nextPrg"></ProgramDisplayWinners>
+
 </template>
 
 <style scoped>
