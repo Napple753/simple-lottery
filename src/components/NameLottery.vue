@@ -7,7 +7,8 @@ const emit = defineEmits(['finishDraw'])
 
 const props = defineProps<{
   winner: Person|null,
-  candidates:Person[]
+  candidates:Person[],
+  isSimple?:Boolean //表示を省略するかどうか
 }>()
 
 const bottom_pos:Ref<number> = ref(0);
@@ -29,27 +30,36 @@ async function moveTo(pos:number, time:number=0){
   transition_duration.value=0;
 }
 
-async function draw(time=10*1000,teasing:number|undefined=undefined){
+async function draw(drawingTime=10*1000,teasing:number|undefined=undefined){
+  //const targetTS = Date.now() + drawingTime;
+  const unitTime = 500//一人あたりの表示時間
+  const simpleDrawingTime = 6000;
 
   isDeciding.value=false;
   const winner = props.winner;
   if(props.candidates.length<=0 || winner==null){
     return;
   }
-  displayCandidates.value = shuffleArray(props.candidates.filter(p=>p.id!==winner.id));
+
+  const isSimple = props.isSimple && (drawingTime > simpleDrawingTime);
+
+  const waitingTime = isSimple?simpleDrawingTime:drawingTime;
+
+  const displayCandidateCount = Math.ceil(waitingTime/unitTime*2);
+  await moveTo(-displayCandidateCount * 100, 0);//表示時間をもとにくじに出す人数を決定
+  if(isSimple){
+   await wait(drawingTime - simpleDrawingTime);
+  }
+  
+  displayCandidates.value = shuffleArray(props.candidates.filter(p=>p.id!==winner.id)).slice(0,displayCandidateCount);
   displayWinner.value = winner;
-  const ts = Date.now()
-  //const time=10*1000
-  const UT = 500//一人あたりの表示時間
   if(teasing===undefined){
     teasing = Math.ceil((Math.random()*2)**2)-1;//一旦停止する人数
   }
   
-  await moveTo(-Math.ceil(time/UT*2) * 100, 0);//表示時間をもとにくじに出す人数を決定
-  
-  await moveTo(-teasing * 95, time - UT*teasing);
+  await moveTo(-teasing * 95, waitingTime - unitTime*teasing);
   for(let i=(teasing-1);i>=0;i--){
-    await moveTo(-i * 95, UT-50);
+    await moveTo(-i * 95, unitTime-50);
     await wait(50);
   }
   decidedMusic.play();
@@ -75,6 +85,7 @@ defineExpose({draw});
         <DisplayName :person="displayWinner"></DisplayName>
       </div>
     </div>
+    <div class="loader" v-show="displayCandidates.length===0"></div>
   </div>
 </template>
 
@@ -111,4 +122,17 @@ defineExpose({draw});
     transform-origin: center center;
     transition: transform .5s;
   }
+
+  /* HTML: <div class="loader"></div> */
+  .loader {
+    width: 60px;
+    height: 100%;
+    aspect-ratio: 4;
+    background: radial-gradient(circle closest-side,#888 90%,#8880) 0/calc(100%/3) 100% space;
+    clip-path: inset(0 100% 0 0);
+    animation: l1 1s steps(4) infinite;
+    margin:auto;
+    vertical-align: middle;
+  }
+  @keyframes l1 {to{clip-path: inset(0 -34% 0 0)}}
 </style>

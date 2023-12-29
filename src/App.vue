@@ -15,7 +15,7 @@ let remainingCandidate:Person[] = [];
 const winners:Ref<Person[]> = ref([]);
 
 let program_list: Program[] = [];
-let program_number = 0;
+const program_number = ref(0);
 
 const programStarted = ref(false);
 
@@ -26,12 +26,12 @@ fetch("./setting.jsonc").then(res=>res.text()).then(text=>JSONCParse(text)).then
 });
 
 function nextPrg(){
-  program.value = program_list[program_number];
+  program.value = program_list[program_number.value];
   if(program.value.type=="PRIZE"){
     const winner_number = program.value.winner_number
     winners.value = winners.value = shuffleArray(remainingCandidate).slice(0,winner_number);
   }
-  program_number++;
+  program_number.value++;
 }
 
 function setCandidates(names:Person[]){
@@ -48,11 +48,11 @@ function setCandidates(names:Person[]){
   <LoadCSV @load-names="setCandidates" v-show="!programStarted"></LoadCSV>
   
   
-  <ProgramMessage v-if="program && program.type=='MESSAGE'" :program="program" @finish-program="nextPrg"></ProgramMessage>
+  <ProgramMessage v-if="program && program.type=='MESSAGE'" :program="program" :key="program_number" @finish-program="nextPrg"></ProgramMessage>
   <ProgramPrizes  v-if="program && program.type=='PRIZE'"
-    :candidates="dummy" :winners="winners" :program="program"
+    :candidates="dummy" :winners="winners" :program="program" :key="program_number" 
     @finish-program="nextPrg"></ProgramPrizes>
-  <ProgramDisplayWinners v-if="program && program.type=='DISPLAY_WINNERS'" :program="program" @finish-program="nextPrg"></ProgramDisplayWinners>
+  <ProgramDisplayWinners v-if="program && program.type=='DISPLAY_WINNERS'" :program="program" :key="program_number" @finish-program="nextPrg"></ProgramDisplayWinners>
 
 </template>
 
@@ -78,6 +78,7 @@ h1{
 
   padding:1rem 2rem;
   box-sizing: border-box;
+  align-items: center;
 }
 
 .button_wrapper{

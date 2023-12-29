@@ -26,7 +26,7 @@ function draw(){
 
   let timing = 5*1000;
   lotteries.forEach((lottery)=>{
-    if(Math.random()<0.2){
+    if(props.winners.length<=5 && Math.random()<0.2){
       timing += 500;
       lottery.draw(timing,1);
     }else{
@@ -65,7 +65,8 @@ function nextProgram(){
 
     <div v-show="status!='beforeDraw'" class="lotteries">
       <template v-for="winner in winners">
-        <NameLottery :winner="winner" :candidates="candidates" :ref="lotteryEls" @finish-draw="decided"></NameLottery>
+        <NameLottery :winner="winner" :candidates="candidates" :is-simple="winners.length>5"
+          :ref="lotteryEls" @finish-draw="decided"></NameLottery>
       </template>
     </div>
     <div class="button_wrapper" v-show="status!='beforeDraw'">
@@ -92,9 +93,13 @@ function nextProgram(){
   justify-content: center;
   height: 100%;
   row-gap: 2rem;
+  width: 100vw;
+  overflow-y: scroll;
 }
 
 .lotteries div{
+  --length: v-bind(Math.min(winners.length,5));
   margin: auto;
+  width: calc(calc(100%/ var(--length) ) - 1rem);
 }
 </style>
