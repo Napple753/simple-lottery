@@ -1,0 +1,39 @@
+{
+    "program":[
+        {
+            "type":"MESSAGE",
+            "message":"抽選会開始までしばらくお待ち下さい"
+        },
+        {
+            "type":"PRIZE",
+            "prize_name":"運がいいで賞",//賞の名前
+            "img":"/img/present_box.png",//表示する画像
+            "winner_number":3//最大人数
+        },
+        {
+            "type":"PRIZE",
+            "prize_name":"すごい運がいいで賞",
+            "img":"/img/kaden_soujiki_cordless_stick.png",
+            "winner_number":2
+        },
+        {
+            "type":"DISPLAY_WINNERS" //当選者表示
+        },
+        {
+            "type":"PRIZE",
+            "prize_name":"一番運がいいで賞",
+            "img":"/img/kaden_reizouko.png",
+            "winner_number":1
+        },
+        {
+            "type":"PRIZE",
+            "prize_name":"ちょっと運がいいで賞",
+            "img":"/img/pocket_tissue.png",
+            "winner_number":10
+        },
+        {
+            "type":"MESSAGE",
+            "message":"抽選会へのご参加ありがとうございました。"
+        }
+    ]
+}
