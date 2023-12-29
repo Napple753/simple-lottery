@@ -12,12 +12,18 @@ function nextProgram(){
 </script>
 
 <template>
-  <div>
-    <p>{{ program.message }}</p>
-    <input type="button" value="次へ" @click="nextProgram">
+  <div class="program">
+    <p class="message">{{ program.message }}</p>
+    <div class="button_wrapper">
+      <input type="button" value="次へ" @click="nextProgram">
+    </div>
   </div>
 </template>
 
 <style scoped>
-
+.message{
+  font-size:200%;
+  font-weight: bold;
+  margin:auto;
+}
 </style>

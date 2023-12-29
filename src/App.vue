@@ -47,6 +47,7 @@ function setCandidates(names:Person[]){
 <template>
   <LoadCSV @load-names="setCandidates" v-show="!programStarted"></LoadCSV>
   
+  
   <ProgramMessage v-if="program && program.type=='MESSAGE'" :program="program" @finish-program="nextPrg"></ProgramMessage>
   <ProgramPrizes  v-if="program && program.type=='PRIZE'"
     :candidates="dummy" :winners="winners" :program="program"
@@ -55,5 +56,34 @@ function setCandidates(names:Person[]){
 
 </template>
 
-<style scoped>
+<style>
+html,body,#app{
+  height:100%;
+  width:100%;
+  margin:0;
+  padding:0;
+  box-sizing: border-box;
+}
+body{
+  padding:1px;
+}
+h1{
+  text-align: center;
+}
+.program{
+  display:flex;
+  flex-direction: column;
+  height:100%;
+  justify-content:flex-start;
+
+  padding:1rem 2rem;
+  box-sizing: border-box;
+}
+
+.button_wrapper{
+  width:80%;
+  height: 2rem;
+  text-align: right;
+  margin-bottom:1rem;
+}
 </style>

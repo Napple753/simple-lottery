@@ -52,21 +52,49 @@ function nextProgram(){
 </script>
 
 <template>
-  <h1>{{ program.prize_name }}</h1>
-  <img v-if="program.img" v-show="status=='beforeDraw'" :src="program.img">
-  <button v-show="status=='beforeDraw'" @click="draw">抽選スタート</button>
+  <div class="program programPrize">
+    <h1>{{ program.prize_name }}</h1>
 
-  <div v-show="status!='beforeDraw'" class="lotteries">
-    <template v-for="winner in winners">
-      <NameLottery :winner="winner" :candidates="candidates" :ref="lotteryEls" @finish-draw="decided"></NameLottery>
-    </template>
+    <div class="prizeImage" v-show="status=='beforeDraw'">
+      <img v-if="program.img" :src="program.img">
+    </div>
+
+    <div v-show="status=='beforeDraw'" class="button_wrapper">
+      <input type="button" value="抽選スタート" @click="draw">
+    </div>
+
+    <div v-show="status!='beforeDraw'" class="lotteries">
+      <template v-for="winner in winners">
+        <NameLottery :winner="winner" :candidates="candidates" :ref="lotteryEls" @finish-draw="decided"></NameLottery>
+      </template>
+    </div>
+    <div class="button_wrapper" v-show="status!='beforeDraw'">
+      <input v-show="status=='afterDraw'" type="button" value="次へ" @click="nextProgram">
+    </div>
   </div>
-
-  <input v-show="status=='afterDraw'" type="button" value="次へ" @click="nextProgram">
 </template>
 
 <style scoped>
+
+.prizeImage{
+  height:100%;
+  text-align: center;
+}
+
+.prizeImage img{
+  height:100%;
+  object-fit: contain;
+
+}
 .lotteries{
   display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  height: 100%;
+  row-gap: 2rem;
+}
+
+.lotteries div{
+  margin: auto;
 }
 </style>

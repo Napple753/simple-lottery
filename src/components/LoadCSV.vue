@@ -23,7 +23,7 @@ onMounted(()=>{
 });
 
 function loadSampleCSV(){
-  fetch("./sample.csv").then(res=>res.text()).then(res=>loadCSVText(res));
+  fetch("/sample.csv").then(res=>res.text()).then(res=>loadCSVText(res));
 }
 
 function loadCSVText(csvText:string){
@@ -44,7 +44,7 @@ function loadCSVText(csvText:string){
 </script>
 
 <template>
-  <div>
+  <div class="loadCSV">
     <h2>名簿の読み込み</h2>
     <p><input type="file" accept="csv"></p>
     <p>または<input type="button" value="サンプルを使う" @click="loadSampleCSV"></p>
@@ -52,6 +52,10 @@ function loadCSVText(csvText:string){
 </template>
 
 <style scoped>
+.loadCSV{
+  margin:0;
+  padding:1rem 2rem;
+}
 .person{
   display: flex;
   flex-direction: column;

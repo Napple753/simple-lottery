@@ -8,15 +8,17 @@ defineProps<{ person: Person }>()
 </script>
 
 <template>
-  <div class="person">
-    <p class="person_id">{{ person.id }}</p>
-    <p class="person_name">{{ person.name }}</p>
-    <p class="person_ruby">{{ person.ruby }}</p>
+  <div class="person_wrapper">
+    <div class="person">
+      <p class="person_id">{{ person.id }}</p>
+      <p class="person_name">{{ person.name }}</p>
+      <p class="person_ruby">{{ person.ruby }}</p>
+    </div>
   </div>
 </template>
 
 <style scoped>
-.person{
+.person_wrapper{
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -25,6 +27,15 @@ defineProps<{ person: Person }>()
   width:100%;
   box-sizing: border-box;
   border:1px solid grey;
+}
+.person{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height:100%;
+  width:80%;
+  box-sizing: border-box;
   margin:0;
   padding:0;
   flex-shrink: 0;

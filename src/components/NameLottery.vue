@@ -68,12 +68,12 @@ defineExpose({draw});
 <template>
   <div class="lottery" :class="{isDeciding:isDeciding}">
     <div class="inner" :style="{bottom:bottom_pos+'%', transitionDuration: transition_duration +'ms'}">
-      <template v-for="candidate in displayCandidates">
-          <DisplayName :person="candidate"></DisplayName>
-      </template>
-      <temmplate v-if="displayWinner">
+      <div v-for="candidate in displayCandidates">
+        <DisplayName :person="candidate"></DisplayName>
+      </div>
+      <div v-if="displayWinner">
         <DisplayName :person="displayWinner"></DisplayName>
-      </temmplate>
+      </div>
     </div>
   </div>
 </template>
@@ -81,7 +81,8 @@ defineExpose({draw});
 <style scoped>
   .lottery{
     height:10rem;
-    width:80%;
+    width:20rem;
+    box-sizing: border-box;
     overflow: hidden;
     position:relative;
     box-shadow: inset .2rem .2rem 1rem rgba(0,0,0,.5);
@@ -106,7 +107,7 @@ defineExpose({draw});
   }
 
   .isDeciding .inner{
-    transform: scale(1.2);
+    transform: scale(1.25);
     transform-origin: center center;
     transition: transform .5s;
   }

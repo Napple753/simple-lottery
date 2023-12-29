@@ -12,9 +12,11 @@ function nextProgram(){
 </script>
 
 <template>
-  <div>
+  <div class="program">
     <p>Display Winners[ToDo]</p>
-    <input type="button" value="次へ" @click="nextProgram">
+    <div class="button_wrapper">
+      <input type="button" value="次へ" @click="nextProgram">
+    </div>
   </div>
 </template>
 
