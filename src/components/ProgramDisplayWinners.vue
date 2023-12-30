@@ -1,9 +1,13 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { DisplayWinner } from '../myTypes'
+import { DisplayWinner, Person, Log } from '../myTypes'
+import { LotteryBox } from '../util';
 const emit = defineEmits(['finishProgram'])
 
-defineProps<{ program: DisplayWinner }>()
+defineProps<{ 
+  program: DisplayWinner,
+  winnersLog: Log<Person>
+}>()
 
 function nextProgram(){
   emit("finishProgram");
@@ -13,7 +17,19 @@ function nextProgram(){
 
 <template>
   <div class="program">
-    <p>Display Winners[ToDo]</p>
+    <h1>ここまでの当選者</h1>
+    <div class="winners_list">
+      <div v-for="prize in winnersLog" class="prize">
+        <h2>{{ prize.prizeName }}</h2>
+        <table>
+          <tr v-for="winner in prize.selected">
+            <td>{{ winner.id }}</td>
+            <td>{{ winner.name }}</td>
+            <td>{{ winner.ruby }}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
     <div class="button_wrapper">
       <input type="button" value="次へ" @click="nextProgram">
     </div>
@@ -21,5 +37,21 @@ function nextProgram(){
 </template>
 
 <style scoped>
-
+.winners_list{
+  height:100%;
+  overflow-y: scroll;
+  width:100vw;
+  column-width: 30rem;
+  padding: 1rem 2rem;
+  box-sizing: border-box;
+}
+.prize{
+  break-inside: avoid;
+}
+table, tr,td{
+  border:none;
+}
+td{
+  padding: 0 1em;
+}
 </style>

@@ -25,3 +25,9 @@ export interface DisplayWinner extends ProgramBase{
 }
 
 export type Program = Prize|Message|DisplayWinner;
+
+export type Log<T> = {
+    prizeName:string,
+    selected:T[]
+    timestamp:number,
+}[];

@@ -6,12 +6,14 @@ import LoadCSV from './components/LoadCSV.vue'
 import ProgramMessage from './components/ProgramMessage.vue'
 import ProgramDisplayWinners from './components/ProgramDisplayWinners.vue'
 import ProgramPrizes from './components/ProgramPrizes.vue'
-import {Person, Program} from './myTypes.ts'
-import { wait, shuffleArray, loadMusic } from './util'
+import { Person, Program, Log } from './myTypes.ts'
+import { wait, shuffleArray, loadMusic, LotteryBox } from './util'
 import { parse as JSONCParse } from 'jsonc-parser';
 
+let lotteryBox:LotteryBox<Person>;
+const winners_log:Ref<Log<Person>> = ref([]);
+
 const dummy:Ref<Person[]> = ref([]);
-let remainingCandidate:Person[] = [];
 const winners:Ref<Person[]> = ref([]);
 
 let program_list: Program[] = [];
@@ -25,23 +27,29 @@ fetch("./setting.jsonc").then(res=>res.text()).then(text=>JSONCParse(text)).then
   program_list=o.program;
 });
 
-function nextPrg(){
-  program.value = program_list[program_number.value];
-  if(program.value.type=="PRIZE"){
-    const winner_number = program.value.winner_number
-    winners.value = winners.value = shuffleArray(remainingCandidate).slice(0,winner_number);
-  }
-  program_number.value++;
-}
-
 function setCandidates(names:Person[]){
   console.log("setCandidates",names);
-  remainingCandidate = shuffleArray(names);
   dummy.value = structuredClone(names);
   programStarted.value = true;
 
+  lotteryBox = new LotteryBox<Person>(names)
+
   nextPrg();
 }
+
+function nextPrg(){
+  if(lotteryBox===null){ return; }
+  program.value = program_list[program_number.value];
+  if(program.value.type==="PRIZE"){
+    const prize_name = program.value.prize_name;
+    const winner_number = program.value.winner_number;
+    winners.value = lotteryBox.draw(prize_name, winner_number)
+  }else if(program.value.type==="DISPLAY_WINNERS"){
+    winners_log.value = lotteryBox.log;
+  }
+  program_number.value = Math.min(program_number.value+1,program_list.length-1);
+}
+
 </script>
 
 <template>
@@ -52,7 +60,10 @@ function setCandidates(names:Person[]){
   <ProgramPrizes  v-if="program && program.type=='PRIZE'"
     :candidates="dummy" :winners="winners" :program="program" :key="program_number" 
     @finish-program="nextPrg"></ProgramPrizes>
-  <ProgramDisplayWinners v-if="program && program.type=='DISPLAY_WINNERS'" :program="program" :key="program_number" @finish-program="nextPrg"></ProgramDisplayWinners>
+  <ProgramDisplayWinners v-if="program && program.type=='DISPLAY_WINNERS'"
+    :program="program" :key="program_number"
+    :winners-log="winners_log"
+    @finish-program="nextPrg"></ProgramDisplayWinners>
 
 </template>
 
