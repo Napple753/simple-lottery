@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { ref, Ref } from 'vue'
-import { Person, Prize } from '../myTypes'
+import { Candidate, DisplaySetting, Prize } from '../myTypes'
 import NameLottery from './NameLottery.vue'
 const emit = defineEmits(['finishProgram'])
 
 const props = defineProps<{
   program:Prize,
-  winners:Person[],
-  candidates:Person[]
+  winners:Candidate[],
+  candidates:Candidate[],
+  displaySetting:DisplaySetting
 }>()
 
 let lotteries:InstanceType<typeof NameLottery>[] = []
@@ -66,6 +67,7 @@ function nextProgram(){
     <div v-show="status!='beforeDraw'" class="lotteries">
       <template v-for="winner in winners">
         <NameLottery :winner="winner" :candidates="candidates" :is-simple="winners.length>5"
+          :displaySetting="displaySetting"
           :ref="lotteryEls" @finish-draw="decided"></NameLottery>
       </template>
     </div>

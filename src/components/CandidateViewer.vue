@@ -1,24 +1,27 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Person } from '../myTypes'
+import { Candidate, DisplaySetting } from '../myTypes'
 
-defineProps<{ person: Person }>()
+defineProps<{ 
+  candidate: Candidate,
+  displaySetting: DisplaySetting
+ }>()
 
 
 </script>
 
 <template>
-  <div class="person_wrapper">
-    <div class="person">
-      <p class="person_id">{{ person.id }}</p>
-      <p class="person_name">{{ person.name }}</p>
-      <p class="person_ruby">{{ person.ruby }}</p>
+  <div class="candidate_wrapper">
+    <div class="candidate">
+      <p class="top_info">{{ candidate.data[displaySetting.top_pos] }}</p>
+      <p class="main_info">{{ candidate.data[displaySetting.main_pos] }}</p>
+      <p class="bottom_info">{{ candidate.data[displaySetting.bottom_pos] }}</p>
     </div>
   </div>
 </template>
 
 <style scoped>
-.person_wrapper{
+.candidate_wrapper{
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -28,7 +31,7 @@ defineProps<{ person: Person }>()
   box-sizing: border-box;
   border:1px solid grey;
 }
-.person{
+.candidate{
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -40,19 +43,20 @@ defineProps<{ person: Person }>()
   padding:0;
   flex-shrink: 0;
 }
-.person p{
+.candidate p{
   margin:0;
   user-select: all;
+  break-inside: avoid;
 }
 
-.person_id{
+.top_info{
   font-size: 1rem;
 }
-.person_name{
+.main_info{
   font-size: 2rem;
   font-weight: 800;
 }
-.person_ruby{
+.bottom_info{
   font-size:1rem;
 }
 </style>

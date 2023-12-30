@@ -1,22 +1,23 @@
 <script setup lang="ts">
 import { ref, Ref } from 'vue'
-import { Person } from '../myTypes'
+import { Candidate, DisplaySetting } from '../myTypes'
 import { wait, shuffleArray, loadMusic } from '../util'
-import DisplayName from './DisplayName.vue'
+import CandidateViewer from './CandidateViewer.vue'
 const emit = defineEmits(['finishDraw'])
 
 const props = defineProps<{
-  winner: Person|null,
-  candidates:Person[],
+  winner: Candidate|null,
+  candidates:Candidate[],
   isSimple?:Boolean //表示を省略するかどうか
+  displaySetting:DisplaySetting
 }>()
 
 const bottom_pos:Ref<number> = ref(0);
 const transition_duration:Ref<number> = ref(0);
 const isDeciding:Ref<boolean> = ref(false);
 
-const displayWinner:Ref<Person|null> = ref(null);
-const displayCandidates:Ref<Person[]> = ref([]);
+const displayWinner:Ref<Candidate|null> = ref(null);
+const displayCandidates:Ref<Candidate[]> = ref([]);
 
 const decidedMusic =  loadMusic("decided.mp3");
 
@@ -78,10 +79,10 @@ defineExpose({draw});
   <div class="lottery" :class="{isDeciding:isDeciding}">
     <div class="inner" :style="{bottom:bottom_pos+'%', transitionDuration: transition_duration +'ms'}">
       <div v-for="candidate in displayCandidates">
-        <DisplayName :person="candidate"></DisplayName>
+        <CandidateViewer :candidate="candidate" :display-setting="displaySetting"></CandidateViewer>
       </div>
       <div v-if="displayWinner">
-        <DisplayName :person="displayWinner"></DisplayName>
+        <CandidateViewer :candidate="displayWinner" :display-setting="displaySetting"></CandidateViewer>
       </div>
     </div>
     <div class="loader" v-show="displayCandidates.length===0"></div>

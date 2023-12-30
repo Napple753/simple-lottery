@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { DisplayWinner, Person, Log } from '../myTypes'
+import { DisplayWinner, Candidate, Log } from '../myTypes'
 import { LotteryBox } from '../util';
 const emit = defineEmits(['finishProgram'])
 
 defineProps<{ 
   program: DisplayWinner,
-  winnersLog: Log<Person>
+  winnersLog: Log<Candidate>
 }>()
 
 function nextProgram(){
@@ -23,9 +23,7 @@ function nextProgram(){
         <h2>{{ prize.prizeName }}</h2>
         <table>
           <tr v-for="winner in prize.selected">
-            <td>{{ winner.id }}</td>
-            <td>{{ winner.name }}</td>
-            <td>{{ winner.ruby }}</td>
+            <td v-for="cell in winner.data">{{ cell }}</td>
           </tr>
         </table>
       </div>

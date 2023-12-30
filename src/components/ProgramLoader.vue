@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, Ref } from 'vue'
-import { Person, Settings, isSettings } from '../myTypes'
+import { Settings, isSettings } from '../myTypes'
 import { parse as JSONCParse } from 'jsonc-parser';
 
 const emit = defineEmits(['loadSettings']);
@@ -60,7 +60,7 @@ function nextProgram(){
       </ul>
     </div>
     <div class="button_wrapper">
-      <input type="button" value="次へ" @click="nextProgram">
+      <input type="button" value="次へ" @click="nextProgram" v-show="settings!==null">
     </div>
   </div>
 </template>
