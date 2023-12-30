@@ -3,12 +3,12 @@
 import { ref, Ref } from 'vue'
 //import DisplayName from './components/DisplayName.vue'
 import LoadCSV from './components/LoadCSV.vue'
+import LoadProgram from './components/LoadProgram.vue'
 import ProgramMessage from './components/ProgramMessage.vue'
 import ProgramDisplayWinners from './components/ProgramDisplayWinners.vue'
 import ProgramPrizes from './components/ProgramPrizes.vue'
-import { Person, Program, Log } from './myTypes.ts'
+import { Person, Program, Log, Settings } from './myTypes.ts'
 import { wait, shuffleArray, loadMusic, LotteryBox } from './util'
-import { parse as JSONCParse } from 'jsonc-parser';
 
 let lotteryBox:LotteryBox<Person>;
 const winners_log:Ref<Log<Person>> = ref([]);
@@ -19,13 +19,16 @@ const winners:Ref<Person[]> = ref([]);
 let program_list: Program[] = [];
 const program_number = ref(0);
 
+const programLoaded = ref(false);
 const programStarted = ref(false);
 
 const program:Ref<Program|null> = ref(null);
 
-fetch("./setting.jsonc").then(res=>res.text()).then(text=>JSONCParse(text)).then(o=>{
-  program_list=o.program;
-});
+function loadSetting(settings:Settings){
+  window.document.title = settings.program_name;
+  program_list = settings.program;
+  programLoaded.value = true;
+}
 
 function setCandidates(names:Person[]){
   console.log("setCandidates",names);
@@ -53,7 +56,8 @@ function nextPrg(){
 </script>
 
 <template>
-  <LoadCSV @load-names="setCandidates" v-show="!programStarted"></LoadCSV>
+  <LoadProgram @load-settings="loadSetting" v-show="!programLoaded"></LoadProgram>
+  <LoadCSV @load-names="setCandidates" v-show="programLoaded && !programStarted"></LoadCSV>
   
   
   <ProgramMessage v-if="program && program.type=='MESSAGE'" :program="program" :key="program_number" @finish-program="nextPrg"></ProgramMessage>

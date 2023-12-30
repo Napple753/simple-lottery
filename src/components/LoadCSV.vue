@@ -4,24 +4,6 @@ import { Person } from '../myTypes'
 
 const emit = defineEmits(['loadNames'])
 
-onMounted(()=>{
-  const fileInput = document.querySelector("input[type=file]");
-  if(fileInput==null)return;
-
-  fileInput.addEventListener("change", () => {
-    const [file] = fileInput.files;
-    if (file) {
-      const reader = new FileReader();
-      reader.addEventListener("load", () => {
-        const res = reader.result;
-        if(res==null) return;
-        loadCSVText(res as string)
-      });
-      reader.readAsText(file);
-    }
-  });
-});
-
 function loadSampleCSV(){
   fetch("/sample.csv").then(res=>res.text()).then(res=>loadCSVText(res));
 }
@@ -39,14 +21,26 @@ function loadCSVText(csvText:string){
   })
   emit("loadNames",persons)
 }
+async function loadCSVFile(e:InputEvent){
+  const [file] = e.target.files;
 
+  if (file===null) { return; }
+
+  const reader = new FileReader();
+  reader.addEventListener("load", () => {
+    const res = reader.result;
+    if(res==null) return;
+    loadCSVText(res as string)
+  });
+  reader.readAsText(file);
+}
 
 </script>
 
 <template>
   <div class="loadCSV">
     <h2>名簿の読み込み</h2>
-    <p><input type="file" accept="csv"></p>
+    <p><input type="file" accept="csv" @change="loadCSVFile"></p>
     <p>または<input type="button" value="サンプルを使う" @click="loadSampleCSV"></p>
   </div>
 </template>
