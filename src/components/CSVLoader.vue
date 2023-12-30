@@ -92,7 +92,7 @@ function updateDisplaySetting(newDisplaySetting:DisplaySetting){
       </div>
     </div>
     <div class="button_wrapper">
-      <input type="button" value="次へ" @click="nextProgram">
+      <input type="button" value="次へ" @click="nextProgram" v-show="candidates.length>1">
     </div>
   </div>
 </template>

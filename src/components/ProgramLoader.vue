@@ -60,7 +60,7 @@ function nextProgram(){
       </ul>
     </div>
     <div class="button_wrapper">
-      <input type="button" value="次へ" @click="nextProgram">
+      <input type="button" value="次へ" @click="nextProgram" v-show="settings!==null">
     </div>
   </div>
 </template>
