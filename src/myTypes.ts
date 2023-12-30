@@ -1,7 +1,6 @@
-export type Person = {
-    name:string,
-    ruby:string,
-    id:string
+export type Candidate = {
+    id:number,
+    data:string[]
 }
 
 export interface ProgramBase {
@@ -68,3 +67,9 @@ export type Log<T> = {
     selected:T[]
     timestamp:number,
 }[];
+
+export type DisplaySetting = {
+    top_pos:number,
+    main_pos:number,
+    bottom_pos:number,
+}

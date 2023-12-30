@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, Ref } from 'vue'
-import { Person, Settings, isSettings } from '../myTypes'
+import { Settings, isSettings } from '../myTypes'
 import { parse as JSONCParse } from 'jsonc-parser';
 
 const emit = defineEmits(['loadSettings']);

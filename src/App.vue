@@ -2,19 +2,20 @@
 
 import { ref, Ref } from 'vue'
 //import DisplayName from './components/DisplayName.vue'
-import LoadCSV from './components/LoadCSV.vue'
-import LoadProgram from './components/LoadProgram.vue'
+import CSVLoader from './components/CSVLoader.vue'
+import ProgramLoader from './components/ProgramLoader.vue'
 import ProgramMessage from './components/ProgramMessage.vue'
 import ProgramDisplayWinners from './components/ProgramDisplayWinners.vue'
 import ProgramPrizes from './components/ProgramPrizes.vue'
-import { Person, Program, Log, Settings } from './myTypes.ts'
+import { Candidate, DisplaySetting, Program, Log, Settings } from './myTypes.ts'
 import { wait, shuffleArray, loadMusic, LotteryBox } from './util'
 
-let lotteryBox:LotteryBox<Person>;
-const winners_log:Ref<Log<Person>> = ref([]);
+let lotteryBox:LotteryBox<Candidate>;
+const winners_log:Ref<Log<Candidate>> = ref([]);
+const displaySetting:Ref<DisplaySetting|null> = ref(null);
 
-const dummy:Ref<Person[]> = ref([]);
-const winners:Ref<Person[]> = ref([]);
+const dummy:Ref<Candidate[]> = ref([]);
+const winners:Ref<Candidate[]> = ref([]);
 
 let program_list: Program[] = [];
 const program_number = ref(0);
@@ -30,12 +31,13 @@ function loadSetting(settings:Settings){
   programLoaded.value = true;
 }
 
-function setCandidates(names:Person[]){
-  console.log("setCandidates",names);
-  dummy.value = structuredClone(names);
+function setCandidates(arg:{candidates:Candidate[], displaySetting:DisplaySetting}){
+  console.log("setCandidates",arg.candidates);
+  dummy.value = JSON.parse(JSON.stringify(arg.candidates));
   programStarted.value = true;
+  displaySetting.value = arg.displaySetting;
 
-  lotteryBox = new LotteryBox<Person>(names)
+  lotteryBox = new LotteryBox<Candidate>(arg.candidates)
 
   nextPrg();
 }
@@ -56,13 +58,14 @@ function nextPrg(){
 </script>
 
 <template>
-  <LoadProgram @load-settings="loadSetting" v-show="!programLoaded"></LoadProgram>
-  <LoadCSV @load-names="setCandidates" v-show="programLoaded && !programStarted"></LoadCSV>
+  <ProgramLoader @load-settings="loadSetting" v-show="!programLoaded"></ProgramLoader>
+  <CSVLoader @load-candidates="setCandidates" v-show="programLoaded && !programStarted"></CSVLoader>
   
   
   <ProgramMessage v-if="program && program.type=='MESSAGE'" :program="program" :key="program_number" @finish-program="nextPrg"></ProgramMessage>
-  <ProgramPrizes  v-if="program && program.type=='PRIZE'"
+  <ProgramPrizes  v-if="program && program.type=='PRIZE' && displaySetting"
     :candidates="dummy" :winners="winners" :program="program" :key="program_number" 
+    :display-setting="displaySetting"
     @finish-program="nextPrg"></ProgramPrizes>
   <ProgramDisplayWinners v-if="program && program.type=='DISPLAY_WINNERS'"
     :program="program" :key="program_number"
