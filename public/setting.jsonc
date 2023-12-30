@@ -32,6 +32,9 @@
             "winner_number":10
         },
         {
+            "type":"DISPLAY_WINNERS" //当選者表示
+        },
+        {
             "type":"MESSAGE",
             "message":"抽選会へのご参加ありがとうございました。"
         }

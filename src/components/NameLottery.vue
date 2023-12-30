@@ -23,7 +23,6 @@ const decidedMusic =  loadMusic("decided.mp3");
 
 
 async function moveTo(pos:number, time:number=0){
-  console.log(pos)
   transition_duration.value=time;
   bottom_pos.value = pos;
   await wait(Math.max(time,10))
