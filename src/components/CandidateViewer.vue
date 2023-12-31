@@ -1,22 +1,28 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, Ref } from 'vue'
 import { Candidate, DisplaySetting } from '../myTypes'
-import ProgramPrizesVue from './ProgramPrizes.vue';
 
-const props = defineProps<{ 
+defineProps<{ 
   candidate: Candidate,
   displaySetting: DisplaySetting
 }>()
 
-const top_info:Ref<HTMLElement> = ref(null)
+const top_info:Ref<HTMLElement|null> = ref(null)
 const topScale = ref(1)
-const main_info:Ref<HTMLElement> = ref(null)
+const main_info:Ref<HTMLElement|null> = ref(null)
 const mainScale = ref(1)
-const bottom_info:Ref<HTMLElement> = ref(null)
+const bottom_info:Ref<HTMLElement|null> = ref(null)
 const bottomScale = ref(1)
-const info_wrapper:Ref<HTMLElement> = ref(null)
+const info_wrapper:Ref<HTMLElement|null> = ref(null)
 
 onMounted(()=>{
+  if(top_info.value==null
+    || main_info.value==null
+    || bottom_info.value==null
+    || info_wrapper.value==null){
+    return;
+  }
+  
   const baseW = info_wrapper.value.clientWidth;
 
   const topW = top_info.value.clientWidth;

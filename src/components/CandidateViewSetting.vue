@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Candidate, DisplaySetting, isDisplayWinner } from '../myTypes'
+import { DisplaySetting } from '../myTypes'
 
 const emit = defineEmits(['changeSetting']);
 const props = defineProps<{

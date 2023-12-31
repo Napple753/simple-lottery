@@ -19,15 +19,15 @@ function loadSampleCSV(){
 }
 
 function loadCSVText(csvText:string){
-  const rawData:string[][] = Papa.parse(csvText).data;
+  const rawData = Papa.parse(csvText).data as string[][];
 
   candidates.value = rawData.map((d,i)=>({
     id:i,
     data:d
   }));
 }
-async function loadCSVFile(e:InputEvent){
-  const [file] = e.target.files;
+async function loadCSVFile(e:Event){
+  const [file] = (e.target as any).files;
 
   if (file===null) { return; }
 

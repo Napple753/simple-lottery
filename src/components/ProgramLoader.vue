@@ -18,8 +18,8 @@ async function loadJSONCText(jsoncText:string){
   }
   settings.value = loaded
 }
-async function loadProgramFile(e:InputEvent){
-  const inputElement = e.target;
+async function loadProgramFile(e:Event){
+  const inputElement = e.target as any;
   if (inputElement===null) { return; }
   const [file] = inputElement.files;
 

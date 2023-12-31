@@ -1,4 +1,4 @@
-import { log, Candidate } from './myTypes'
+import { Log, Candidate } from './myTypes'
 import Encoding from 'encoding-japanese';
 
 export function loadMusic(src:string){
@@ -43,7 +43,7 @@ export class LotteryBox{
     #notSelected:Candidate[]
     #candidates:Candidate[]
 
-    #log:log<Candidate> = [];
+    #log:Log<Candidate> = [];
 
     constructor(candidates:Candidate[]){
         this.#candidates = [...candidates];
@@ -72,7 +72,7 @@ export class LotteryBox{
         return selected;
     }
 
-    get log():log<Candidate>{
+    get log():Log<Candidate>{
         return JSON.parse(JSON.stringify(this.#log));
     }
 
@@ -89,17 +89,17 @@ export class LotteryBox{
 }
 
 export function readAnyEncoding(reader:FileReader):string{
-    let array:Uint8Array|Uint16Array|Uint32Array = new Uint8Array(reader.result);
+    let array:Uint8Array|Uint16Array|Uint32Array = new Uint8Array(reader.result as any);
 
     // 文字コードを取得
     switch (Encoding.detect(array)) {
       case 'UTF16':
           // 16ビット符号なし整数値配列と見なす
-          array = new Uint16Array(reader.result);
+          array = new Uint16Array(reader.result as any);
           break;
       case 'UTF32':
           // 32ビット符号なし整数値配列と見なす
-          array = new Uint32Array(reader.result);
+          array = new Uint32Array(reader.result as any);
           break;
     }
 

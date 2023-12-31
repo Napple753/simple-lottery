@@ -59,7 +59,7 @@ export function isSettings(arg:any): arg is Settings{
         && typeof arg === "object"
         && typeof arg.program_name === "string"
         && Array.isArray(arg.program)
-        && arg.program.every(p=>isProgram(p))
+        && arg.program.every((p:any)=>isProgram(p))
 }
 
 export type Log<T> = {

@@ -8,7 +8,7 @@ import ProgramMessage from './components/ProgramMessage.vue'
 import ProgramDisplayWinners from './components/ProgramDisplayWinners.vue'
 import ProgramPrizes from './components/ProgramPrizes.vue'
 import { Candidate, DisplaySetting, Program, Log, Settings } from './myTypes.ts'
-import { wait, shuffleArray, loadMusic, LotteryBox } from './util'
+import { LotteryBox } from './util'
 
 let lotteryBox:LotteryBox;
 const winners_log:Ref<Log<Candidate>> = ref([]);

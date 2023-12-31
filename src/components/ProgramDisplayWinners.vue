@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import { DisplayWinner, Candidate, Log } from '../myTypes'
-import { LotteryBox } from '../util';
 const emit = defineEmits(['finishProgram'])
 
 defineProps<{ 

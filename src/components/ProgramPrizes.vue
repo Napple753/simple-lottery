@@ -15,6 +15,7 @@ let lotteries:InstanceType<typeof NameLottery>[] = []
 
 const lotteryEls = (el:InstanceType<typeof NameLottery>) => {
   lotteries.push(el)
+  return "lotteryEls"
 }
 
 const status: Ref<"beforeDraw"|"drawing"|"afterDraw"> = ref("beforeDraw")
