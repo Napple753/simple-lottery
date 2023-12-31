@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { ref, Ref, computed } from 'vue'
 import { Candidate, DisplaySetting } from '../myTypes'
+import { readAnyEncoding } from '../util'
 import CandidateViewer from './CandidateViewer.vue'
 import CandidateViewSetting from './CandidateViewSetting.vue'
+import Papa from 'papaparse';
 
 const emit = defineEmits(['loadCandidates']);
 const candidates:Ref<Candidate[]> = ref([]);
@@ -17,9 +19,11 @@ function loadSampleCSV(){
 }
 
 function loadCSVText(csvText:string){
-  candidates.value = csvText.split("\n").map((line,i)=>({
+  const rawData:string[][] = Papa.parse(csvText).data;
+
+  candidates.value = rawData.map((d,i)=>({
     id:i,
-    data:line.split(",")
+    data:d
   }));
   console.log(candidates.value);
 }
@@ -30,11 +34,11 @@ async function loadCSVFile(e:InputEvent){
 
   const reader = new FileReader();
   reader.addEventListener("load", () => {
-    const res = reader.result;
-    if(res==null) return;
+    const res = readAnyEncoding(reader)
+
     loadCSVText(res as string)
   });
-  reader.readAsText(file);
+  reader.readAsArrayBuffer(file);
 }
 function nextProgram(){
   emit("loadCandidates",{

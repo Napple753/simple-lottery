@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, Ref } from 'vue'
 import { Settings, isSettings } from '../myTypes'
+import { readAnyEncoding } from '../util'
 import { parse as JSONCParse } from 'jsonc-parser';
 
 const emit = defineEmits(['loadSettings']);
@@ -26,13 +27,12 @@ async function loadProgramFile(e:InputEvent){
 
   const reader = new FileReader();
   reader.addEventListener("load", () => {
-    const res = reader.result;
-    if(res==null) return;
+    const res = readAnyEncoding(reader)
 
     inputElement.value="";
     loadJSONCText(res as string)
   });
-  reader.readAsText(file);
+  reader.readAsArrayBuffer(file);
 }
 
 function nextProgram(){

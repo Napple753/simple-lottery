@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, Ref } from 'vue'
 import { Candidate, DisplaySetting } from '../myTypes'
-import { wait, shuffleArray, loadMusic } from '../util'
+import { wait, shuffleArray, loadMusic, getDummyList } from '../util'
 import CandidateViewer from './CandidateViewer.vue'
 const emit = defineEmits(['finishDraw'])
 
@@ -51,7 +51,7 @@ async function draw(drawingTime=10*1000,teasing:number|undefined=undefined){
    await wait(drawingTime - simpleDrawingTime);
   }
   
-  displayCandidates.value = shuffleArray(props.candidates.filter(p=>p.id!==winner.id)).slice(0,displayCandidateCount);
+  displayCandidates.value = getDummyList(props.candidates,displayCandidateCount,winner);
   displayWinner.value = winner;
   if(teasing===undefined){
     teasing = Math.ceil((Math.random()*2)**2)-1;//一旦停止する人数

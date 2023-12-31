@@ -10,7 +10,7 @@ import ProgramPrizes from './components/ProgramPrizes.vue'
 import { Candidate, DisplaySetting, Program, Log, Settings } from './myTypes.ts'
 import { wait, shuffleArray, loadMusic, LotteryBox } from './util'
 
-let lotteryBox:LotteryBox<Candidate>;
+let lotteryBox:LotteryBox;
 const winners_log:Ref<Log<Candidate>> = ref([]);
 const displaySetting:Ref<DisplaySetting|null> = ref(null);
 
@@ -37,7 +37,7 @@ function setCandidates(arg:{candidates:Candidate[], displaySetting:DisplaySettin
   programStarted.value = true;
   displaySetting.value = arg.displaySetting;
 
-  lotteryBox = new LotteryBox<Candidate>(arg.candidates)
+  lotteryBox = new LotteryBox(arg.candidates)
 
   nextPrg();
 }
