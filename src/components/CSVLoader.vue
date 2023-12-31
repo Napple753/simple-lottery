@@ -25,7 +25,6 @@ function loadCSVText(csvText:string){
     id:i,
     data:d
   }));
-  console.log(candidates.value);
 }
 async function loadCSVFile(e:InputEvent){
   const [file] = e.target.files;

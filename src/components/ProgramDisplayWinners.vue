@@ -39,7 +39,7 @@ function nextProgram(){
   height:100%;
   overflow-y: scroll;
   width:100vw;
-  column-width: 30rem;
+  column-count: 2;
   padding: 1rem 2rem;
   box-sizing: border-box;
 }

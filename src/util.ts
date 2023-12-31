@@ -32,7 +32,6 @@ export function getDummyList(source0:Candidate[], count:number, winner:Candidate
     }
 
     const longerList = getLongerDummyList(source0, count, winner);
-    console.log(longerList.map(c=>c.id))
     return longerList.slice(-count)
 }
 

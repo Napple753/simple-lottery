@@ -21,6 +21,8 @@ const displayCandidates:Ref<Candidate[]> = ref([]);
 
 const decidedMusic =  loadMusic("decided.mp3");
 
+const uniqueID = ref(Date.now())
+
 
 
 async function moveTo(pos:number, time:number=0){
@@ -78,11 +80,11 @@ defineExpose({draw});
 <template>
   <div class="lottery" :class="{isDeciding:isDeciding}">
     <div class="inner" :style="{bottom:bottom_pos+'%', transitionDuration: transition_duration +'ms'}">
-      <div v-for="candidate in displayCandidates">
-        <CandidateViewer :candidate="candidate" :display-setting="displaySetting"></CandidateViewer>
+      <div v-for="candidate in displayCandidates" :key="uniqueID+candidate.id">
+        <CandidateViewer :candidate="candidate" :display-setting="displaySetting" :key="uniqueID+candidate.id"></CandidateViewer>
       </div>
       <div v-if="displayWinner">
-        <CandidateViewer :candidate="displayWinner" :display-setting="displaySetting"></CandidateViewer>
+        <CandidateViewer :candidate="displayWinner" :display-setting="displaySetting" :key="uniqueID+displayWinner.id"></CandidateViewer>
       </div>
     </div>
     <div class="loader" v-show="displayCandidates.length===0"></div>

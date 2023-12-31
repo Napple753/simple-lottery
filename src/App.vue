@@ -32,7 +32,6 @@ function loadSetting(settings:Settings){
 }
 
 function setCandidates(arg:{candidates:Candidate[], displaySetting:DisplaySetting}){
-  console.log("setCandidates",arg.candidates);
   dummy.value = JSON.parse(JSON.stringify(arg.candidates));
   programStarted.value = true;
   displaySetting.value = arg.displaySetting;

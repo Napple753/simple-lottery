@@ -1,21 +1,47 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { Candidate, DisplaySetting } from '../myTypes'
+import ProgramPrizesVue from './ProgramPrizes.vue';
 
-defineProps<{ 
+const props = defineProps<{ 
   candidate: Candidate,
   displaySetting: DisplaySetting
- }>()
+}>()
+
+const top_info:Ref<HTMLElement> = ref(null)
+const topScale = ref(1)
+const main_info:Ref<HTMLElement> = ref(null)
+const mainScale = ref(1)
+const bottom_info:Ref<HTMLElement> = ref(null)
+const bottomScale = ref(1)
+const info_wrapper:Ref<HTMLElement> = ref(null)
+
+onMounted(()=>{
+  const baseW = info_wrapper.value.clientWidth;
+
+  const topW = top_info.value.clientWidth;
+  if(topW>baseW){
+    topScale.value = baseW/topW;
+  }
+  const mainW = main_info.value.clientWidth;
+  if(mainW>baseW){
+    mainScale.value = baseW/mainW;
+  }
+  const bottomW = bottom_info.value.clientWidth;
+  if(bottomW>baseW){
+    bottomScale.value = baseW/bottomW;
+  }
+});
 
 
 </script>
 
 <template>
   <div class="candidate_wrapper">
-    <div class="candidate">
-      <p class="top_info">{{ candidate.data[displaySetting.top_pos] }}</p>
-      <p class="main_info">{{ candidate.data[displaySetting.main_pos] }}</p>
-      <p class="bottom_info">{{ candidate.data[displaySetting.bottom_pos] }}</p>
+    <div class="candidate" ref="info_wrapper">
+      <p class="top_info" ref="top_info">{{ candidate.data[displaySetting.top_pos] }}</p>
+      <p class="main_info" ref="main_info">{{ candidate.data[displaySetting.main_pos] }}</p>
+      <p class="bottom_info" ref="bottom_info">{{ candidate.data[displaySetting.bottom_pos] }}</p>
     </div>
   </div>
 </template>
@@ -30,6 +56,7 @@ defineProps<{
   width:100%;
   box-sizing: border-box;
   border:1px solid grey;
+  overflow: hidden;
 }
 .candidate{
   display: flex;
@@ -46,17 +73,22 @@ defineProps<{
 .candidate p{
   margin:0;
   user-select: all;
-  break-inside: avoid;
+  white-space: nowrap;
+  transform-origin: center;
+  transform:scaleX(var(--scale));
 }
 
 .top_info{
   font-size: 1rem;
+  --scale:v-bind(topScale);
 }
 .main_info{
   font-size: 2rem;
   font-weight: 800;
+  --scale:v-bind(mainScale);
 }
 .bottom_info{
   font-size:1rem;
+  --scale:v-bind(bottomScale);
 }
 </style>
