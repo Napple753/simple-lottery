@@ -45,7 +45,7 @@ function nextProgram(){
   <div class="program">
     <div class="loadingForm">
       <h1>進行プログラムの読み込み</h1>
-      <p><input type="file" accept="jsonc" @change="loadProgramFile"></p>
+      <p><input type="file" accept=".jsonc,.json" @change="loadProgramFile"></p>
       <p>または<input type="button" value="サンプルを使う" @click="loadSampleProgram"></p>
       <p><a href="/sample_setting.jsonc" download>サンプルファイルのダウンロード</a></p>
     </div>

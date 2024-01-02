@@ -70,7 +70,7 @@ function updateDisplaySetting(newDisplaySetting:DisplaySetting){
   <div class="program">
     <div class="loadingForm">
       <h1>抽選対象の読み込み</h1>
-      <p><input type="file" accept="csv" @change="loadCSVFile"></p>
+      <p><input type="file" accept=".csv" @change="loadCSVFile"></p>
       <p>または<input type="button" value="サンプルを使う" @click="loadSampleCSV"></p>
     </div>
     <div class="previewWrapper">
