@@ -1,96 +1,102 @@
 <script setup lang="ts">
-import { ref, Ref } from 'vue'
-import { Candidate, DisplaySetting, Prize } from '../myTypes'
-import NameLottery from './NameLottery.vue'
-const emit = defineEmits(['finishProgram'])
+import { ref, Ref } from "vue";
+import { Candidate, DisplaySetting, Prize } from "../myTypes";
+import NameLottery from "./NameLottery.vue";
+const emit = defineEmits(["finishProgram"]);
 
 const props = defineProps<{
-  program:Prize,
-  winners:Candidate[],
-  candidates:Candidate[],
-  displaySetting:DisplaySetting
-}>()
+  program: Prize;
+  winners: Candidate[];
+  candidates: Candidate[];
+  displaySetting: DisplaySetting;
+}>();
 
-let lotteries:InstanceType<typeof NameLottery>[] = []
+let lotteries: InstanceType<typeof NameLottery>[] = [];
 
-const lotteryEls = (el:InstanceType<typeof NameLottery>) => {
-  lotteries.push(el)
-  return "lotteryEls"
-}
+const lotteryEls = (el: InstanceType<typeof NameLottery>) => {
+  lotteries.push(el);
+  return "lotteryEls";
+};
 
-const status: Ref<"beforeDraw"|"drawing"|"afterDraw"> = ref("beforeDraw")
-
+const status: Ref<"beforeDraw" | "drawing" | "afterDraw"> = ref("beforeDraw");
 
 let decidedCount = 0;
-function draw(){
+function draw() {
   decidedCount = 0;
   status.value = "drawing";
 
-  let timing = 5*1000;
-  lotteries.forEach((lottery)=>{
-    if(props.winners.length<=5 && Math.random()<0.2){
+  let timing = 5 * 1000;
+  lotteries.forEach((lottery) => {
+    if (props.winners.length <= 5 && Math.random() < 0.2) {
       timing += 500;
-      lottery.draw(timing,1);
-    }else{
-      lottery.draw(timing,0);
+      lottery.draw(timing, 1);
+    } else {
+      lottery.draw(timing, 0);
     }
-    timing += 2*1000;
-  })
+    timing += 2 * 1000;
+  });
 }
 
-function decided(){
+function decided() {
   decidedCount++;
-  if(decidedCount==props.winners.length){
-    status.value = "afterDraw"
+  if (decidedCount == props.winners.length) {
+    status.value = "afterDraw";
   }
 }
 
-function nextProgram(){
+function nextProgram() {
   status.value = "beforeDraw";
-  lotteries= [];
+  lotteries = [];
   emit("finishProgram");
 }
-
 </script>
 
 <template>
   <div class="program programPrize">
     <h1>{{ program.prize_name }}</h1>
 
-    <div class="prizeImage" v-show="status=='beforeDraw'">
-      <img v-if="program.img" :src="program.img">
+    <div class="prizeImage" v-show="status == 'beforeDraw'">
+      <img v-if="program.img" :src="program.img" />
     </div>
 
-    <div v-show="status=='beforeDraw'" class="button_wrapper">
-      <input type="button" value="抽選スタート" @click="draw">
+    <div v-show="status == 'beforeDraw'" class="button_wrapper">
+      <input type="button" value="抽選スタート" @click="draw" />
     </div>
 
-    <div v-show="status!='beforeDraw'" class="lotteries">
+    <div v-show="status != 'beforeDraw'" class="lotteries">
       <template v-for="winner in winners">
-        <NameLottery :winner="winner" :candidates="candidates" :is-simple="winners.length>5"
+        <NameLottery
+          :winner="winner"
+          :candidates="candidates"
+          :is-simple="winners.length > 5"
           :displaySetting="displaySetting"
-          :ref="lotteryEls" @finish-draw="decided"></NameLottery>
+          :ref="lotteryEls"
+          @finish-draw="decided"
+        ></NameLottery>
       </template>
     </div>
-    <div class="button_wrapper" v-show="status!='beforeDraw'">
-      <input v-show="status=='afterDraw'" type="button" value="次へ" @click="nextProgram">
+    <div class="button_wrapper" v-show="status != 'beforeDraw'">
+      <input
+        v-show="status == 'afterDraw'"
+        type="button"
+        value="次へ"
+        @click="nextProgram"
+      />
     </div>
   </div>
 </template>
 
 <style scoped>
-
-.prizeImage{
-  height:100%;
+.prizeImage {
+  height: 100%;
   text-align: center;
 }
 
-.prizeImage img{
-  height:100%;
+.prizeImage img {
+  height: 100%;
   object-fit: contain;
-
 }
-.lotteries{
+.lotteries {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -100,9 +106,9 @@ function nextProgram(){
   overflow-y: scroll;
 }
 
-.lotteries div{
-  --length: v-bind(Math.min(winners.length,5));
+.lotteries div {
+  --length: v-bind(Math.min(winners.length, 5));
   margin: auto;
-  width: calc(calc(100%/ var(--length) ) - 1rem);
+  width: calc(calc(100% / var(--length)) - 1rem);
 }
 </style>

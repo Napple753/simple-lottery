@@ -1,16 +1,15 @@
 <script setup lang="ts">
-import { DisplayWinner, Candidate, Log } from '../myTypes'
-const emit = defineEmits(['finishProgram'])
+import { DisplayWinner, Candidate, Log } from "../myTypes";
+const emit = defineEmits(["finishProgram"]);
 
-defineProps<{ 
-  program: DisplayWinner,
-  winnersLog: Log<Candidate>
-}>()
+defineProps<{
+  program: DisplayWinner;
+  winnersLog: Log<Candidate>;
+}>();
 
-function nextProgram(){
+function nextProgram() {
   emit("finishProgram");
 }
-
 </script>
 
 <template>
@@ -27,27 +26,29 @@ function nextProgram(){
       </div>
     </div>
     <div class="button_wrapper">
-      <input type="button" value="次へ" @click="nextProgram">
+      <input type="button" value="次へ" @click="nextProgram" />
     </div>
   </div>
 </template>
 
 <style scoped>
-.winners_list{
-  height:100%;
+.winners_list {
+  height: 100%;
   overflow-y: scroll;
-  width:100vw;
+  width: 100vw;
   column-count: 2;
   padding: 1rem 2rem;
   box-sizing: border-box;
 }
-.prize{
+.prize {
   break-inside: avoid;
 }
-table, tr,td{
-  border:none;
+table,
+tr,
+td {
+  border: none;
 }
-td{
+td {
   padding: 0 1em;
 }
 </style>
