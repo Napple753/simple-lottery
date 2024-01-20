@@ -54,11 +54,11 @@ export function isProgram(arg: any): arg is Program {
   return isPrize(arg) || isMessage(arg) || isDisplayWinner(arg);
 }
 
-export type Settings = {
+export type EventPlans = {
   program_name: string;
   program: Program[];
 };
-export function isSettings(arg: any): arg is Settings {
+export function isEventPlans(arg: any): arg is EventPlans {
   return (
     arg !== null &&
     typeof arg === "object" &&

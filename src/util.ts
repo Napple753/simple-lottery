@@ -55,7 +55,7 @@ export class LotteryBox {
   #notSelected: Candidate[];
   #candidates: Candidate[];
 
-  #log: Log<Candidate> = [];
+  #log: Log<number> = [];
 
   constructor(candidates: Candidate[]) {
     this.#candidates = [...candidates];
@@ -64,9 +64,10 @@ export class LotteryBox {
 
   draw(prizeName: string, count: number) {
     const selected = this.#drawMany(count);
+    const selectedIds = selected.map((c) => c.id);
     this.#log.push({
       prizeName,
-      selected,
+      selected: selectedIds,
       timestamp: Date.now(),
     });
     return selected;
@@ -85,7 +86,19 @@ export class LotteryBox {
   }
 
   get log(): Log<Candidate> {
-    return JSON.parse(JSON.stringify(this.#log));
+    return this.#log.map((log) => {
+      const selectedCandidates = log.selected.map((selectedId) => {
+        const candidate = this.#candidates.find(
+          (c) => c.id == selectedId,
+        ) as Candidate;
+        return candidate;
+      });
+      return {
+        prizeName: log.prizeName,
+        selected: selectedCandidates,
+        timestamp: log.timestamp,
+      };
+    });
   }
 
   #drawOne(selected: Candidate[]): Candidate {

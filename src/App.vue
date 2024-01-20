@@ -11,7 +11,7 @@ import {
   DisplaySetting,
   Program,
   Log,
-  Settings,
+  EventPlans,
 } from "./myTypes.ts";
 import { LotteryBox } from "./util";
 
@@ -30,7 +30,7 @@ const programStarted = ref(false);
 
 const program: Ref<Program | null> = ref(null);
 
-function loadSetting(settings: Settings) {
+function loadSetting(settings: EventPlans) {
   window.document.title = settings.program_name;
   program_list = settings.program;
   programLoaded.value = true;
