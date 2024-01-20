@@ -19,32 +19,28 @@ export function shuffleArray<T = any>(source0: T[]): T[] {
   return shuffled;
 }
 
+/**
+  ダミー配列作成関数
+   * @param source ダミー配列のもとになる配列。当選者を含んでもよい
+   * @param  count ダミー配列の長さ
+   * @param winner 当選者
+   * @return ダミー配列。最後の(count-1)個には当選者は含まれない
+   */
 export function getDummyList(
-  source0: Candidate[],
+  source: Candidate[],
   count: number,
   winner: Candidate,
 ) {
-  function getLongerDummyList(
-    source0: Candidate[],
-    count: number,
-    winner: Candidate,
-  ): Candidate[] {
-    if (source0.length - 1 < count) {
-      let dummyList: Candidate[] = [];
-      while (dummyList.length < count - (source0.length - 1)) {
-        dummyList = dummyList.concat(shuffleArray<Candidate>(source0));
-      }
-      return dummyList.concat(
-        getLongerDummyList(source0, source0.length - 1, winner),
-      );
-    }
-    return shuffleArray<Candidate>(
-      source0.filter((p) => p.id !== winner.id),
-    ).slice(0, count);
+  const dummyList: Candidate[] = [];
+  const candidateNumber = source.length;
+  for (let i = 0; i < Math.floor(count / candidateNumber); i++) {
+    dummyList.push(...shuffleArray<Candidate>(source));
   }
+  dummyList.push(
+    ...shuffleArray<Candidate>(source).filter((p) => p.id !== winner.id),
+  );
 
-  const longerList = getLongerDummyList(source0, count, winner);
-  return longerList.slice(-count);
+  return dummyList.slice(-count);
 }
 
 export function wait(time: number) {
