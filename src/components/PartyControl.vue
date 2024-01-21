@@ -3,26 +3,31 @@ import { computed, onMounted, ref, Ref } from "vue";
 import ProgramMessage from "../components/ProgramMessage.vue";
 import ProgramDisplayWinners from "../components/ProgramDisplayWinners.vue";
 import ProgramPrizes from "../components/ProgramPrizes.vue";
-import { Candidate, DisplaySetting, PartyPlans, WinnerLog } from "../myTypes.ts";
+import ProgramFinale from "../components/ProgramFinale.vue";
+import {
+  Candidate,
+  DisplaySetting,
+  PartyPlans,
+  WinnerLog,
+  PartyLog,
+} from "../myTypes.ts";
 import { LotteryBox } from "../logic/LotteryBox";
+import { digestMessage } from "../logic/digestMessage";
 
 const props = defineProps<{
-  /**
-   * 抽選の対象者
-   */
+  /** パーティーID */
+  partyId: string;
+  /** 候補者データのヘッダー(保存時に使用) */
+  candidateHeader: string[];
+  /** 抽選の対象者 */
   candidates: Candidate[];
-  /**
-   * 抽選会の設定
-   */
+  /** 抽選会の設定 */
   partyPlans: PartyPlans;
-  /**
-   * 当選者の表示順設定
-   */
+  /** 当選者の表示順設定 */
   displaySetting: DisplaySetting;
 }>();
 
 let lotteryBox: LotteryBox | null = null;
-const winnerIdList: Ref<(number[] | null)[]> = ref([]);
 const currentWinners: Ref<Candidate[]> = ref([]);
 const winnersLogs: Ref<WinnerLog<Candidate>[] | null> = ref(null);
 
@@ -44,26 +49,40 @@ const currentProgram = computed(
 );
 
 function next() {
-  currentProgramId.value = Math.min(
-    currentProgramId.value + 1,
-    props.partyPlans.program.length - 1,
-  );
-  if (currentProgram.value.type === "PRIZE") {
+  currentProgramId.value++;
+  if (currentProgram.value?.type === "PRIZE") {
     const programId = currentProgramId.value;
     const prize_name = currentProgram.value.prize_name;
     const winner_number = currentProgram.value.winner_number;
-    const winners = lotteryBox?.draw(programId,prize_name, winner_number) || null;
+    const winners =
+      lotteryBox?.draw(programId, prize_name, winner_number) || null;
     currentWinners.value = winners || [];
-    winnerIdList.value[currentProgramId.value] =
-      winners?.map((c) => c.id) || null;
   } else {
     currentWinners.value = [];
-    winnerIdList.value[currentProgramId.value] = null;
   }
 
-  if (currentProgram.value.type === "DISPLAY_WINNERS") {
+  if (
+    !currentProgram.value ||
+    currentProgram.value.type === "DISPLAY_WINNERS"
+  ) {
     winnersLogs.value = lotteryBox?.winnerLogCandidates || null;
   }
+  savePartyLog();
+}
+
+async function savePartyLog() {
+  const hashedCandidates = await digestMessage(
+    JSON.stringify(props.candidates),
+  );
+  const partyLog: PartyLog = {
+    partyId: props.partyId,
+    partyPlans: props.partyPlans,
+    hashedCandidates,
+    displaySetting: props.displaySetting,
+    winnerIds: lotteryBox!.winnerLogIds,
+    currentProgramId: currentProgramId.value,
+  };
+  localStorage.setItem(props.partyId, JSON.stringify(partyLog));
 }
 </script>
 
@@ -90,6 +109,13 @@ function next() {
     :winners-log="winnersLogs"
     @finish-program="next"
   ></ProgramDisplayWinners>
+  <ProgramFinale
+    v-if="!currentProgram && winnersLogs"
+    :key="currentProgramId"
+    :party-name="partyPlans.program_name"
+    :candidate-header="candidateHeader"
+    :winners-log="winnersLogs"
+  ></ProgramFinale>
 </template>
 
 <style>

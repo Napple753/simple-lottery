@@ -45,6 +45,7 @@ async function loadCSVFile(e: Event) {
 }
 function nextProgram() {
   emit("loadCandidates", {
+    candidatesHeader: candidatesHeader.value,
     candidates: candidatesBody.value,
     displaySetting: displaySetting.value,
   });

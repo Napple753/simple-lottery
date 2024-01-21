@@ -9,6 +9,7 @@ import { Candidate, DisplaySetting, PartyPlans } from "./myTypes.ts";
 const partyId: Ref<string | null> = ref(null);
 partyId.value = self.crypto.randomUUID();
 const partyPlans: Ref<PartyPlans | null> = ref(null);
+const candidateHeader: Ref<string[] | null> = ref(null);
 const candidates: Ref<Candidate[] | null> = ref(null);
 const displaySetting: Ref<DisplaySetting | null> = ref(null);
 
@@ -17,9 +18,11 @@ function loadSetting(arg: PartyPlans) {
   window.document.title = partyPlans.value.program_name;
 }
 function setCandidates(arg: {
+  candidatesHeader: string[];
   candidates: Candidate[];
   displaySetting: DisplaySetting;
 }) {
+  candidateHeader.value = arg.candidatesHeader;
   displaySetting.value = arg.displaySetting;
   candidates.value = arg.candidates;
 }
@@ -35,7 +38,11 @@ function setCandidates(arg: {
     @load-candidates="setCandidates"
   ></CandidatesLoader>
   <PartyControl
-    v-if="partyPlans && candidates && displaySetting"
+    v-if="
+      partyId && partyPlans && candidateHeader && candidates && displaySetting
+    "
+    :party-id="partyId"
+    :candidate-header="candidateHeader"
     :candidates="candidates"
     :party-plans="partyPlans"
     :display-setting="displaySetting"

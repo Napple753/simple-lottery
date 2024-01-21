@@ -11,7 +11,7 @@ export class LotteryBox {
     this.#notSelected = [...this.#candidates];
   }
 
-  draw(programId:number,prizeName: string, count: number) {
+  draw(programId: number, prizeName: string, count: number) {
     const selected = this.#drawMany(count);
     const selectedIds = selected.map((c) => c.id);
     this.#winnerLogIds.push({
