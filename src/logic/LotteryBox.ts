@@ -1,20 +1,21 @@
-import { Log, Candidate } from "../myTypes";
+import { WinnerLog, Candidate } from "../myTypes";
 import { shuffleArray } from "./shuffleArray";
 export class LotteryBox {
   #notSelected: Candidate[];
   #candidates: Candidate[];
 
-  #log: Log<number> = [];
+  #winnerLogIds: WinnerLog<number>[] = [];
 
   constructor(candidates: Candidate[]) {
     this.#candidates = [...candidates];
     this.#notSelected = [...this.#candidates];
   }
 
-  draw(prizeName: string, count: number) {
+  draw(programId:number,prizeName: string, count: number) {
     const selected = this.#drawMany(count);
     const selectedIds = selected.map((c) => c.id);
-    this.#log.push({
+    this.#winnerLogIds.push({
+      programId,
       prizeName,
       selected: selectedIds,
       timestamp: Date.now(),
@@ -34,8 +35,12 @@ export class LotteryBox {
     return selected;
   }
 
-  get log(): Log<Candidate> {
-    return this.#log.map((log) => {
+  get winnerLogIds(): WinnerLog<number>[] {
+    return this.#winnerLogIds;
+  }
+
+  get winnerLogCandidates(): WinnerLog<Candidate>[] {
+    return this.#winnerLogIds.map((log) => {
       const selectedCandidates = log.selected.map((selectedId) => {
         const candidate = this.#candidates.find(
           (c) => c.id == selectedId,
@@ -43,6 +48,7 @@ export class LotteryBox {
         return candidate;
       });
       return {
+        programId: log.programId,
         prizeName: log.prizeName,
         selected: selectedCandidates,
         timestamp: log.timestamp,

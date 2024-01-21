@@ -3,7 +3,7 @@ import { computed, onMounted, ref, Ref } from "vue";
 import ProgramMessage from "../components/ProgramMessage.vue";
 import ProgramDisplayWinners from "../components/ProgramDisplayWinners.vue";
 import ProgramPrizes from "../components/ProgramPrizes.vue";
-import { Candidate, DisplaySetting, PartyPlans, Log } from "../myTypes.ts";
+import { Candidate, DisplaySetting, PartyPlans, WinnerLog } from "../myTypes.ts";
 import { LotteryBox } from "../logic/LotteryBox";
 
 const props = defineProps<{
@@ -24,7 +24,7 @@ const props = defineProps<{
 let lotteryBox: LotteryBox | null = null;
 const winnerIdList: Ref<(number[] | null)[]> = ref([]);
 const currentWinners: Ref<Candidate[]> = ref([]);
-const winnersLog: Ref<Log<Candidate> | null> = ref(null);
+const winnersLogs: Ref<WinnerLog<Candidate>[] | null> = ref(null);
 
 /**
  * 現在のプログラム番号
@@ -49,9 +49,10 @@ function next() {
     props.partyPlans.program.length - 1,
   );
   if (currentProgram.value.type === "PRIZE") {
+    const programId = currentProgramId.value;
     const prize_name = currentProgram.value.prize_name;
     const winner_number = currentProgram.value.winner_number;
-    const winners = lotteryBox?.draw(prize_name, winner_number) || null;
+    const winners = lotteryBox?.draw(programId,prize_name, winner_number) || null;
     currentWinners.value = winners || [];
     winnerIdList.value[currentProgramId.value] =
       winners?.map((c) => c.id) || null;
@@ -61,7 +62,7 @@ function next() {
   }
 
   if (currentProgram.value.type === "DISPLAY_WINNERS") {
-    winnersLog.value = lotteryBox?.log || null;
+    winnersLogs.value = lotteryBox?.winnerLogCandidates || null;
   }
 }
 </script>
@@ -83,10 +84,10 @@ function next() {
     @finish-program="next"
   ></ProgramPrizes>
   <ProgramDisplayWinners
-    v-if="currentProgram?.type == 'DISPLAY_WINNERS' && winnersLog"
+    v-if="currentProgram?.type == 'DISPLAY_WINNERS' && winnersLogs"
     :program="currentProgram"
     :key="currentProgramId"
-    :winners-log="winnersLog"
+    :winners-log="winnersLogs"
     @finish-program="next"
   ></ProgramDisplayWinners>
 </template>
