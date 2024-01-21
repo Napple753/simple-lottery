@@ -9,10 +9,9 @@ import {
   DisplaySetting,
   PartyPlans,
   WinnerLog,
-  PartyLog,
 } from "../myTypes.ts";
 import { LotteryBox } from "../logic/LotteryBox";
-import { digestMessage } from "../logic/digestMessage";
+import { PartyLog } from "../logic/PartyLog";
 
 const props = defineProps<{
   /** パーティーID */
@@ -28,6 +27,7 @@ const props = defineProps<{
 }>();
 
 let lotteryBox: LotteryBox | null = null;
+let partyLog: PartyLog | null = null;
 const currentWinners: Ref<Candidate[]> = ref([]);
 const winnersLogs: Ref<WinnerLog<Candidate>[] | null> = ref(null);
 
@@ -38,6 +38,7 @@ const currentProgramId = ref(-1);
 
 onMounted(() => {
   lotteryBox = new LotteryBox(props.candidates);
+  updatePartyLog();
   next();
 });
 
@@ -67,22 +68,22 @@ function next() {
   ) {
     winnersLogs.value = lotteryBox?.winnerLogCandidates || null;
   }
-  savePartyLog();
+  updatePartyLog();
 }
 
-async function savePartyLog() {
-  const hashedCandidates = await digestMessage(
-    JSON.stringify(props.candidates),
-  );
-  const partyLog: PartyLog = {
-    partyId: props.partyId,
-    partyPlans: props.partyPlans,
-    hashedCandidates,
-    displaySetting: props.displaySetting,
-    winnerIds: lotteryBox!.winnerLogIds,
-    currentProgramId: currentProgramId.value,
-  };
-  localStorage.setItem(props.partyId, JSON.stringify(partyLog));
+async function updatePartyLog() {
+  if (partyLog === null) {
+    partyLog = new PartyLog(
+      props.partyId,
+      props.partyPlans,
+      props.candidates,
+      props.displaySetting,
+    );
+  } else {
+    partyLog.winnerIds = lotteryBox!.winnerLogIds;
+    partyLog.currentProgramId = currentProgramId.value;
+    partyLog.saveToLocalStorage();
+  }
 }
 </script>
 

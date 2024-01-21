@@ -13,12 +13,12 @@ function saveWinnersLog() {
     .map((log) => {
       const timeISOString = new Date(log.timestamp).toISOString();
       return log.selected.map((c) => {
-        return [log.prizeName, timeISOString, ...c.data];
+        return [log.prizeName, timeISOString, "-", ...c.data];
       });
     })
     .flat();
   console.log(props.candidateHeader);
-  const header = ["当選賞名", "当選時刻", ...props.candidateHeader];
+  const header = ["当選賞名", "当選時刻","キャンセル済み", ...props.candidateHeader];
   data.splice(0, 0, header);
   const csvText = Papa.unparse(data, {
     quotes: true, //or array of booleans

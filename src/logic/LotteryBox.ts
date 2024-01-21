@@ -18,6 +18,7 @@ export class LotteryBox {
       programId,
       prizeName,
       selected: selectedIds,
+      cancelled: [],
       timestamp: Date.now(),
     });
     return selected;
@@ -51,6 +52,7 @@ export class LotteryBox {
         programId: log.programId,
         prizeName: log.prizeName,
         selected: selectedCandidates,
+        cancelled: [],
         timestamp: log.timestamp,
       };
     });

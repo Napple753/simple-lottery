@@ -72,6 +72,7 @@ export type WinnerLog<T> = {
   programId: number;
   prizeName: string;
   selected: T[];
+  cancelled: T[];
   timestamp: number;
 };
 
@@ -79,14 +80,4 @@ export type DisplaySetting = {
   top_pos: number;
   main_pos: number;
   bottom_pos: number;
-};
-
-export type PartyLog = {
-  /** uuid */
-  partyId: string;
-  partyPlans: PartyPlans;
-  hashedCandidates: string;
-  displaySetting: DisplaySetting;
-  winnerIds: WinnerLog<number>[];
-  currentProgramId: number;
 };
