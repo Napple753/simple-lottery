@@ -1,61 +1,91 @@
 <script setup lang="ts">
-import { computed, ComputedRef } from "vue";
-//import DisplayName from './components/DisplayName.vue'
+import { computed, onMounted, ref, Ref } from "vue";
 import ProgramMessage from "../components/ProgramMessage.vue";
 import ProgramDisplayWinners from "../components/ProgramDisplayWinners.vue";
 import ProgramPrizes from "../components/ProgramPrizes.vue";
-import { Candidate, DisplaySetting, EventPlans } from "../myTypes.ts";
-import { LotteryParty } from "../LotteryParty";
+import { Candidate, DisplaySetting, EventPlans, Log } from "../myTypes.ts";
+import { LotteryBox } from "../util";
 
-let lotteryParty: LotteryParty | undefined;
+const props = defineProps<{
+  /**
+   * 抽選の対象者
+   */
+  candidates: Candidate[];
+  /**
+   * 抽選会の設定
+   */
+  eventPlans: EventPlans;
+  /**
+   * 当選者の表示順設定
+   */
+  displaySetting: DisplaySetting;
+}>();
 
-function startParty(
-  candidates: Candidate[],
-  eventPlans: EventPlans,
-  displaySetting: DisplaySetting,
-) {
-  lotteryParty = new LotteryParty(candidates, eventPlans, displaySetting);
-  lotteryParty.next();
-}
+let lotteryBox: LotteryBox | null = null;
+const winnerIdList: Ref<(number[] | null)[]> = ref([]);
+const currentWinners: Ref<Candidate[]> = ref([]);
+const winnersLog: Ref<Log<Candidate> | null> = ref(null);
+/**
+ * 現在のプログラム番号
+ */
+const currentProgramId = ref(-1);
 
-const currentProgramNumber = computed(() => lotteryParty?.currentProgramNumber);
-const currentProgram = computed(() => lotteryParty?.currentProgram);
-const displaySetting = computed(() => lotteryParty?.displaySetting);
-const candidates = computed(() => lotteryParty?.candidates) as ComputedRef<
-  Candidate[]
->;
-const winners = computed(() => lotteryParty?.currentWinners) as ComputedRef<
-  Candidate[]
->;
+onMounted(() => {
+  lotteryBox = new LotteryBox(props.candidates);
+  next();
+});
+
+/**
+ * 現在のプログラム
+ */
+const currentProgram = computed(
+  () => props.eventPlans.program[currentProgramId.value],
+);
 
 function next() {
-  lotteryParty?.next();
-}
+  currentProgramId.value = Math.min(
+    currentProgramId.value + 1,
+    props.eventPlans.program.length - 1,
+  );
+  if (currentProgram.value.type === "PRIZE") {
+    const prize_name = currentProgram.value.prize_name;
+    const winner_number = currentProgram.value.winner_number;
+    const winners = lotteryBox?.draw(prize_name, winner_number) || null;
+    currentWinners.value = winners || [];
+    winnerIdList.value[currentProgramId.value] =
+      winners?.map((c) => c.id) || null;
+  } else {
+    currentWinners.value = [];
+    winnerIdList.value[currentProgramId.value] = null;
+  }
 
-defineExpose({ startParty });
+  if (currentProgram.value.type === "DISPLAY_WINNERS") {
+    winnersLog.value = lotteryBox?.log || null;
+  }
+}
 </script>
 
 <template>
   <ProgramMessage
     v-if="currentProgram?.type === 'MESSAGE'"
     :program="currentProgram"
-    :key="currentProgramNumber"
+    :key="currentProgramId"
     @finish-program="next"
   ></ProgramMessage>
   <ProgramPrizes
     v-if="currentProgram?.type === 'PRIZE' && displaySetting"
     :candidates="candidates"
-    :winners="winners"
+    :winners="currentWinners"
     :program="currentProgram"
-    :key="currentProgramNumber"
+    :key="currentProgramId"
     :display-setting="displaySetting"
     @finish-program="next"
   ></ProgramPrizes>
   <ProgramDisplayWinners
-    v-if="currentProgram?.type == 'DISPLAY_WINNERS'"
+    v-if="currentProgram?.type == 'DISPLAY_WINNERS' && winnersLog"
     :program="currentProgram"
-    :key="currentProgramNumber"
-    :winners-log="[]"
+    :key="currentProgramId"
+    :winners-log="winnersLog"
     @finish-program="next"
   ></ProgramDisplayWinners>
 </template>

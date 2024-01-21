@@ -3,103 +3,47 @@ import { ref, Ref } from "vue";
 //import DisplayName from './components/DisplayName.vue'
 import CSVLoader from "./components/CSVLoader.vue";
 import ProgramLoader from "./components/ProgramLoader.vue";
-import ProgramMessage from "./components/ProgramMessage.vue";
-import ProgramDisplayWinners from "./components/ProgramDisplayWinners.vue";
-import ProgramPrizes from "./components/ProgramPrizes.vue";
+import ProgramControl from "./components/ProgramControl.vue";
 import {
   Candidate,
   DisplaySetting,
-  Program,
-  Log,
   EventPlans,
 } from "./myTypes.ts";
-import { LotteryBox } from "./util";
 
-let lotteryBox: LotteryBox;
-const winners_log: Ref<Log<Candidate>> = ref([]);
+const partyId:Ref<string|null> = ref(null);
+const eventPlans: Ref<EventPlans | null> = ref(null);
+const candidates: Ref<Candidate[]|null> = ref(null);
 const displaySetting: Ref<DisplaySetting | null> = ref(null);
 
-const dummy: Ref<Candidate[]> = ref([]);
-const winners: Ref<Candidate[]> = ref([]);
 
-let program_list: Program[] = [];
-const program_number = ref(0);
-
-const programLoaded = ref(false);
-const programStarted = ref(false);
-
-const program: Ref<Program | null> = ref(null);
-
-function loadSetting(settings: EventPlans) {
-  window.document.title = settings.program_name;
-  program_list = settings.program;
-  programLoaded.value = true;
+function loadSetting(arg: EventPlans) {
+  eventPlans.value = arg;
+  window.document.title = eventPlans.value.program_name;
 }
-
 function setCandidates(arg: {
   candidates: Candidate[];
   displaySetting: DisplaySetting;
 }) {
-  dummy.value = JSON.parse(JSON.stringify(arg.candidates));
-  programStarted.value = true;
   displaySetting.value = arg.displaySetting;
-
-  lotteryBox = new LotteryBox(arg.candidates);
-
-  nextPrg();
-}
-
-function nextPrg() {
-  if (lotteryBox === null) {
-    return;
-  }
-  program.value = program_list[program_number.value];
-  if (program.value.type === "PRIZE") {
-    const prize_name = program.value.prize_name;
-    const winner_number = program.value.winner_number;
-    winners.value = lotteryBox.draw(prize_name, winner_number);
-  } else if (program.value.type === "DISPLAY_WINNERS") {
-    winners_log.value = lotteryBox.log;
-  }
-  program_number.value = Math.min(
-    program_number.value + 1,
-    program_list.length - 1,
-  );
+  candidates.value = arg.candidates;
 }
 </script>
 
 <template>
   <ProgramLoader
     @load-settings="loadSetting"
-    v-show="!programLoaded"
+    v-if="!eventPlans"
   ></ProgramLoader>
   <CSVLoader
     @load-candidates="setCandidates"
-    v-show="programLoaded && !programStarted"
+    v-if="eventPlans && !candidates"
   ></CSVLoader>
-
-  <ProgramMessage
-    v-if="program && program.type == 'MESSAGE'"
-    :program="program"
-    :key="program_number"
-    @finish-program="nextPrg"
-  ></ProgramMessage>
-  <ProgramPrizes
-    v-if="program && program.type == 'PRIZE' && displaySetting"
-    :candidates="dummy"
-    :winners="winners"
-    :program="program"
-    :key="program_number"
+  <ProgramControl
+    v-if="eventPlans && candidates && displaySetting"
+    :candidates="candidates"
+    :event-plans="eventPlans"
     :display-setting="displaySetting"
-    @finish-program="nextPrg"
-  ></ProgramPrizes>
-  <ProgramDisplayWinners
-    v-if="program && program.type == 'DISPLAY_WINNERS'"
-    :program="program"
-    :key="program_number"
-    :winners-log="winners_log"
-    @finish-program="nextPrg"
-  ></ProgramDisplayWinners>
+  ></ProgramControl>
 </template>
 
 <style>
