@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { ref, Ref } from "vue";
 import { Candidate, DisplaySetting } from "../myTypes";
-import { wait, loadMusic, getDummyList } from "../util";
+import { wait } from "../logic/wait";
+import { loadMusic } from "../logic/loadMusic";
+import { getDummyList } from "../logic/getDummyList";
 import CandidateViewer from "./CandidateViewer.vue";
 const emit = defineEmits(["finishDraw"]);
 

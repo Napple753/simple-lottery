@@ -3,8 +3,8 @@ import { computed, onMounted, ref, Ref } from "vue";
 import ProgramMessage from "../components/ProgramMessage.vue";
 import ProgramDisplayWinners from "../components/ProgramDisplayWinners.vue";
 import ProgramPrizes from "../components/ProgramPrizes.vue";
-import { Candidate, DisplaySetting, EventPlans, Log } from "../myTypes.ts";
-import { LotteryBox } from "../util";
+import { Candidate, DisplaySetting, PartyPlans, Log } from "../myTypes.ts";
+import { LotteryBox } from "../logic/LotteryBox";
 
 const props = defineProps<{
   /**
@@ -14,7 +14,7 @@ const props = defineProps<{
   /**
    * 抽選会の設定
    */
-  eventPlans: EventPlans;
+  partyPlans: PartyPlans;
   /**
    * 当選者の表示順設定
    */
@@ -25,6 +25,7 @@ let lotteryBox: LotteryBox | null = null;
 const winnerIdList: Ref<(number[] | null)[]> = ref([]);
 const currentWinners: Ref<Candidate[]> = ref([]);
 const winnersLog: Ref<Log<Candidate> | null> = ref(null);
+
 /**
  * 現在のプログラム番号
  */
@@ -39,13 +40,13 @@ onMounted(() => {
  * 現在のプログラム
  */
 const currentProgram = computed(
-  () => props.eventPlans.program[currentProgramId.value],
+  () => props.partyPlans.program[currentProgramId.value],
 );
 
 function next() {
   currentProgramId.value = Math.min(
     currentProgramId.value + 1,
-    props.eventPlans.program.length - 1,
+    props.partyPlans.program.length - 1,
   );
   if (currentProgram.value.type === "PRIZE") {
     const prize_name = currentProgram.value.prize_name;

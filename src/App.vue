@@ -1,24 +1,20 @@
 <script setup lang="ts">
 import { ref, Ref } from "vue";
 //import DisplayName from './components/DisplayName.vue'
-import CSVLoader from "./components/CSVLoader.vue";
-import ProgramLoader from "./components/ProgramLoader.vue";
-import ProgramControl from "./components/ProgramControl.vue";
-import {
-  Candidate,
-  DisplaySetting,
-  EventPlans,
-} from "./myTypes.ts";
+import CandidatesLoader from "./components/CandidatesLoader.vue";
+import PartyPlansLoader from "./components/PartyPlansLoader.vue";
+import PartyControl from "./components/PartyControl.vue";
+import { Candidate, DisplaySetting, PartyPlans } from "./myTypes.ts";
 
-const partyId:Ref<string|null> = ref(null);
-const eventPlans: Ref<EventPlans | null> = ref(null);
-const candidates: Ref<Candidate[]|null> = ref(null);
+const partyId: Ref<string | null> = ref(null);
+partyId.value = self.crypto.randomUUID();
+const partyPlans: Ref<PartyPlans | null> = ref(null);
+const candidates: Ref<Candidate[] | null> = ref(null);
 const displaySetting: Ref<DisplaySetting | null> = ref(null);
 
-
-function loadSetting(arg: EventPlans) {
-  eventPlans.value = arg;
-  window.document.title = eventPlans.value.program_name;
+function loadSetting(arg: PartyPlans) {
+  partyPlans.value = arg;
+  window.document.title = partyPlans.value.program_name;
 }
 function setCandidates(arg: {
   candidates: Candidate[];
@@ -30,20 +26,20 @@ function setCandidates(arg: {
 </script>
 
 <template>
-  <ProgramLoader
+  <PartyPlansLoader
+    v-if="!partyPlans"
     @load-settings="loadSetting"
-    v-if="!eventPlans"
-  ></ProgramLoader>
-  <CSVLoader
+  ></PartyPlansLoader>
+  <CandidatesLoader
+    v-if="partyPlans && !candidates"
     @load-candidates="setCandidates"
-    v-if="eventPlans && !candidates"
-  ></CSVLoader>
-  <ProgramControl
-    v-if="eventPlans && candidates && displaySetting"
+  ></CandidatesLoader>
+  <PartyControl
+    v-if="partyPlans && candidates && displaySetting"
     :candidates="candidates"
-    :event-plans="eventPlans"
+    :party-plans="partyPlans"
     :display-setting="displaySetting"
-  ></ProgramControl>
+  ></PartyControl>
 </template>
 
 <style>
