@@ -1,22 +1,30 @@
 <script setup lang="ts">
 import { ref, Ref } from "vue";
-//import DisplayName from './components/DisplayName.vue'
+import SelectSavedParties from "./components/SelectSavedParties.vue";
 import CandidatesLoader from "./components/CandidatesLoader.vue";
 import PartyPlansLoader from "./components/PartyPlansLoader.vue";
 import PartyControl from "./components/PartyControl.vue";
 import { Candidate, DisplaySetting, PartyPlans } from "./myTypes.ts";
 
 const partyId: Ref<string | null> = ref(null);
-partyId.value = self.crypto.randomUUID();
 const partyPlans: Ref<PartyPlans | null> = ref(null);
 const candidateHeader: Ref<string[] | null> = ref(null);
 const candidates: Ref<Candidate[] | null> = ref(null);
 const displaySetting: Ref<DisplaySetting | null> = ref(null);
 
+function initializeParty(inPartyId: string | null) {
+  if (inPartyId === null) {
+    partyId.value = self.crypto.randomUUID();
+  } else {
+    partyId.value = inPartyId;
+  }
+}
+
 function loadSetting(arg: PartyPlans) {
   partyPlans.value = arg;
   window.document.title = partyPlans.value.program_name;
 }
+
 function setCandidates(arg: {
   candidatesHeader: string[];
   candidates: Candidate[];
@@ -29,8 +37,12 @@ function setCandidates(arg: {
 </script>
 
 <template>
+  <SelectSavedParties
+    v-if="!partyId"
+    @select-party="initializeParty"
+  ></SelectSavedParties>
   <PartyPlansLoader
-    v-if="!partyPlans"
+    v-if="partyId && !partyPlans"
     @load-settings="loadSetting"
   ></PartyPlansLoader>
   <CandidatesLoader

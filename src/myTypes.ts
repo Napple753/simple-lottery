@@ -81,3 +81,19 @@ export type DisplaySetting = {
   main_pos: number;
   bottom_pos: number;
 };
+
+export type PartyLog = {
+  partyId: string;
+  partyName: string;
+  startDateTS: number;
+};
+
+export function isPartyLog(arg: any): arg is PartyPlans {
+  return (
+    arg !== null &&
+    typeof arg === "object" &&
+    typeof arg.partyId === "string" &&
+    typeof arg.partyName === "string" &&
+    typeof arg.startDateTS === "number"
+  );
+}

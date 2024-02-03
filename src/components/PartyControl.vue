@@ -11,7 +11,7 @@ import {
   WinnerLog,
 } from "../myTypes.ts";
 import { LotteryBox } from "../logic/LotteryBox";
-import { PartyLog } from "../logic/PartyLog";
+import { PartyLogControl } from "../logic/PartyLogControl";
 
 const props = defineProps<{
   /** パーティーID */
@@ -27,7 +27,7 @@ const props = defineProps<{
 }>();
 
 let lotteryBox: LotteryBox | null = null;
-let partyLog: PartyLog | null = null;
+let partyLogControl: PartyLogControl | null = null;
 const currentWinners: Ref<Candidate[]> = ref([]);
 const winnersLogs: Ref<WinnerLog<Candidate>[] | null> = ref(null);
 
@@ -72,17 +72,17 @@ function next() {
 }
 
 async function updatePartyLog() {
-  if (partyLog === null) {
-    partyLog = new PartyLog(
+  if (partyLogControl === null) {
+    partyLogControl = new PartyLogControl(
       props.partyId,
       props.partyPlans,
       props.candidates,
       props.displaySetting,
     );
   } else {
-    partyLog.winnerIds = lotteryBox!.winnerLogIds;
-    partyLog.currentProgramId = currentProgramId.value;
-    partyLog.saveToLocalStorage();
+    partyLogControl.winnerIds = lotteryBox!.winnerLogIds;
+    partyLogControl.currentProgramId = currentProgramId.value;
+    partyLogControl.saveToLocalStorage();
   }
 }
 </script>
@@ -138,3 +138,4 @@ async function updatePartyLog() {
   margin-bottom: 1rem;
 }
 </style>
+PartyLogControlPartyLogControlPartyLogControl../logic/PartyLogControl.ts

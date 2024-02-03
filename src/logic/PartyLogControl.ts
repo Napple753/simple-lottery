@@ -1,7 +1,15 @@
-import { digestMessage } from "../logic/digestMessage";
-import { PartyPlans, Candidate, DisplaySetting, WinnerLog } from "../myTypes";
+const ENABLE_PARTY_LOG = false;
 
-export class PartyLog {
+import { digestMessage } from "./digestMessage";
+import {
+  PartyPlans,
+  Candidate,
+  DisplaySetting,
+  WinnerLog,
+  PartyLog,
+} from "../myTypes";
+
+export class PartyLogControl {
   #partyId: string;
   #partyPlans: PartyPlans;
   #hashedCandidates!: string;
@@ -47,15 +55,13 @@ export class PartyLog {
   }
 
   saveToLocalStorage() {
+    if (!ENABLE_PARTY_LOG) return;
     localStorage.setItem(this.#partyId, JSON.stringify(this.partyLog));
   }
 
   updatePartyIds() {
-    const partyIdLogs: {
-      partyId: string;
-      partyName: string;
-      startDateTS: number;
-    }[] = JSON.parse(localStorage.getItem("partyIdLogs") || "[]");
+    if (!ENABLE_PARTY_LOG) return;
+    const partyIdLogs = PartyLogControl.getSavedPartyList();
     const lastLog = partyIdLogs.find(
       (partyIdLog) => partyIdLog.partyId === this.#partyId,
     );
@@ -69,15 +75,19 @@ export class PartyLog {
   }
 
   deleteFromLocalStorage() {
+    if (!ENABLE_PARTY_LOG) return;
     localStorage.removeItem(this.#partyId);
-    const partyIdLogs: {
-      partyId: string;
-      partyName: string;
-      startDateTS: number;
-    }[] = JSON.parse(localStorage.getItem("partyIdLogs") || "[]");
+    const partyIdLogs = PartyLogControl.getSavedPartyList();
     const newPartyIdLogs = partyIdLogs.filter(
       (partyIdLog) => partyIdLog.partyId !== this.#partyId,
     );
     localStorage.setItem("partyIdLogs", JSON.stringify(newPartyIdLogs));
+  }
+
+  static getSavedPartyList(): PartyLog[] {
+    if (!ENABLE_PARTY_LOG) return [];
+    return (
+      JSON.parse(localStorage.getItem("partyIdLogs") || "[]") as PartyLog[]
+    ).sort((a, b) => b.startDateTS - a.startDateTS);
   }
 }

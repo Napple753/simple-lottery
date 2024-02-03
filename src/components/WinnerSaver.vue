@@ -18,7 +18,12 @@ function saveWinnersLog() {
     })
     .flat();
   console.log(props.candidateHeader);
-  const header = ["当選賞名", "当選時刻","キャンセル済み", ...props.candidateHeader];
+  const header = [
+    "当選賞名",
+    "当選時刻",
+    "キャンセル済み",
+    ...props.candidateHeader,
+  ];
   data.splice(0, 0, header);
   const csvText = Papa.unparse(data, {
     quotes: true, //or array of booleans
