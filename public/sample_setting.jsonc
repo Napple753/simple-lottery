@@ -8,13 +8,13 @@
         {
             "type":"PRIZE",
             "prize_name":"運がいいで賞",//賞の名前
-            "img":"/img/present_box.png",//表示する画像
+            "img":"https://napple753.github.io/simple-lottery/img/present_box.png",//表示する画像
             "winner_number":3//最大人数
         },
         {
             "type":"PRIZE",
             "prize_name":"すごく運がいいで賞",
-            "img":"/img/kaden_soujiki_cordless_stick.png",
+            "img":"https://napple753.github.io/simple-lottery/img/kaden_soujiki_cordless_stick.png",
             "winner_number":2
         },
         {
@@ -23,13 +23,13 @@
         {
             "type":"PRIZE",
             "prize_name":"一番運がいいで賞",
-            "img":"/img/kaden_reizouko.png",
+            "img":"https://napple753.github.io/simple-lottery/img/kaden_reizouko.png",
             "winner_number":1
         },
         {
             "type":"PRIZE",
             "prize_name":"ちょっと運がいいで賞",
-            "img":"/img/pocket_tissue.png",
+            "img":"https://napple753.github.io/simple-lottery/img/pocket_tissue.png",
             "winner_number":10
         },
         {
