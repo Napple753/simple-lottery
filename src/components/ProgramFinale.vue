@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { WinnerLog, Candidate } from "../myTypes";
-import WinnerSaver from "./WinnerSaver.vue";
+import { WinnerLog, Candidate } from "@/myTypes";
+import WinnerSaver from "@/components/WinnerSaver.vue";
 const emit = defineEmits(["finishProgram"]);
 
 defineProps<{

@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref, Ref } from "vue";
-import SelectSavedParties from "./components/SelectSavedParties.vue";
-import CandidatesLoader from "./components/CandidatesLoader.vue";
-import PartyPlansLoader from "./components/PartyPlansLoader.vue";
-import PartyControl from "./components/PartyControl.vue";
-import { Candidate, DisplaySetting, PartyPlans } from "./myTypes.ts";
+import SelectSavedParties from "@/components/SelectSavedParties.vue";
+import CandidatesLoader from "@/components/CandidatesLoader.vue";
+import PartyPlansLoader from "@/components/PartyPlansLoader.vue";
+import PartyControl from "@/components/PartyControl.vue";
+import { Candidate, DisplaySetting, PartyPlans } from "@/myTypes.ts";
 
 const partyId: Ref<string | null> = ref(null);
 const partyPlans: Ref<PartyPlans | null> = ref(null);

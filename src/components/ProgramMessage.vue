@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Message } from "../myTypes";
+import { Message } from "@/myTypes";
 const emit = defineEmits(["finishProgram"]);
 
 defineProps<{ program: Message }>();

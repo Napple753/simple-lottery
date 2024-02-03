@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Candidate, WinnerLog } from "../myTypes";
+import { Candidate, WinnerLog } from "@/myTypes";
 import Papa from "papaparse";
 
 const props = defineProps<{

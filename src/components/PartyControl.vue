@@ -1,17 +1,12 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, Ref } from "vue";
-import ProgramMessage from "../components/ProgramMessage.vue";
-import ProgramDisplayWinners from "../components/ProgramDisplayWinners.vue";
-import ProgramPrizes from "../components/ProgramPrizes.vue";
-import ProgramFinale from "../components/ProgramFinale.vue";
-import {
-  Candidate,
-  DisplaySetting,
-  PartyPlans,
-  WinnerLog,
-} from "../myTypes.ts";
-import { LotteryBox } from "../logic/LotteryBox";
-import { PartyLogControl } from "../logic/PartyLogControl";
+import ProgramMessage from "@/components/ProgramMessage.vue";
+import ProgramDisplayWinners from "@/components/ProgramDisplayWinners.vue";
+import ProgramPrizes from "@/components/ProgramPrizes.vue";
+import ProgramFinale from "@/components/ProgramFinale.vue";
+import { Candidate, DisplaySetting, PartyPlans, WinnerLog } from "@/myTypes.ts";
+import { LotteryBox } from "@/logic/LotteryBox";
+import { PartyLogControl } from "@/logic/PartyLogControl";
 
 const props = defineProps<{
   /** パーティーID */

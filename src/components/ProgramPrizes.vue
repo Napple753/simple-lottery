@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, Ref } from "vue";
-import { Candidate, DisplaySetting, Prize } from "../myTypes";
-import NameLottery from "./NameLottery.vue";
+import { Candidate, DisplaySetting, Prize } from "@/myTypes";
+import NameLottery from "@/components/NameLottery.vue";
 const emit = defineEmits(["finishProgram"]);
 
 const props = defineProps<{

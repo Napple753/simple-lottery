@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref, Ref } from "vue";
-import { Candidate, DisplaySetting } from "../myTypes";
-import { wait } from "../logic/wait";
-import { loadMusic } from "../logic/loadMusic";
-import { getDummyList } from "../logic/getDummyList";
-import CandidateViewer from "./CandidateViewer.vue";
+import { Candidate, DisplaySetting } from "@/myTypes";
+import { wait } from "@/logic/wait";
+import { loadMusic } from "@/logic/loadMusic";
+import { getDummyList } from "@/logic/getDummyList";
+import CandidateViewer from "@/components/CandidateViewer.vue";
 const emit = defineEmits(["finishDraw"]);
 
 const props = defineProps<{
@@ -21,7 +21,7 @@ const isDeciding: Ref<boolean> = ref(false);
 const displayWinner: Ref<Candidate | null> = ref(null);
 const displayCandidates: Ref<Candidate[]> = ref([]);
 
-const decidedMusic = loadMusic("decided.mp3");
+const decidedMusic = loadMusic(import.meta.env.BASE_URL+"decided.mp3");
 
 const uniqueID = ref(Date.now());
 

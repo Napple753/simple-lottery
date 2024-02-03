@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref, Ref, computed } from "vue";
-import { Candidate, DisplaySetting } from "../myTypes";
-import { readAnyEncoding } from "../logic/readAnyEncoding";
-import CandidateViewer from "./CandidateViewer.vue";
-import CandidateViewSetting from "./CandidateViewSetting.vue";
+import { Candidate, DisplaySetting } from "@/myTypes";
+import { readAnyEncoding } from "@/logic/readAnyEncoding";
+import CandidateViewer from "@/components/CandidateViewer.vue";
+import CandidateViewSetting from "@/components/CandidateViewSetting.vue";
 import Papa from "papaparse";
 
 const emit = defineEmits(["loadCandidates"]);
@@ -15,7 +15,7 @@ const displaySetting: Ref<DisplaySetting> = ref({
 });
 
 function loadSampleCSV() {
-  fetch("/sample.csv")
+  fetch(import.meta.env.BASE_URL+"sample.csv")
     .then((res) => res.text())
     .then((res) => loadCSVText(res));
 }
