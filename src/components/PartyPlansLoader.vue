@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { ref, Ref } from "vue";
-import { Settings, isSettings } from "../myTypes";
-import { readAnyEncoding } from "../util";
+import { PartyPlans, isPartyPlans } from "../myTypes";
+import { readAnyEncoding } from "../logic/readAnyEncoding";
 import { parse as JSONCParse } from "jsonc-parser";
 
 const emit = defineEmits(["loadSettings"]);
-const settings: Ref<Settings | null> = ref(null);
+const settings: Ref<PartyPlans | null> = ref(null);
 
 function loadSampleProgram() {
   fetch("/sample_setting.jsonc")
@@ -15,7 +15,7 @@ function loadSampleProgram() {
 
 async function loadJSONCText(jsoncText: string) {
   const loaded = await JSONCParse(jsoncText);
-  if (!isSettings(loaded)) {
+  if (!isPartyPlans(loaded)) {
     return alert("設定ファイルの形式に間違いがあります。");
   }
   settings.value = loaded;

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, Ref, computed } from "vue";
 import { Candidate, DisplaySetting } from "../myTypes";
-import { readAnyEncoding } from "../util";
+import { readAnyEncoding } from "../logic/readAnyEncoding";
 import CandidateViewer from "./CandidateViewer.vue";
 import CandidateViewSetting from "./CandidateViewSetting.vue";
 import Papa from "papaparse";
@@ -45,6 +45,7 @@ async function loadCSVFile(e: Event) {
 }
 function nextProgram() {
   emit("loadCandidates", {
+    candidatesHeader: candidatesHeader.value,
     candidates: candidatesBody.value,
     displaySetting: displaySetting.value,
   });

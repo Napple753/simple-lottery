@@ -54,11 +54,11 @@ export function isProgram(arg: any): arg is Program {
   return isPrize(arg) || isMessage(arg) || isDisplayWinner(arg);
 }
 
-export type Settings = {
+export type PartyPlans = {
   program_name: string;
   program: Program[];
 };
-export function isSettings(arg: any): arg is Settings {
+export function isPartyPlans(arg: any): arg is PartyPlans {
   return (
     arg !== null &&
     typeof arg === "object" &&
@@ -68,14 +68,32 @@ export function isSettings(arg: any): arg is Settings {
   );
 }
 
-export type Log<T> = {
+export type WinnerLog<T> = {
+  programId: number;
   prizeName: string;
   selected: T[];
+  cancelled: T[];
   timestamp: number;
-}[];
+};
 
 export type DisplaySetting = {
   top_pos: number;
   main_pos: number;
   bottom_pos: number;
 };
+
+export type PartyLog = {
+  partyId: string;
+  partyName: string;
+  startDateTS: number;
+};
+
+export function isPartyLog(arg: any): arg is PartyPlans {
+  return (
+    arg !== null &&
+    typeof arg === "object" &&
+    typeof arg.partyId === "string" &&
+    typeof arg.partyName === "string" &&
+    typeof arg.startDateTS === "number"
+  );
+}

@@ -1,105 +1,64 @@
 <script setup lang="ts">
 import { ref, Ref } from "vue";
-//import DisplayName from './components/DisplayName.vue'
-import CSVLoader from "./components/CSVLoader.vue";
-import ProgramLoader from "./components/ProgramLoader.vue";
-import ProgramMessage from "./components/ProgramMessage.vue";
-import ProgramDisplayWinners from "./components/ProgramDisplayWinners.vue";
-import ProgramPrizes from "./components/ProgramPrizes.vue";
-import {
-  Candidate,
-  DisplaySetting,
-  Program,
-  Log,
-  Settings,
-} from "./myTypes.ts";
-import { LotteryBox } from "./util";
+import SelectSavedParties from "./components/SelectSavedParties.vue";
+import CandidatesLoader from "./components/CandidatesLoader.vue";
+import PartyPlansLoader from "./components/PartyPlansLoader.vue";
+import PartyControl from "./components/PartyControl.vue";
+import { Candidate, DisplaySetting, PartyPlans } from "./myTypes.ts";
 
-let lotteryBox: LotteryBox;
-const winners_log: Ref<Log<Candidate>> = ref([]);
+const partyId: Ref<string | null> = ref(null);
+const partyPlans: Ref<PartyPlans | null> = ref(null);
+const candidateHeader: Ref<string[] | null> = ref(null);
+const candidates: Ref<Candidate[] | null> = ref(null);
 const displaySetting: Ref<DisplaySetting | null> = ref(null);
 
-const dummy: Ref<Candidate[]> = ref([]);
-const winners: Ref<Candidate[]> = ref([]);
+function initializeParty(inPartyId: string | null) {
+  if (inPartyId === null) {
+    partyId.value = self.crypto.randomUUID();
+  } else {
+    partyId.value = inPartyId;
+  }
+}
 
-let program_list: Program[] = [];
-const program_number = ref(0);
-
-const programLoaded = ref(false);
-const programStarted = ref(false);
-
-const program: Ref<Program | null> = ref(null);
-
-function loadSetting(settings: Settings) {
-  window.document.title = settings.program_name;
-  program_list = settings.program;
-  programLoaded.value = true;
+function loadSetting(arg: PartyPlans) {
+  partyPlans.value = arg;
+  window.document.title = partyPlans.value.program_name;
 }
 
 function setCandidates(arg: {
+  candidatesHeader: string[];
   candidates: Candidate[];
   displaySetting: DisplaySetting;
 }) {
-  dummy.value = JSON.parse(JSON.stringify(arg.candidates));
-  programStarted.value = true;
+  candidateHeader.value = arg.candidatesHeader;
   displaySetting.value = arg.displaySetting;
-
-  lotteryBox = new LotteryBox(arg.candidates);
-
-  nextPrg();
-}
-
-function nextPrg() {
-  if (lotteryBox === null) {
-    return;
-  }
-  program.value = program_list[program_number.value];
-  if (program.value.type === "PRIZE") {
-    const prize_name = program.value.prize_name;
-    const winner_number = program.value.winner_number;
-    winners.value = lotteryBox.draw(prize_name, winner_number);
-  } else if (program.value.type === "DISPLAY_WINNERS") {
-    winners_log.value = lotteryBox.log;
-  }
-  program_number.value = Math.min(
-    program_number.value + 1,
-    program_list.length - 1,
-  );
+  candidates.value = arg.candidates;
 }
 </script>
 
 <template>
-  <ProgramLoader
+  <SelectSavedParties
+    v-if="!partyId"
+    @select-party="initializeParty"
+  ></SelectSavedParties>
+  <PartyPlansLoader
+    v-if="partyId && !partyPlans"
     @load-settings="loadSetting"
-    v-show="!programLoaded"
-  ></ProgramLoader>
-  <CSVLoader
+  ></PartyPlansLoader>
+  <CandidatesLoader
+    v-if="partyPlans && !candidates"
     @load-candidates="setCandidates"
-    v-show="programLoaded && !programStarted"
-  ></CSVLoader>
-
-  <ProgramMessage
-    v-if="program && program.type == 'MESSAGE'"
-    :program="program"
-    :key="program_number"
-    @finish-program="nextPrg"
-  ></ProgramMessage>
-  <ProgramPrizes
-    v-if="program && program.type == 'PRIZE' && displaySetting"
-    :candidates="dummy"
-    :winners="winners"
-    :program="program"
-    :key="program_number"
+  ></CandidatesLoader>
+  <PartyControl
+    v-if="
+      partyId && partyPlans && candidateHeader && candidates && displaySetting
+    "
+    :party-id="partyId"
+    :candidate-header="candidateHeader"
+    :candidates="candidates"
+    :party-plans="partyPlans"
     :display-setting="displaySetting"
-    @finish-program="nextPrg"
-  ></ProgramPrizes>
-  <ProgramDisplayWinners
-    v-if="program && program.type == 'DISPLAY_WINNERS'"
-    :program="program"
-    :key="program_number"
-    :winners-log="winners_log"
-    @finish-program="nextPrg"
-  ></ProgramDisplayWinners>
+  ></PartyControl>
 </template>
 
 <style>
