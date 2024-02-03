@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, Ref } from "vue";
-import { PartyLog } from "../myTypes";
-import { PartyLogControl } from "../logic/PartyLogControl";
+import { PartyLog } from "@/myTypes";
+import { PartyLogControl } from "@/logic/PartyLogControl";
 
 const emit = defineEmits<{
   selectParty: [id: string | null];

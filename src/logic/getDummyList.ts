@@ -1,5 +1,5 @@
-import { shuffleArray } from "./shuffleArray";
-import { Candidate } from "../myTypes";
+import { shuffleArray } from "@/logic/shuffleArray";
+import { Candidate } from "@/myTypes";
 /**
   ダミー配列作成関数
    * @param source ダミー配列のもとになる配列。当選者を含んでもよい

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref, Ref } from "vue";
-import { Candidate, DisplaySetting } from "../myTypes";
+import { Candidate, DisplaySetting } from "@/myTypes";
 
 defineProps<{
   candidate: Candidate;

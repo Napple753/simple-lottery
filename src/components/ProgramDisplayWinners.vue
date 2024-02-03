@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { DisplayWinner, Candidate, WinnerLog } from "../myTypes";
+import { DisplayWinner, Candidate, WinnerLog } from "@/myTypes";
 const emit = defineEmits(["finishProgram"]);
 
 defineProps<{

@@ -1,5 +1,5 @@
-import { WinnerLog, Candidate } from "../myTypes";
-import { shuffleArray } from "./shuffleArray";
+import { WinnerLog, Candidate } from "@/myTypes";
+import { shuffleArray } from "@/logic/shuffleArray";
 export class LotteryBox {
   #notSelected: Candidate[];
   #candidates: Candidate[];

@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { ref, Ref } from "vue";
-import { PartyPlans, isPartyPlans } from "../myTypes";
-import { readAnyEncoding } from "../logic/readAnyEncoding";
+import { PartyPlans, isPartyPlans } from "@/myTypes";
+import { readAnyEncoding } from "@/logic/readAnyEncoding";
 import { parse as JSONCParse } from "jsonc-parser";
 
 const emit = defineEmits(["loadSettings"]);
 const settings: Ref<PartyPlans | null> = ref(null);
 
 function loadSampleProgram() {
-  fetch("/sample_setting.jsonc")
+  fetch(import.meta.env.BASE_URL+"sample_setting.jsonc")
     .then((res) => res.text())
     .then((res) => loadJSONCText(res));
 }
