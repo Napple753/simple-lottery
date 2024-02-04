@@ -8,7 +8,7 @@ const emit = defineEmits(["loadSettings"]);
 const settings: Ref<PartyPlans | null> = ref(null);
 
 function loadSampleProgram() {
-  fetch(import.meta.env.BASE_URL+"sample_setting.jsonc")
+  fetch(import.meta.env.BASE_URL + "sample_setting.jsonc")
     .then((res) => res.text())
     .then((res) => loadJSONCText(res));
 }

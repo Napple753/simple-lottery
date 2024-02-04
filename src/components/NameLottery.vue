@@ -21,7 +21,7 @@ const isDeciding: Ref<boolean> = ref(false);
 const displayWinner: Ref<Candidate | null> = ref(null);
 const displayCandidates: Ref<Candidate[]> = ref([]);
 
-const decidedMusic = loadMusic(import.meta.env.BASE_URL+"decided.mp3");
+const decidedMusic = loadMusic(import.meta.env.BASE_URL + "decided.mp3");
 
 const uniqueID = ref(Date.now());
 
