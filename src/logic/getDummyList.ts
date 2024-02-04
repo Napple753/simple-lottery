@@ -20,6 +20,5 @@ export function getDummyList(
   dummyList.push(
     ...shuffleArray<Candidate>(source).filter((p) => p.id !== winner.id),
   );
-
   return dummyList.slice(-count);
 }
