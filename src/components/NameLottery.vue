@@ -80,7 +80,7 @@ async function draw(
   decidedMusic.play();
   await wait(50);
   isDeciding.value = true;
-  
+
   emit("finishDraw");
 }
 
