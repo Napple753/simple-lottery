@@ -15,7 +15,7 @@ const displaySetting: Ref<DisplaySetting> = ref({
 });
 
 function loadSampleCSV() {
-  fetch(import.meta.env.BASE_URL+"sample.csv")
+  fetch(import.meta.env.BASE_URL + "sample.csv")
     .then((res) => res.text())
     .then((res) => loadCSVText(res));
 }
