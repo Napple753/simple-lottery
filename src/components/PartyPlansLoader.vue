@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, Ref } from "vue";
+import { computed, ref, Ref } from "vue";
 import { PartyPlans, isPartyPlans } from "@/myTypes";
 import { readAnyEncoding } from "@/logic/readAnyEncoding";
 import { parse as JSONCParse } from "jsonc-parser";
@@ -10,7 +10,7 @@ const emit = defineEmits<{
 const settings: Ref<PartyPlans | null> = ref(null);
 
 function loadSampleProgram() {
-  fetch(import.meta.env.BASE_URL + "sample_setting.jsonc")
+  fetch(sampleProgramUrl.value)
     .then((res) => res.text())
     .then((res) => loadJSONCText(res));
 }
@@ -47,6 +47,10 @@ function nextProgram() {
   if (settings.value === null) return;
   emit("loadSettings", settings.value);
 }
+
+const sampleProgramUrl = computed(
+  () => import.meta.env.BASE_URL + "sample_setting.jsonc",
+);
 </script>
 
 <template>
@@ -64,9 +68,7 @@ function nextProgram() {
         />
       </p>
       <p>
-        <a href="/sample_setting.jsonc" download
-          >サンプルファイルのダウンロード</a
-        >
+        <a :href="sampleProgramUrl" download>サンプルファイルのダウンロード</a>
       </p>
     </div>
     <div class="programPreview">
