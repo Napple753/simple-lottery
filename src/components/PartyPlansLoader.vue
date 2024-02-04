@@ -4,7 +4,9 @@ import { PartyPlans, isPartyPlans } from "@/myTypes";
 import { readAnyEncoding } from "@/logic/readAnyEncoding";
 import { parse as JSONCParse } from "jsonc-parser";
 
-const emit = defineEmits(["loadSettings"]);
+const emit = defineEmits<{
+  (e: "loadSettings", settings: PartyPlans): void;
+}>();
 const settings: Ref<PartyPlans | null> = ref(null);
 
 function loadSampleProgram() {
@@ -42,6 +44,7 @@ async function loadProgramFile(e: Event) {
 }
 
 function nextProgram() {
+  if (settings.value === null) return;
   emit("loadSettings", settings.value);
 }
 </script>
@@ -95,17 +98,4 @@ function nextProgram() {
   </div>
 </template>
 
-<style scoped>
-.loadingForm {
-  width: 100vw;
-  padding: 1rem 2rem;
-  box-sizing: border-box;
-}
-.programPreview {
-  width: 100vw;
-  height: 100%;
-  overflow-y: scroll;
-  box-sizing: border-box;
-  padding: 1rem 2rem;
-}
-</style>
+<style scoped></style>

@@ -2,7 +2,9 @@
 import { ref, Ref } from "vue";
 import { Candidate, DisplaySetting, Prize } from "@/myTypes";
 import NameLottery from "@/components/NameLottery.vue";
-const emit = defineEmits(["finishProgram"]);
+const emit = defineEmits<{
+  (e: "finishProgram"): void;
+}>();
 
 const props = defineProps<{
   program: Prize;

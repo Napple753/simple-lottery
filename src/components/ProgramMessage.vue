@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { Message } from "@/myTypes";
-const emit = defineEmits(["finishProgram"]);
+const emit = defineEmits<{
+  (e: "finishProgram"): void;
+}>();
 
 defineProps<{ program: Message }>();
 
@@ -18,10 +20,4 @@ function nextProgram() {
   </div>
 </template>
 
-<style scoped>
-.message {
-  font-size: 200%;
-  font-weight: bold;
-  margin: auto;
-}
-</style>
+<style scoped></style>

@@ -114,23 +114,4 @@ async function updatePartyLog() {
   ></ProgramFinale>
 </template>
 
-<style>
-.program {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  justify-content: flex-start;
-
-  padding: 1rem 2rem;
-  box-sizing: border-box;
-  align-items: center;
-}
-
-.button_wrapper {
-  width: 80%;
-  height: 2rem;
-  text-align: right;
-  margin-bottom: 1rem;
-}
-</style>
-PartyLogControlPartyLogControlPartyLogControl../logic/PartyLogControl.ts
+<style scoped></style>

@@ -1,16 +1,28 @@
 import { WinnerLog, Candidate } from "@/myTypes";
 import { shuffleArray } from "@/logic/shuffleArray";
+
 export class LotteryBox {
   #notSelected: Candidate[];
   #candidates: Candidate[];
 
   #winnerLogIds: WinnerLog<number>[] = [];
 
+  /**
+   * 抽選用クラスの作成
+   * @param candidates 抽選対象
+   */
   constructor(candidates: Candidate[]) {
     this.#candidates = [...candidates];
     this.#notSelected = [...this.#candidates];
   }
 
+  /**
+   * 抽選を行う
+   * @param programId 記録用進行プログラム番号
+   * @param prizeName 記録用賞の名前
+   * @param count 当選者の数
+   * @returns
+   */
   draw(programId: number, prizeName: string, count: number) {
     const selected = this.#drawMany(count);
     const selectedIds = selected.map((c) => c.id);

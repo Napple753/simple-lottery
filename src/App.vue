@@ -94,4 +94,33 @@ h1 {
   text-align: right;
   margin-bottom: 1rem;
 }
+
+.loadingForm {
+  width: 100vw;
+  padding: 1rem 2rem;
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+.previewWrapper {
+  width: 100vw;
+  height: 100%;
+  overflow-y: hidden;
+  box-sizing: border-box;
+  padding: 0;
+  display: flex;
+  flex-direction: row;
+  flex-shrink: 1;
+}
+.programPreview {
+  width: 100vw;
+  height: 100%;
+  overflow-y: scroll;
+  box-sizing: border-box;
+  padding: 1rem 2rem;
+}
+.message {
+  font-size: 200%;
+  font-weight: bold;
+  margin: auto;
+}
 </style>

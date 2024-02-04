@@ -6,7 +6,17 @@ import CandidateViewer from "@/components/CandidateViewer.vue";
 import CandidateViewSetting from "@/components/CandidateViewSetting.vue";
 import Papa from "papaparse";
 
-const emit = defineEmits(["loadCandidates"]);
+const emit = defineEmits<{
+  (
+    e: "loadCandidates",
+    arg: {
+      candidatesHeader: string[];
+      candidates: Candidate[];
+      displaySetting: DisplaySetting;
+    },
+  ): void;
+}>();
+
 const candidates: Ref<Candidate[]> = ref([]);
 const displaySetting: Ref<DisplaySetting> = ref({
   top_pos: 0,
@@ -14,20 +24,6 @@ const displaySetting: Ref<DisplaySetting> = ref({
   bottom_pos: 2,
 });
 
-function loadSampleCSV() {
-  fetch(import.meta.env.BASE_URL + "sample.csv")
-    .then((res) => res.text())
-    .then((res) => loadCSVText(res));
-}
-
-function loadCSVText(csvText: string) {
-  const rawData = Papa.parse(csvText).data as string[][];
-
-  candidates.value = rawData.map((d, i) => ({
-    id: i,
-    data: d,
-  }));
-}
 async function loadCSVFile(e: Event) {
   const [file] = (e.target as any).files;
 
@@ -42,6 +38,19 @@ async function loadCSVFile(e: Event) {
     loadCSVText(res as string);
   });
   reader.readAsArrayBuffer(file);
+}
+function loadSampleCSV() {
+  fetch(import.meta.env.BASE_URL + "sample.csv")
+    .then((res) => res.text())
+    .then((res) => loadCSVText(res));
+}
+function loadCSVText(csvText: string) {
+  const rawData = Papa.parse(csvText).data as string[][];
+
+  candidates.value = rawData.map((d, i) => ({
+    id: i,
+    data: d,
+  }));
 }
 function nextProgram() {
   emit("loadCandidates", {
@@ -129,22 +138,6 @@ function updateDisplaySetting(newDisplaySetting: DisplaySetting) {
 </template>
 
 <style scoped>
-.loadingForm {
-  width: 100vw;
-  padding: 1rem 2rem;
-  box-sizing: border-box;
-  flex-shrink: 0;
-}
-.previewWrapper {
-  width: 100vw;
-  height: 100%;
-  overflow-y: hidden;
-  box-sizing: border-box;
-  padding: 0;
-  display: flex;
-  flex-direction: row;
-  flex-shrink: 1;
-}
 .candidatesPreview {
   width: 50vw;
   height: 100%;

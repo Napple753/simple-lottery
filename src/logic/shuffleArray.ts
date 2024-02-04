@@ -1,8 +1,13 @@
-export function shuffleArray<T = any>(source0: T[]): T[] {
-  const source = [...source0];
+/**
+ * 既存の配列を変更せずシャッフル
+ * @param source 元の配列(変更されない)
+ * @returns シャッフルされた配列
+ */
+export function shuffleArray<T = any>(source: T[]): T[] {
+  const sourceCopy = [...source];
   const shuffled = [];
-  for (let i = source.length; i > 0; i--) {
-    shuffled.push(source.splice(Math.floor(i * Math.random()), 1)[0]);
+  for (let i = sourceCopy.length; i > 0; i--) {
+    shuffled.push(sourceCopy.splice(Math.floor(i * Math.random()), 1)[0]);
   }
   return shuffled;
 }

@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { DisplayWinner, Candidate, WinnerLog } from "@/myTypes";
-const emit = defineEmits(["finishProgram"]);
+const emit = defineEmits<{
+  (e: "finishProgram"): void;
+}>();
 
 defineProps<{
   program: DisplayWinner;

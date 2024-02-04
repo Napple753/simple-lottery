@@ -3,7 +3,9 @@ import { onMounted, ref, Ref } from "vue";
 import { Candidate, DisplaySetting } from "@/myTypes";
 
 defineProps<{
+  /** 候補者 */
   candidate: Candidate;
+  /** 当選者の表示順設定 */
   displaySetting: DisplaySetting;
 }>();
 
