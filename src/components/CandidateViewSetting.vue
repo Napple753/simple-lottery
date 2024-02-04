@@ -2,9 +2,13 @@
 import { ref } from "vue";
 import { DisplaySetting } from "@/myTypes";
 
-const emit = defineEmits(["changeSetting"]);
+const emit = defineEmits<{
+  (e: "changeSetting", displaySetting: DisplaySetting): void;
+}>();
 const props = defineProps<{
+  /** 当選者の表示順設定 */
   displaySetting: DisplaySetting;
+  /** 候補者データのヘッダー */
   header: string[];
 }>();
 

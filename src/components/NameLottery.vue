@@ -5,12 +5,18 @@ import { wait } from "@/logic/wait";
 import { loadMusic } from "@/logic/loadMusic";
 import { getDummyList } from "@/logic/getDummyList";
 import CandidateViewer from "@/components/CandidateViewer.vue";
-const emit = defineEmits(["finishDraw"]);
+const emit = defineEmits<{
+  (e: "finishDraw"): void;
+}>();
 
 const props = defineProps<{
+  /** 当選者 */
   winner: Candidate | null;
+  /** ダミー当選者作成用の候補者 */
   candidates: Candidate[];
-  isSimple?: Boolean; //表示を省略するかどうか
+  /** ロールの省略 */
+  isSimple?: Boolean;
+  /** 当選者の表示順設定 */
   displaySetting: DisplaySetting;
 }>();
 
@@ -93,6 +99,7 @@ defineExpose({ draw });
       <div
         v-for="candidate in displayCandidates"
         :key="uniqueID + candidate.id"
+        class="dummyCandidates"
       >
         <CandidateViewer
           :candidate="candidate"
@@ -100,7 +107,7 @@ defineExpose({ draw });
           :key="uniqueID + candidate.id"
         ></CandidateViewer>
       </div>
-      <div v-if="displayWinner">
+      <div v-if="displayWinner" class="winner">
         <CandidateViewer
           :candidate="displayWinner"
           :display-setting="displaySetting"
@@ -133,12 +140,11 @@ defineExpose({ draw });
   transition-property: bottom;
   /*transition-timing-function: ease-out;*/
 }
-.isDeciding {
+.isDeciding .winner {
   background-color: yellow;
   color: red;
   box-shadow: none;
 }
-
 .isDeciding .inner {
   transform: scale(1.25);
   transform-origin: center center;

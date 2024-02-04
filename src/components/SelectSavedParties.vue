@@ -4,7 +4,7 @@ import { PartyLog } from "@/myTypes";
 import { PartyLogControl } from "@/logic/PartyLogControl";
 
 const emit = defineEmits<{
-  selectParty: [id: string | null];
+  (e: "selectParty", id: string | null): void;
 }>();
 
 function startNewParty() {
@@ -40,21 +40,4 @@ if (savedPartyList.value.length == 0) {
   </div>
 </template>
 
-<style scoped>
-.loadingForm {
-  width: 100vw;
-  padding: 1rem 2rem;
-  box-sizing: border-box;
-  flex-shrink: 0;
-}
-.previewWrapper {
-  width: 100vw;
-  height: 100%;
-  overflow-y: hidden;
-  box-sizing: border-box;
-  padding: 0;
-  display: flex;
-  flex-direction: row;
-  flex-shrink: 1;
-}
-</style>
+<style scoped></style>

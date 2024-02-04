@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { WinnerLog, Candidate } from "@/myTypes";
 import WinnerSaver from "@/components/WinnerSaver.vue";
-const emit = defineEmits(["finishProgram"]);
+const emit = defineEmits<{
+  (e: "finishProgram"): void;
+}>();
 
 defineProps<{
   partyName: string;
@@ -28,10 +30,4 @@ function nextProgram() {
   </div>
 </template>
 
-<style scoped>
-.message {
-  font-size: 200%;
-  font-weight: bold;
-  margin: auto;
-}
-</style>
+<style scoped></style>

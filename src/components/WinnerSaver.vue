@@ -3,8 +3,11 @@ import { Candidate, WinnerLog } from "@/myTypes";
 import Papa from "papaparse";
 
 const props = defineProps<{
+  /** 抽選会の名前(保存時に使用) */
   partyName: string;
+  /** 候補者データのヘッダー(保存時に使用) */
   candidateHeader: string[];
+  /** 当選者の記録 */
   winnersLog: WinnerLog<Candidate>[];
 }>();
 
@@ -54,22 +57,6 @@ function saveWinnersLog() {
 </template>
 
 <style scoped>
-.loadingForm {
-  width: 100vw;
-  padding: 1rem 2rem;
-  box-sizing: border-box;
-  flex-shrink: 0;
-}
-.previewWrapper {
-  width: 100vw;
-  height: 100%;
-  overflow-y: hidden;
-  box-sizing: border-box;
-  padding: 0;
-  display: flex;
-  flex-direction: row;
-  flex-shrink: 1;
-}
 .candidatesPreview {
   width: 50vw;
   height: 100%;
