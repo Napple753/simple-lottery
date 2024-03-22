@@ -101,7 +101,10 @@ function updateDisplaySetting(newDisplaySetting: DisplaySetting) {
             v-model="useHeader"
           />CSVファイルの見出し行を利用</label
         >
-        <table>
+        <p v-if="candidatesBody.length > 0">
+          <small>{{ candidatesBody.length }}件のデータを読み込みました！</small>
+        </p>
+        <table class="candidatesTable">
           <tr>
             <th v-for="cell in candidatesHeader">{{ cell }}</th>
           </tr>
@@ -138,6 +141,18 @@ function updateDisplaySetting(newDisplaySetting: DisplaySetting) {
 </template>
 
 <style scoped>
+.candidatesTable {
+  border-collapse: collapse;
+  border: 1px solid lightgray;
+}
+.candidatesTable tr:nth-child(even) {
+  background-color: azure;
+}
+.candidatesTable tr,
+.candidatesTable td,
+.candidatesTable th {
+  border: 1px solid lightgray;
+}
 .candidatesPreview {
   width: 50vw;
   height: 100%;
