@@ -78,11 +78,14 @@ const sampleProgramUrl = computed(
           <template v-if="program.type == 'MESSAGE'">{{
             program.message
           }}</template>
-          <template v-if="program.type == 'PRIZE'"
-            >{{ program.prize_name }} (当選者{{
-              program.winner_number
-            }}人)</template
-          >
+          <template v-if="program.type == 'PRIZE'">
+            <img
+              v-if="program.img"
+              :src="program.img"
+              style="max-height: 2em"
+            />
+            {{ program.prize_name }} (当選者{{ program.winner_number }}人)
+          </template>
           <template v-if="program.type == 'DISPLAY_WINNERS'"
             >(当選者一覧表示)</template
           >
