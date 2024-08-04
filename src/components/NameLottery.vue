@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { ref, Ref } from "vue";
+import { inject, ref, Ref } from "vue";
 import { Candidate, DisplaySetting } from "@/myTypes";
 import { wait } from "@/logic/wait";
-import { loadMusic } from "@/logic/loadMusic";
 import { getDummyList } from "@/logic/getDummyList";
 import CandidateViewer from "@/components/CandidateViewer.vue";
+import { SoundUtilities } from "@/logic/SoundUtilities";
 const emit = defineEmits<{
   (e: "finishDraw"): void;
 }>();
@@ -27,7 +27,7 @@ const isDeciding: Ref<boolean> = ref(false);
 const displayWinner: Ref<Candidate | null> = ref(null);
 const displayCandidates: Ref<Candidate[]> = ref([]);
 
-const decidedMusic = loadMusic(import.meta.env.BASE_URL + "decided.mp3");
+const soundUtilities = inject<SoundUtilities>("soundUtilities");
 
 const uniqueID = ref(Date.now());
 
@@ -77,7 +77,8 @@ async function draw(
     await moveTo(-i * 95, unitTime - 50);
     await wait(50);
   }
-  decidedMusic.play();
+
+  soundUtilities?.playDecided();
   await wait(50);
   isDeciding.value = true;
 

@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { ref, Ref } from "vue";
+import { ref, Ref, inject } from "vue";
 import { Candidate, DisplaySetting, Prize } from "@/myTypes";
 import NameLottery from "@/components/NameLottery.vue";
 const emit = defineEmits<{
   (e: "finishProgram"): void;
 }>();
+import { SoundUtilities } from "@/logic/SoundUtilities";
 
 const props = defineProps<{
   program: Prize;
@@ -15,6 +16,8 @@ const props = defineProps<{
 
 let lotteries: InstanceType<typeof NameLottery>[] = [];
 
+const soundUtilities = inject<SoundUtilities>("soundUtilities");
+
 const lotteryEls = (el: InstanceType<typeof NameLottery>) => {
   lotteries.push(el);
   return "lotteryEls";
@@ -23,6 +26,8 @@ const lotteryEls = (el: InstanceType<typeof NameLottery>) => {
 const status: Ref<"beforeDraw" | "drawing" | "afterDraw"> = ref("beforeDraw");
 
 let decidedCount = 0;
+let rollingSoundSource: AudioBufferSourceNode | undefined;
+
 function draw() {
   decidedCount = 0;
   status.value = "drawing";
@@ -37,11 +42,13 @@ function draw() {
     }
     timing += 2 * 1000;
   });
+  rollingSoundSource = soundUtilities?.playRolling();
 }
 
 function decided() {
   decidedCount++;
   if (decidedCount == props.winners.length) {
+    rollingSoundSource?.stop();
     status.value = "afterDraw";
   }
 }
