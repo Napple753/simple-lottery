@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, Ref } from "vue";
+import { computed, onMounted, ref, Ref, provide } from "vue";
 import ProgramMessage from "@/components/ProgramMessage.vue";
 import ProgramDisplayWinners from "@/components/ProgramDisplayWinners.vue";
 import ProgramPrizes from "@/components/ProgramPrizes.vue";
@@ -7,6 +7,7 @@ import ProgramFinale from "@/components/ProgramFinale.vue";
 import { Candidate, DisplaySetting, PartyPlans, WinnerLog } from "@/myTypes.ts";
 import { LotteryBox } from "@/logic/LotteryBox";
 import { PartyLogControl } from "@/logic/PartyLogControl";
+import { SoundUtilities } from "@/logic/SoundUtilities";
 
 const props = defineProps<{
   /** パーティーID */
@@ -35,6 +36,7 @@ onMounted(() => {
   lotteryBox = new LotteryBox(props.candidates);
   updatePartyLog();
   next();
+  provide("soundUtilities", new SoundUtilities());
 });
 
 /**
