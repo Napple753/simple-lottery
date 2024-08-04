@@ -46,11 +46,13 @@ function loadSampleCSV() {
 }
 function loadCSVText(csvText: string) {
   const rawData = Papa.parse(csvText).data as string[][];
-
-  candidates.value = rawData.map((d, i) => ({
-    id: i,
-    data: d,
-  }));
+  const columns = rawData[0].length;
+  candidates.value = rawData
+    .filter((d) => d.length === columns && d.some((cell) => cell !== ""))
+    .map((d, i) => ({
+      id: i,
+      data: d,
+    }));
 }
 function nextProgram() {
   emit("loadCandidates", {
