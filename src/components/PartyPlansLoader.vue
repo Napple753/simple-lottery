@@ -23,13 +23,9 @@ async function loadJSONCText(jsoncText: string) {
   settings.value = loaded;
 }
 async function loadProgramFile(e: Event) {
-  const inputElement = e.target as any;
-  if (inputElement === null) {
-    return;
-  }
-  const [file] = inputElement.files;
-
-  if (file === null) {
+  const inputElement = e.target as HTMLInputElement;
+  const file = inputElement.files?.[0];
+  if (!file) {
     return;
   }
 
@@ -74,7 +70,7 @@ const sampleProgramUrl = computed(
     <div class="programPreview">
       <p>{{ settings?.program_name }}</p>
       <ul>
-        <li v-for="program in settings?.program">
+        <li v-for="(program, i) in settings?.program" :key="i">
           <template v-if="program.type == 'MESSAGE'">{{
             program.message
           }}</template>

@@ -14,6 +14,7 @@ export interface Prize extends ProgramBase {
   winner_number: number;
 }
 
+// eslint-disable-next-line
 export function isPrize(arg: any): arg is Prize {
   return (
     arg !== null &&
@@ -30,6 +31,8 @@ export interface Message extends ProgramBase {
   type: "MESSAGE";
   message: string;
 }
+
+// eslint-disable-next-line
 export function isMessage(arg: any): arg is Message {
   return (
     arg !== null &&
@@ -42,6 +45,8 @@ export function isMessage(arg: any): arg is Message {
 export interface DisplayWinner extends ProgramBase {
   type: "DISPLAY_WINNERS";
 }
+
+// eslint-disable-next-line
 export function isDisplayWinner(arg: any): arg is DisplayWinner {
   return (
     arg !== null && typeof arg === "object" && arg.type === "DISPLAY_WINNERS"
@@ -50,6 +55,7 @@ export function isDisplayWinner(arg: any): arg is DisplayWinner {
 
 export type Program = Prize | Message | DisplayWinner;
 
+// eslint-disable-next-line
 export function isProgram(arg: any): arg is Program {
   return isPrize(arg) || isMessage(arg) || isDisplayWinner(arg);
 }
@@ -58,13 +64,15 @@ export type PartyPlans = {
   program_name: string;
   program: Program[];
 };
+
+// eslint-disable-next-line
 export function isPartyPlans(arg: any): arg is PartyPlans {
   return (
     arg !== null &&
     typeof arg === "object" &&
     typeof arg.program_name === "string" &&
     Array.isArray(arg.program) &&
-    arg.program.every((p: any) => isProgram(p))
+    arg.program.every((p: unknown) => isProgram(p))
   );
 }
 
@@ -88,6 +96,7 @@ export type PartyLog = {
   startDateTS: number;
 };
 
+// eslint-disable-next-line
 export function isPartyLog(arg: any): arg is PartyPlans {
   return (
     arg !== null &&

@@ -20,7 +20,6 @@ function saveWinnersLog() {
       });
     })
     .flat();
-  console.log(props.candidateHeader);
   const header = [
     "当選賞名",
     "当選時刻",
@@ -37,7 +36,6 @@ function saveWinnersLog() {
     newline: "\r\n",
     skipEmptyLines: false, //other option is 'greedy', meaning skip delimiters, quotes, and whitespace.
   });
-  console.log(csvText);
   const filename = props.partyName + ".csv";
   const bom = new Uint8Array([0xef, 0xbb, 0xbf]);
   const blob = new Blob([bom, csvText], { type: "text/csv" });

@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { WinnerLog, Candidate } from "@/myTypes";
 import WinnerSaver from "@/components/WinnerSaver.vue";
-const emit = defineEmits<{
+
+defineEmits<{
   (e: "finishProgram"): void;
 }>();
 
