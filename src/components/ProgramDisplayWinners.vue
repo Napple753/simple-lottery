@@ -18,11 +18,11 @@ function nextProgram() {
   <div class="program">
     <h1>ここまでの当選者</h1>
     <div class="winners_list">
-      <div v-for="prize in winnersLog" class="prize">
+      <div v-for="(prize, i) in winnersLog" :key="i" class="prize">
         <h2>{{ prize.prizeName }}</h2>
         <table>
-          <tr v-for="winner in prize.selected">
-            <td v-for="cell in winner.data">{{ cell }}</td>
+          <tr v-for="(winner, j) in prize.selected" :key="j">
+            <td v-for="(cell, k) in winner.data" :key="k">{{ cell }}</td>
           </tr>
         </table>
       </div>

@@ -73,7 +73,7 @@ function nextProgram() {
     </div>
 
     <div v-show="status != 'beforeDraw'" class="lotteries">
-      <template v-for="winner in winners">
+      <template v-for="winner in winners" :key="winner.id">
         <NameLottery
           :winner="winner"
           :candidates="candidates"

@@ -15,7 +15,7 @@ const props = defineProps<{
   /** ダミー当選者作成用の候補者 */
   candidates: Candidate[];
   /** ロールの省略 */
-  isSimple?: Boolean;
+  isSimple?: boolean;
   /** 当選者の表示順設定 */
   displaySetting: DisplaySetting;
 }>();

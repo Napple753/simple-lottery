@@ -31,7 +31,7 @@ function updateDisplaySetting() {
       <p class="top_info">
         <select v-model="top_pos" @change="updateDisplaySetting">
           <option value="-1"></option>
-          <option v-for="(item, i) in header" :value="i">
+          <option v-for="(item, i) in header" :key="i" :value="i">
             {{ item }}
           </option>
         </select>

@@ -25,9 +25,9 @@ const displaySetting: Ref<DisplaySetting> = ref({
 });
 
 async function loadCSVFile(e: Event) {
-  const [file] = (e.target as any).files;
-
-  if (file === null) {
+  const inputElement = e.target as HTMLInputElement;
+  const file = inputElement.files?.[0];
+  if (!file) {
     return;
   }
 
@@ -108,10 +108,10 @@ function updateDisplaySetting(newDisplaySetting: DisplaySetting) {
         </p>
         <table class="candidatesTable">
           <tr>
-            <th v-for="cell in candidatesHeader">{{ cell }}</th>
+            <th v-for="(cell, i) in candidatesHeader" :key="i">{{ cell }}</th>
           </tr>
           <tr v-for="candidate in candidatesBody" :key="candidate.id">
-            <td v-for="cell in candidate.data">{{ cell }}</td>
+            <td v-for="(cell, i) in candidate.data" :key="i">{{ cell }}</td>
           </tr>
         </table>
       </div>
