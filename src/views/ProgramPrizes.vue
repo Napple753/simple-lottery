@@ -69,7 +69,7 @@ function nextProgram() {
     </div>
 
     <div v-show="status == 'beforeDraw'" class="button_wrapper">
-      <input type="button" value="抽選スタート" @click="draw" />
+      <input type="button" :value="$t('start-drawing')" @click="draw" />
     </div>
 
     <div v-show="status != 'beforeDraw'" class="lotteries">
@@ -88,7 +88,7 @@ function nextProgram() {
       <input
         v-show="status == 'afterDraw'"
         type="button"
-        value="次へ"
+        :value="$t('next')"
         @click="nextProgram"
       />
     </div>

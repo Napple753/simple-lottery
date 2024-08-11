@@ -16,7 +16,7 @@ function nextProgram() {
 
 <template>
   <div class="program">
-    <h1>ここまでの当選者</h1>
+    <h1>{{ $t("winners-so-far") }}</h1>
     <div class="winners_list">
       <div v-for="(prize, i) in winnersLog" :key="i" class="prize">
         <h2>{{ prize.prizeName }}</h2>
@@ -28,7 +28,7 @@ function nextProgram() {
       </div>
     </div>
     <div class="button_wrapper">
-      <input type="button" value="次へ" @click="nextProgram" />
+      <input type="button" :value="$t('next')" @click="nextProgram" />
     </div>
   </div>
 </template>

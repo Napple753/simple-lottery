@@ -15,7 +15,7 @@ function nextProgram() {
   <div class="program">
     <p class="message">{{ program.message }}</p>
     <div class="button_wrapper">
-      <input type="button" value="次へ" @click="nextProgram" />
+      <input type="button" :value="$t('next')" @click="nextProgram" />
     </div>
   </div>
 </template>

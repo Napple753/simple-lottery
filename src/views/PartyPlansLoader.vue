@@ -52,19 +52,20 @@ const sampleProgramUrl = computed(
 <template>
   <div class="program">
     <div class="loadingForm">
-      <h1>進行プログラムの読み込み</h1>
+      <h1>{{ $t("load-party-plan") }}</h1>
       <p>
         <input type="file" accept=".jsonc,.json" @change="loadProgramFile" />
       </p>
       <p>
-        または<input
+        {{ $t("or-you-can")
+        }}<input
           type="button"
-          value="サンプルを使う"
+          :value="$t('use-sample')"
           @click="loadSampleProgram"
         />
       </p>
       <p>
-        <a :href="sampleProgramUrl" download>サンプルファイルのダウンロード</a>
+        <a :href="sampleProgramUrl" download>{{ $t("download-sample") }}</a>
       </p>
     </div>
     <div class="programPreview">
@@ -80,10 +81,12 @@ const sampleProgramUrl = computed(
               :src="program.img"
               style="max-height: 2em"
             />
-            {{ program.prize_name }} (当選者{{ program.winner_number }}人)
+            {{ program.prize_name }} ({{
+              $t("winner-count", program.winner_number)
+            }})
           </template>
           <template v-if="program.type == 'DISPLAY_WINNERS'"
-            >(当選者一覧表示)</template
+            >({{ $t("list-up-winners") }})</template
           >
         </li>
       </ul>
@@ -91,7 +94,7 @@ const sampleProgramUrl = computed(
     <div class="button_wrapper">
       <input
         type="button"
-        value="次へ"
+        :value="$t('next')"
         @click="nextProgram"
         v-show="settings !== null"
       />

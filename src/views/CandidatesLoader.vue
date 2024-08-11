@@ -85,12 +85,13 @@ function updateDisplaySetting(newDisplaySetting: DisplaySetting) {
 <template>
   <div class="program">
     <div class="loadingForm">
-      <h1>抽選対象の読み込み</h1>
+      <h1>{{ $t("load-candidate-list") }}</h1>
       <p><input type="file" accept=".csv" @change="loadCSVFile" /></p>
       <p>
-        または<input
+        {{ $t("or-you-can")
+        }}<input
           type="button"
-          value="サンプルを使う"
+          :value="$t('use-sample')"
           @click="loadSampleCSV"
         />
       </p>
@@ -98,13 +99,12 @@ function updateDisplaySetting(newDisplaySetting: DisplaySetting) {
     <div class="previewWrapper">
       <div class="candidatesPreview">
         <label
-          ><input
-            type="checkbox"
-            v-model="useHeader"
-          />CSVファイルの見出し行を利用</label
+          ><input type="checkbox" v-model="useHeader" />{{
+            $t("use-csv-header")
+          }}</label
         >
         <p v-if="candidatesBody.length > 0">
-          <small>{{ candidatesBody.length }}件のデータを読み込みました！</small>
+          <small>{{ $t("n-loaded", candidatesBody.length) }}</small>
         </p>
         <table class="candidatesTable">
           <tr>
@@ -117,13 +117,13 @@ function updateDisplaySetting(newDisplaySetting: DisplaySetting) {
       </div>
       <div class="displayPreview">
         <template v-if="candidatesBody && candidatesBody[0]">
-          <p>表示順</p>
+          <p>{{ $t("display-order") }}</p>
           <CandidateViewSetting
             :header="candidatesHeader"
             :display-setting="displaySetting"
             @change-setting="updateDisplaySetting"
           ></CandidateViewSetting>
-          <p>表示サンプル</p>
+          <p>{{ $t("display-sample") }}</p>
           <CandidateViewer
             :candidate="candidatesBody[0]"
             :display-setting="displaySetting"
@@ -134,7 +134,7 @@ function updateDisplaySetting(newDisplaySetting: DisplaySetting) {
     <div class="button_wrapper">
       <input
         type="button"
-        value="次へ"
+        :value="$t('next')"
         @click="nextProgram"
         v-show="candidates.length > 1"
       />

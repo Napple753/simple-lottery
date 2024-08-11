@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { Candidate, WinnerLog } from "@/myTypes";
 import Papa from "papaparse";
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 
 const props = defineProps<{
   /** 抽選会の名前(保存時に使用) */
@@ -21,9 +23,9 @@ function saveWinnersLog() {
     })
     .flat();
   const header = [
-    "当選賞名",
-    "当選時刻",
-    "キャンセル済み",
+    t("prize-won"),
+    t("winning-datetime"),
+    t("is-cancelled"),
     ...props.candidateHeader,
   ];
   data.splice(0, 0, header);
@@ -51,7 +53,11 @@ function saveWinnersLog() {
 </script>
 
 <template>
-  <input type="button" value="当選者をCSVで保存" @click="saveWinnersLog" />
+  <input
+    type="button"
+    :value="$t('save-winners-csv')"
+    @click="saveWinnersLog"
+  />
 </template>
 
 <style scoped>

@@ -16,7 +16,8 @@
     "encoding-japanese": "^2.0.0",
     "jsonc-parser": "^3.3.1",
     "papaparse": "^5.4.1",
-    "vue": "^3.4.37"
+    "vue": "^3.4.37",
+    "vue-i18n": "^9.13.1"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.0",
