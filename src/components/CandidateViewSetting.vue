@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { DisplaySetting } from "@/myTypes";
 
 const emit = defineEmits<{
@@ -13,8 +13,18 @@ const props = defineProps<{
 }>();
 
 const top_pos = ref(props.displaySetting.top_pos);
+watch(top_pos, () => updateDisplaySetting());
 const main_pos = ref(props.displaySetting.main_pos);
+watch(main_pos, () => updateDisplaySetting());
 const bottom_pos = ref(props.displaySetting.bottom_pos);
+watch(bottom_pos, () => updateDisplaySetting());
+
+const headerPositions = computed(() => {
+  return props.header.map((header, i) => ({
+    title: header,
+    value: i,
+  }));
+});
 
 function updateDisplaySetting() {
   emit("changeSetting", {
@@ -29,28 +39,37 @@ function updateDisplaySetting() {
   <div class="candidate_wrapper">
     <div class="candidate">
       <p class="top_info">
-        <select v-model="top_pos" @change="updateDisplaySetting">
-          <option value="-1"></option>
-          <option v-for="(item, i) in header" :key="i" :value="i">
-            {{ item }}
-          </option>
-        </select>
+        <v-select
+          clearable
+          density="compact"
+          v-model="top_pos"
+          label=""
+          :items="headerPositions"
+          item-title="title"
+          item-value="value"
+        ></v-select>
       </p>
       <p class="main_info">
-        <select v-model="main_pos" @change="updateDisplaySetting">
-          <option value="-1"></option>
-          <option v-for="(item, i) in header" v-bind:value="i" v-bind:key="i">
-            {{ item }}
-          </option>
-        </select>
+        <v-select
+          clearable
+          density="compact"
+          v-model="main_pos"
+          label=""
+          :items="headerPositions"
+          item-title="title"
+          item-value="value"
+        ></v-select>
       </p>
       <p class="bottom_info">
-        <select v-model="bottom_pos" @change="updateDisplaySetting">
-          <option value="-1"></option>
-          <option v-for="(item, i) in header" v-bind:value="i" v-bind:key="i">
-            {{ item }}
-          </option>
-        </select>
+        <v-select
+          clearable
+          density="compact"
+          v-model="bottom_pos"
+          label=""
+          :items="headerPositions"
+          item-title="title"
+          item-value="value"
+        ></v-select>
       </p>
     </div>
   </div>
@@ -79,6 +98,7 @@ function updateDisplaySetting() {
   flex-shrink: 0;
 }
 .candidate p {
+  width: 100%;
   margin: 0;
   padding: 0;
   user-select: all;

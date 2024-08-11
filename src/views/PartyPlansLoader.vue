@@ -3,13 +3,17 @@ import { computed, ref, Ref } from "vue";
 import { PartyPlans, isPartyPlans } from "@/myTypes";
 import { readAnyEncoding } from "@/logic/readAnyEncoding";
 import { parse as JSONCParse } from "jsonc-parser";
+import { VFileInput } from "vuetify/components";
 
 const emit = defineEmits<{
   (e: "loadSettings", settings: PartyPlans): void;
 }>();
 const settings: Ref<PartyPlans | null> = ref(null);
+const partyPlanFile: Ref<File | File[] | null | undefined> = ref(null);
 
 function loadSampleProgram() {
+  partyPlanFile.value = null;
+
   fetch(sampleProgramUrl.value)
     .then((res) => res.text())
     .then((res) => loadJSONCText(res));
@@ -44,6 +48,13 @@ function nextProgram() {
   emit("loadSettings", settings.value);
 }
 
+function downloadSample() {
+  const link = document.createElement("a");
+  link.download = "sample_setting.jsonc";
+  link.href = sampleProgramUrl.value;
+  link.click();
+}
+
 const sampleProgramUrl = computed(
   () => import.meta.env.BASE_URL + "sample_setting.jsonc",
 );
@@ -51,22 +62,41 @@ const sampleProgramUrl = computed(
 
 <template>
   <div class="program">
+    <v-row style="height: 48px" justify="space-between" class="w-75">
+      <v-col cols="auto">
+        <v-avatar color="black" size="24">1</v-avatar>
+        {{ $t("load-party-plan") }}
+      </v-col>
+      <v-spacer></v-spacer>
+      <v-col cols="auto" style="opacity: 0.5">
+        <v-avatar color="black" size="24">2</v-avatar>
+        {{ $t("load-candidate-list") }}
+      </v-col>
+      <v-spacer></v-spacer>
+      <v-col cols="auto" style="opacity: 0.5">
+        <v-avatar color="black" size="24">3</v-avatar>
+        {{ $t("execute-drawing") }}
+      </v-col>
+    </v-row>
     <div class="loadingForm">
-      <h1>{{ $t("load-party-plan") }}</h1>
-      <p>
-        <input type="file" accept=".jsonc,.json" @change="loadProgramFile" />
-      </p>
-      <p>
-        {{ $t("or-you-can")
-        }}<input
-          type="button"
-          :value="$t('use-sample')"
-          @click="loadSampleProgram"
-        />
-      </p>
-      <p>
-        <a :href="sampleProgramUrl" download>{{ $t("download-sample") }}</a>
-      </p>
+      <v-file-input
+        :label="$t('party-plan-file')"
+        accept=".jsonc,.json"
+        v-model="partyPlanFile"
+        @change="loadProgramFile"
+        ref="inputPartyPlan"
+      ></v-file-input>
+      <v-row justify="start">
+        <v-col cols="auto">{{ $t("or-you-can") }}</v-col>
+        <v-col cols="auto">
+          <v-btn @click="loadSampleProgram">{{ $t("use-sample") }}</v-btn>
+        </v-col>
+      </v-row>
+      <v-row justify="end">
+        <v-col cols="auto">
+          <v-btn @click="downloadSample">{{ $t("download-sample") }}</v-btn>
+        </v-col>
+      </v-row>
     </div>
     <div class="programPreview">
       <p>{{ settings?.program_name }}</p>
@@ -92,12 +122,9 @@ const sampleProgramUrl = computed(
       </ul>
     </div>
     <div class="button_wrapper">
-      <input
-        type="button"
-        :value="$t('next')"
-        @click="nextProgram"
-        v-show="settings !== null"
-      />
+      <v-btn @click="nextProgram" v-show="settings !== null">{{
+        $t("next")
+      }}</v-btn>
     </div>
   </div>
 </template>

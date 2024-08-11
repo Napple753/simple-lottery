@@ -53,11 +53,7 @@ function saveWinnersLog() {
 </script>
 
 <template>
-  <input
-    type="button"
-    :value="$t('save-winners-csv')"
-    @click="saveWinnersLog"
-  />
+  <v-btn @click="saveWinnersLog">{{ $t("save-winners-csv") }}</v-btn>
 </template>
 
 <style scoped>

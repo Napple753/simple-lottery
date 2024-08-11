@@ -1,13 +1,16 @@
 export const en = {
   "app-name": "Simple Lottery",
   "load-party-plan": "Load Party Plan",
+  "load-candidate-list": "Load candidate list",
+  "execute-drawing": "Execute drawing",
+  "party-plan-file": "Party Plan file(.json/.jsonc)",
   "or-you-can": "Or you can ",
   "use-sample": "use sample file",
   "download-sample": "download sample file",
+  "candidate-list-file": "Candidate list file(.csv)",
   "winner-count": "0 winners | 1 winner | {count} winners",
   "list-up-winners": "List up winners",
   next: "Next",
-  "load-candidate-list": "Load candidate list",
   "use-csv-header": "Use CSV header",
   "n-loaded": "{count} loaded",
   "display-order": "Display order",
@@ -18,7 +21,7 @@ export const en = {
   "winning-datetime": "Winning datetime",
   "is-cancelled": "is cancelled",
   end: "End",
-  "another-party": "Another party",
+  "another-party": "Reset and draw for another party",
   "save-winners-csv": "Save winners CSV",
 };
 

@@ -26,7 +26,7 @@ function nextProgram() {
     ></WinnerSaver>
     <p class="message">{{ $t("end") }}</p>
     <div class="button_wrapper">
-      <input type="button" :value="$t('another-party')" @click="nextProgram" />
+      <v-btn @click="nextProgram">{{ $t("another-party") }}</v-btn>
     </div>
   </div>
 </template>

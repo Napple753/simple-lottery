@@ -28,7 +28,7 @@ function nextProgram() {
       </div>
     </div>
     <div class="button_wrapper">
-      <input type="button" :value="$t('next')" @click="nextProgram" />
+      <v-btn @click="nextProgram">{{ $t("next") }}</v-btn>
     </div>
   </div>
 </template>

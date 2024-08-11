@@ -17,6 +17,7 @@ const emit = defineEmits<{
   ): void;
 }>();
 
+const CandidateFile: Ref<File | File[] | null | undefined> = ref(null);
 const candidates: Ref<Candidate[]> = ref([]);
 const displaySetting: Ref<DisplaySetting> = ref({
   top_pos: 0,
@@ -40,6 +41,7 @@ async function loadCSVFile(e: Event) {
   reader.readAsArrayBuffer(file);
 }
 function loadSampleCSV() {
+  CandidateFile.value = null;
   fetch(import.meta.env.BASE_URL + "sample.csv")
     .then((res) => res.text())
     .then((res) => loadCSVText(res));
@@ -84,17 +86,35 @@ function updateDisplaySetting(newDisplaySetting: DisplaySetting) {
 
 <template>
   <div class="program">
+    <v-row style="height: 48px" justify="space-between" class="w-75">
+      <v-col cols="auto" style="opacity: 0.5">
+        <v-avatar color="black" size="24">1</v-avatar>
+        {{ $t("load-party-plan") }}
+      </v-col>
+      <v-spacer></v-spacer>
+      <v-col cols="auto">
+        <v-avatar color="black" size="24">2</v-avatar>
+        {{ $t("load-candidate-list") }}
+      </v-col>
+      <v-spacer></v-spacer>
+      <v-col cols="auto" style="opacity: 0.5">
+        <v-avatar color="black" size="24">3</v-avatar>
+        {{ $t("execute-drawing") }}
+      </v-col>
+    </v-row>
     <div class="loadingForm">
-      <h1>{{ $t("load-candidate-list") }}</h1>
-      <p><input type="file" accept=".csv" @change="loadCSVFile" /></p>
-      <p>
-        {{ $t("or-you-can")
-        }}<input
-          type="button"
-          :value="$t('use-sample')"
-          @click="loadSampleCSV"
-        />
-      </p>
+      <v-file-input
+        :label="$t('candidate-list-file')"
+        v-model="CandidateFile"
+        accept=".csv"
+        @change="loadCSVFile"
+      ></v-file-input>
+      <v-row justify="start">
+        <v-col cols="auto">{{ $t("or-you-can") }}</v-col>
+        <v-col cols="auto">
+          <v-btn @click="loadSampleCSV">{{ $t("use-sample") }}</v-btn>
+        </v-col>
+      </v-row>
     </div>
     <div class="previewWrapper">
       <div class="candidatesPreview">
@@ -132,12 +152,9 @@ function updateDisplaySetting(newDisplaySetting: DisplaySetting) {
       </div>
     </div>
     <div class="button_wrapper">
-      <input
-        type="button"
-        :value="$t('next')"
-        @click="nextProgram"
-        v-show="candidates.length > 1"
-      />
+      <v-btn @click="nextProgram" v-show="candidates.length > 1">{{
+        $t("next")
+      }}</v-btn>
     </div>
   </div>
 </template>
