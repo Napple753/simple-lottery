@@ -26,6 +26,16 @@ const headerPositions = computed(() => {
   }));
 });
 
+watch(
+  () => props.displaySetting,
+  (newSetting) => {
+    top_pos.value = newSetting.top_pos;
+    main_pos.value = newSetting.main_pos;
+    bottom_pos.value = newSetting.bottom_pos;
+  },
+  { deep: true },
+);
+
 function updateDisplaySetting() {
   emit("changeSetting", {
     top_pos: top_pos.value,

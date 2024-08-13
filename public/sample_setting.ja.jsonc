@@ -1,43 +1,43 @@
 {
-    "program_name":"Lottery Party 20xx",
+    "program_name":"春の抽選会20xx",
     "program":[
         {
             "type":"MESSAGE",
-            "message":"We'll be starting soon. Thank you for your patience."
+            "message":"抽選会開始までしばらくお待ち下さい"
         },
         {
             "type":"PRIZE",
-            "prize_name":"Lucky Prize",
-            "img":"https://napple753.github.io/simple-lottery/img/present_box.png",//image to display
-            "winner_number":3
+            "prize_name":"運がいいで賞",//賞の名前
+            "img":"https://napple753.github.io/simple-lottery/img/present_box.png",//表示する画像
+            "winner_number":3//最大人数
         },
         {
             "type":"PRIZE",
-            "prize_name":"Very Lucky Prize",
+            "prize_name":"すごく運がいいで賞",
             "img":"https://napple753.github.io/simple-lottery/img/kaden_soujiki_cordless_stick.png",
             "winner_number":2
         },
         {
-            "type":"DISPLAY_WINNERS"
+            "type":"DISPLAY_WINNERS" //当選者表示
         },
         {
             "type":"PRIZE",
-            "prize_name":"The Lickiest Prize",
+            "prize_name":"一番運がいいで賞",
             "img":"https://napple753.github.io/simple-lottery/img/kaden_reizouko.png",
             "winner_number":1
         },
         {
             "type":"PRIZE",
-            "prize_name":"A Little Lucky Prize",
+            "prize_name":"ちょっと運がいいで賞",
             "img":"https://napple753.github.io/simple-lottery/img/pocket_tissue.png",
             "winner_number":10
         },
         {
-            "type":"DISPLAY_WINNERS"
+            "type":"DISPLAY_WINNERS" //当選者表示
         },
         {
             "type":"MESSAGE",
-            "message":"Thank you for taking the time to join us."
+            "message":"抽選会へのご参加ありがとうございました。"
         }
     ]
 }

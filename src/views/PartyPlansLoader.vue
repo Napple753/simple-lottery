@@ -4,6 +4,8 @@ import { PartyPlans, isPartyPlans } from "@/myTypes";
 import { readAnyEncoding } from "@/logic/readAnyEncoding";
 import { parse as JSONCParse } from "jsonc-parser";
 import { VFileInput } from "vuetify/components";
+import { useI18n } from "vue-i18n";
+const { locale } = useI18n();
 
 const emit = defineEmits<{
   (e: "loadSettings", settings: PartyPlans): void;
@@ -50,14 +52,18 @@ function nextProgram() {
 
 function downloadSample() {
   const link = document.createElement("a");
-  link.download = "sample_setting.jsonc";
+  link.download = "sample_setting.jsonc"; //filename for download dialog
   link.href = sampleProgramUrl.value;
   link.click();
 }
 
-const sampleProgramUrl = computed(
-  () => import.meta.env.BASE_URL + "sample_setting.jsonc",
-);
+const sampleProgramUrl = computed(() => {
+  if (locale.value === "ja") {
+    return import.meta.env.BASE_URL + "sample_setting.ja.jsonc";
+  } else {
+    return import.meta.env.BASE_URL + "sample_setting.jsonc";
+  }
+});
 </script>
 
 <template>

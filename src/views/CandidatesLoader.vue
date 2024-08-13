@@ -5,6 +5,8 @@ import { readAnyEncoding } from "@/logic/readAnyEncoding";
 import CandidateViewer from "@/components/CandidateViewer.vue";
 import CandidateViewSetting from "@/components/CandidateViewSetting.vue";
 import Papa from "papaparse";
+import { useI18n } from "vue-i18n";
+const { locale } = useI18n();
 
 const emit = defineEmits<{
   (
@@ -20,9 +22,9 @@ const emit = defineEmits<{
 const CandidateFile: Ref<File | File[] | null | undefined> = ref(null);
 const candidates: Ref<Candidate[]> = ref([]);
 const displaySetting: Ref<DisplaySetting> = ref({
-  top_pos: 0,
-  main_pos: 1,
-  bottom_pos: 2,
+  top_pos: null,
+  main_pos: null,
+  bottom_pos: null,
 });
 
 async function loadCSVFile(e: Event) {
@@ -42,10 +44,17 @@ async function loadCSVFile(e: Event) {
 }
 function loadSampleCSV() {
   CandidateFile.value = null;
-  fetch(import.meta.env.BASE_URL + "sample.csv")
+  fetch(sampleCSVUrl.value)
     .then((res) => res.text())
     .then((res) => loadCSVText(res));
 }
+const sampleCSVUrl = computed(() => {
+  if (locale.value === "ja") {
+    return import.meta.env.BASE_URL + "sample.ja.csv";
+  } else {
+    return import.meta.env.BASE_URL + "sample.csv";
+  }
+});
 function loadCSVText(csvText: string) {
   const rawData = Papa.parse(csvText).data as string[][];
   const columns = rawData[0].length;
@@ -55,6 +64,12 @@ function loadCSVText(csvText: string) {
       id: i,
       data: d,
     }));
+
+  displaySetting.value = {
+    top_pos: 0 >= columns ? null : 0,
+    main_pos: 1 >= columns ? null : 1,
+    bottom_pos: 2 >= columns ? null : 2,
+  };
 }
 function nextProgram() {
   emit("loadCandidates", {
