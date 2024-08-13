@@ -174,7 +174,7 @@ function updateDisplaySetting(newDisplaySetting: DisplaySetting) {
   </div>
 </template>
 
-<style scoped>
+<style>
 .candidatesTable {
   border-collapse: collapse;
   border: 1px solid lightgray;

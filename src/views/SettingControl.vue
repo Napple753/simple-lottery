@@ -1,0 +1,122 @@
+<script setup lang="ts">
+import { computed, ref, Ref } from "vue";
+import SelectSavedParties from "./SelectSavedParties.vue";
+import PartyPlansLoader from "./PartyPlansLoader.vue";
+import CandidatesLoader from "./CandidatesLoader.vue";
+import LanguageSwitch from "@/components/LanguageSwitch.vue";
+import { Candidate, DisplaySetting } from "@/myTypes.ts";
+import { PartyPlans } from "@/Schema";
+
+const partyId: Ref<string | null> = ref(null);
+const partyPlans: Ref<PartyPlans | null> = ref(null);
+const candidateHeader: Ref<string[] | null> = ref(null);
+const candidates: Ref<Candidate[] | null> = ref(null);
+const displaySetting: Ref<DisplaySetting | null> = ref(null);
+
+const isLoadSetting = computed(() => partyId.value && !partyPlans.value);
+const isLoadCandidates = computed(() => partyPlans.value && !candidates.value);
+
+const emit = defineEmits<{
+  (
+    e: "startParty",
+    settings: {
+      partyId: string;
+      partyPlans: PartyPlans;
+      candidateHeader: string[];
+      candidates: Candidate[];
+      displaySetting: DisplaySetting;
+    },
+  ): void;
+}>();
+
+function initializeParty(inPartyId: string | null) {
+  if (inPartyId === null) {
+    partyId.value = self.crypto.randomUUID();
+  } else {
+    partyId.value = inPartyId;
+  }
+}
+
+function loadSetting(arg: PartyPlans) {
+  partyPlans.value = arg;
+  window.document.title = partyPlans.value.program_name;
+}
+
+function setCandidates(arg: {
+  candidatesHeader: string[];
+  candidates: Candidate[];
+  displaySetting: DisplaySetting;
+}) {
+  candidateHeader.value = arg.candidatesHeader;
+  displaySetting.value = arg.displaySetting;
+  candidates.value = arg.candidates;
+
+  startParty();
+}
+
+function startParty() {
+  if (
+    partyId.value &&
+    partyPlans.value &&
+    candidateHeader.value &&
+    candidates.value &&
+    displaySetting.value
+  ) {
+    emit("startParty", {
+      partyId: partyId.value,
+      partyPlans: partyPlans.value,
+      candidateHeader: candidateHeader.value,
+      candidates: candidates.value,
+      displaySetting: displaySetting.value,
+    });
+  }
+}
+</script>
+
+<template>
+  <header>
+    <h1 style="width: 100%">{{ $t("app-name") }}</h1>
+    <language-switch />
+  </header>
+  <SelectSavedParties
+    v-if="!partyId"
+    @select-party="initializeParty"
+  ></SelectSavedParties>
+  <PartyPlansLoader
+    v-if="isLoadSetting"
+    @load-settings="loadSetting"
+  ></PartyPlansLoader>
+  <CandidatesLoader
+    v-if="isLoadCandidates"
+    @load-candidates="setCandidates"
+  ></CandidatesLoader>
+</template>
+
+<style>
+header {
+  height: 48px;
+  width: 100%;
+  display: flex;
+}
+header h1 {
+  text-align: center;
+  font-size: 30px;
+}
+.programPreview {
+  width: 100vw;
+  height: 100%;
+  overflow-y: scroll;
+  box-sizing: border-box;
+  padding: 1rem 2rem;
+}
+.previewWrapper {
+  width: 100vw;
+  height: 100%;
+  overflow-y: hidden;
+  box-sizing: border-box;
+  padding: 0;
+  display: flex;
+  flex-direction: row;
+  flex-shrink: 1;
+}
+</style>
