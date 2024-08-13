@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, Ref, provide } from "vue";
-import ProgramMessage from "@/components/ProgramMessage.vue";
-import ProgramDisplayWinners from "@/components/ProgramDisplayWinners.vue";
-import ProgramPrizes from "@/components/ProgramPrizes.vue";
-import ProgramFinale from "@/components/ProgramFinale.vue";
+import ProgramMessage from "@/views/ProgramMessage.vue";
+import ProgramDisplayWinners from "@/views/ProgramDisplayWinners.vue";
+import ProgramPrizes from "@/views/ProgramPrizes.vue";
+import ProgramFinale from "@/views/ProgramFinale.vue";
 import { Candidate, DisplaySetting, PartyPlans, WinnerLog } from "@/myTypes.ts";
 import { LotteryBox } from "@/logic/LotteryBox";
 import { PartyLogControl } from "@/logic/PartyLogControl";

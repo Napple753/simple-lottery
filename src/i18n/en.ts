@@ -1,0 +1,28 @@
+export const en = {
+  "app-name": "Simple Lottery",
+  "load-party-plan": "Load Party Plan",
+  "load-candidate-list": "Load candidate list",
+  "execute-drawing": "Execute drawing",
+  "party-plan-file": "Party Plan file(.json/.jsonc)",
+  "or-you-can": "Or you can ",
+  "use-sample": "use sample file",
+  "download-sample": "download sample file",
+  "candidate-list-file": "Candidate list file(.csv)",
+  "winner-count": "0 winners | 1 winner | {count} winners",
+  "list-up-winners": "List up winners",
+  next: "Next",
+  "use-csv-header": "Use CSV header",
+  "n-loaded": "{count} loaded",
+  "display-order": "Display order",
+  "display-sample": "Display sample",
+  "start-drawing": "Start drawing",
+  "winners-so-far": "Winners so far",
+  "prize-won": "Prize won",
+  "winning-datetime": "Winning datetime",
+  "is-cancelled": "is cancelled",
+  end: "End",
+  "another-party": "Reset and draw for another party",
+  "save-winners-csv": "Save winners CSV",
+};
+
+export type message_list = Partial<typeof en>;

@@ -24,9 +24,9 @@ function nextProgram() {
       :winners-log="winnersLog"
       :candidate-header="candidateHeader"
     ></WinnerSaver>
-    <p class="message">終了</p>
+    <p class="message">{{ $t("end") }}</p>
     <div class="button_wrapper">
-      <input type="button" value="もう一度" @click="nextProgram" />
+      <v-btn @click="nextProgram">{{ $t("another-party") }}</v-btn>
     </div>
   </div>
 </template>

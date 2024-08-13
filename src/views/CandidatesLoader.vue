@@ -5,6 +5,8 @@ import { readAnyEncoding } from "@/logic/readAnyEncoding";
 import CandidateViewer from "@/components/CandidateViewer.vue";
 import CandidateViewSetting from "@/components/CandidateViewSetting.vue";
 import Papa from "papaparse";
+import { useI18n } from "vue-i18n";
+const { locale } = useI18n();
 
 const emit = defineEmits<{
   (
@@ -17,11 +19,12 @@ const emit = defineEmits<{
   ): void;
 }>();
 
+const CandidateFile: Ref<File | File[] | null | undefined> = ref(null);
 const candidates: Ref<Candidate[]> = ref([]);
 const displaySetting: Ref<DisplaySetting> = ref({
-  top_pos: 0,
-  main_pos: 1,
-  bottom_pos: 2,
+  top_pos: null,
+  main_pos: null,
+  bottom_pos: null,
 });
 
 async function loadCSVFile(e: Event) {
@@ -40,10 +43,18 @@ async function loadCSVFile(e: Event) {
   reader.readAsArrayBuffer(file);
 }
 function loadSampleCSV() {
-  fetch(import.meta.env.BASE_URL + "sample.csv")
+  CandidateFile.value = null;
+  fetch(sampleCSVUrl.value)
     .then((res) => res.text())
     .then((res) => loadCSVText(res));
 }
+const sampleCSVUrl = computed(() => {
+  if (locale.value === "ja") {
+    return import.meta.env.BASE_URL + "sample.ja.csv";
+  } else {
+    return import.meta.env.BASE_URL + "sample.csv";
+  }
+});
 function loadCSVText(csvText: string) {
   const rawData = Papa.parse(csvText).data as string[][];
   const columns = rawData[0].length;
@@ -53,6 +64,12 @@ function loadCSVText(csvText: string) {
       id: i,
       data: d,
     }));
+
+  displaySetting.value = {
+    top_pos: 0 >= columns ? null : 0,
+    main_pos: 1 >= columns ? null : 1,
+    bottom_pos: 2 >= columns ? null : 2,
+  };
 }
 function nextProgram() {
   emit("loadCandidates", {
@@ -84,27 +101,45 @@ function updateDisplaySetting(newDisplaySetting: DisplaySetting) {
 
 <template>
   <div class="program">
+    <v-row style="height: 48px" justify="space-between" class="w-75">
+      <v-col cols="auto" style="opacity: 0.5">
+        <v-avatar color="black" size="24">1</v-avatar>
+        {{ $t("load-party-plan") }}
+      </v-col>
+      <v-spacer></v-spacer>
+      <v-col cols="auto">
+        <v-avatar color="black" size="24">2</v-avatar>
+        {{ $t("load-candidate-list") }}
+      </v-col>
+      <v-spacer></v-spacer>
+      <v-col cols="auto" style="opacity: 0.5">
+        <v-avatar color="black" size="24">3</v-avatar>
+        {{ $t("execute-drawing") }}
+      </v-col>
+    </v-row>
     <div class="loadingForm">
-      <h1>抽選対象の読み込み</h1>
-      <p><input type="file" accept=".csv" @change="loadCSVFile" /></p>
-      <p>
-        または<input
-          type="button"
-          value="サンプルを使う"
-          @click="loadSampleCSV"
-        />
-      </p>
+      <v-file-input
+        :label="$t('candidate-list-file')"
+        v-model="CandidateFile"
+        accept=".csv"
+        @change="loadCSVFile"
+      ></v-file-input>
+      <v-row justify="start">
+        <v-col cols="auto">{{ $t("or-you-can") }}</v-col>
+        <v-col cols="auto">
+          <v-btn @click="loadSampleCSV">{{ $t("use-sample") }}</v-btn>
+        </v-col>
+      </v-row>
     </div>
     <div class="previewWrapper">
       <div class="candidatesPreview">
         <label
-          ><input
-            type="checkbox"
-            v-model="useHeader"
-          />CSVファイルの見出し行を利用</label
+          ><input type="checkbox" v-model="useHeader" />{{
+            $t("use-csv-header")
+          }}</label
         >
         <p v-if="candidatesBody.length > 0">
-          <small>{{ candidatesBody.length }}件のデータを読み込みました！</small>
+          <small>{{ $t("n-loaded", candidatesBody.length) }}</small>
         </p>
         <table class="candidatesTable">
           <tr>
@@ -117,13 +152,13 @@ function updateDisplaySetting(newDisplaySetting: DisplaySetting) {
       </div>
       <div class="displayPreview">
         <template v-if="candidatesBody && candidatesBody[0]">
-          <p>表示順</p>
+          <p>{{ $t("display-order") }}</p>
           <CandidateViewSetting
             :header="candidatesHeader"
             :display-setting="displaySetting"
             @change-setting="updateDisplaySetting"
           ></CandidateViewSetting>
-          <p>表示サンプル</p>
+          <p>{{ $t("display-sample") }}</p>
           <CandidateViewer
             :candidate="candidatesBody[0]"
             :display-setting="displaySetting"
@@ -132,12 +167,9 @@ function updateDisplaySetting(newDisplaySetting: DisplaySetting) {
       </div>
     </div>
     <div class="button_wrapper">
-      <input
-        type="button"
-        value="次へ"
-        @click="nextProgram"
-        v-show="candidates.length > 1"
-      />
+      <v-btn @click="nextProgram" v-show="candidates.length > 1">{{
+        $t("next")
+      }}</v-btn>
     </div>
   </div>
 </template>

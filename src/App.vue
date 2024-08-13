@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { ref, Ref } from "vue";
-import SelectSavedParties from "@/components/SelectSavedParties.vue";
-import CandidatesLoader from "@/components/CandidatesLoader.vue";
-import PartyPlansLoader from "@/components/PartyPlansLoader.vue";
-import PartyControl from "@/components/PartyControl.vue";
+import { computed, ref, Ref } from "vue";
+import SelectSavedParties from "@/views/SelectSavedParties.vue";
+import CandidatesLoader from "@/views/CandidatesLoader.vue";
+import PartyPlansLoader from "@/views/PartyPlansLoader.vue";
+import PartyControl from "@/views/PartyControl.vue";
+import LanguageSwitch from "./components/LanguageSwitch.vue";
 import { Candidate, DisplaySetting, PartyPlans } from "@/myTypes.ts";
 
 const partyId: Ref<string | null> = ref(null);
@@ -34,30 +35,58 @@ function setCandidates(arg: {
   displaySetting.value = arg.displaySetting;
   candidates.value = arg.candidates;
 }
+
+const isLoadSetting = computed(() => partyId.value && !partyPlans.value);
+const isLoadCandidates = computed(() => partyPlans.value && !candidates.value);
+const isHoldingParty = computed(
+  () =>
+    partyId.value !== null &&
+    partyPlans.value !== null &&
+    candidateHeader.value !== null &&
+    candidates.value !== null &&
+    displaySetting.value !== null,
+);
+
+function scrollControl() {
+  if (window.innerHeight < 480) {
+    document.body.style.overflowY = "scroll";
+  } else {
+    document.body.style.overflowY = "hidden";
+  }
+  if (window.innerWidth < 960) {
+    document.body.style.overflowX = "scroll";
+  } else {
+    document.body.style.overflowX = "hidden";
+  }
+}
+scrollControl();
+window.addEventListener("resize", scrollControl);
 </script>
 
 <template>
+  <header v-show="!isHoldingParty">
+    <h1 style="width: 100%">{{ $t("app-name") }}</h1>
+    <language-switch />
+  </header>
   <SelectSavedParties
     v-if="!partyId"
     @select-party="initializeParty"
   ></SelectSavedParties>
   <PartyPlansLoader
-    v-if="partyId && !partyPlans"
+    v-if="isLoadSetting"
     @load-settings="loadSetting"
   ></PartyPlansLoader>
   <CandidatesLoader
-    v-if="partyPlans && !candidates"
+    v-if="isLoadCandidates"
     @load-candidates="setCandidates"
   ></CandidatesLoader>
   <PartyControl
-    v-if="
-      partyId && partyPlans && candidateHeader && candidates && displaySetting
-    "
-    :party-id="partyId"
-    :candidate-header="candidateHeader"
-    :candidates="candidates"
-    :party-plans="partyPlans"
-    :display-setting="displaySetting"
+    v-if="isHoldingParty"
+    :party-id="partyId!"
+    :candidate-header="candidateHeader!"
+    :candidates="candidates!"
+    :party-plans="partyPlans!"
+    :display-setting="displaySetting!"
   ></PartyControl>
 </template>
 
@@ -67,9 +96,16 @@ body,
 #app {
   height: 100%;
   width: 100%;
+  overflow: hidden;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+#app {
+  min-width: 960px;
+  min-height: 480px;
+  display: flex;
+  flex-direction: column;
 }
 body {
   padding: 1px;
@@ -86,6 +122,9 @@ h1 {
   padding: 1rem 2rem;
   box-sizing: border-box;
   align-items: center;
+
+  flex-shrink: 1;
+  overflow: hidden;
 }
 
 .button_wrapper {
@@ -122,5 +161,14 @@ h1 {
   font-size: 200%;
   font-weight: bold;
   margin: auto;
+}
+
+header {
+  height: 48px;
+  width: 100%;
+  display: flex;
+}
+header h1 {
+  font-size: 30px;
 }
 </style>

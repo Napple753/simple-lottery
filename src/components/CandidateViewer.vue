@@ -48,13 +48,25 @@ onMounted(() => {
   <div class="candidate_wrapper">
     <div class="candidate" ref="info_wrapper">
       <p class="top_info" ref="top_info">
-        {{ candidate.data[displaySetting.top_pos] }}
+        {{
+          displaySetting.top_pos === null
+            ? ""
+            : candidate.data[displaySetting.top_pos]
+        }}
       </p>
       <p class="main_info" ref="main_info">
-        {{ candidate.data[displaySetting.main_pos] }}
+        {{
+          displaySetting.main_pos === null
+            ? ""
+            : candidate.data[displaySetting.main_pos]
+        }}
       </p>
       <p class="bottom_info" ref="bottom_info">
-        {{ candidate.data[displaySetting.bottom_pos] }}
+        {{
+          displaySetting.bottom_pos === null
+            ? ""
+            : candidate.data[displaySetting.bottom_pos]
+        }}
       </p>
     </div>
   </div>

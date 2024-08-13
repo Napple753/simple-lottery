@@ -85,9 +85,9 @@ export type WinnerLog<T> = {
 };
 
 export type DisplaySetting = {
-  top_pos: number;
-  main_pos: number;
-  bottom_pos: number;
+  top_pos: number | null;
+  main_pos: number | null;
+  bottom_pos: number | null;
 };
 
 export type PartyLog = {
