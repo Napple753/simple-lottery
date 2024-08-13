@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Message } from "@/myTypes";
+import { Message } from "@/Schema";
 const emit = defineEmits<{
   (e: "finishProgram"): void;
 }>();

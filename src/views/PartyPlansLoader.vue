@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { computed, ref, Ref } from "vue";
-import { PartyPlans, isPartyPlans } from "@/myTypes";
+import { PartyPlans } from "@/Schema";
 import { readAnyEncoding } from "@/logic/readAnyEncoding";
 import { parse as JSONCParse } from "jsonc-parser";
 import { VFileInput } from "vuetify/components";
 import { useI18n } from "vue-i18n";
+import { ZodError } from "zod";
 const { locale } = useI18n();
 
 const emit = defineEmits<{
@@ -12,6 +13,7 @@ const emit = defineEmits<{
 }>();
 const settings: Ref<PartyPlans | null> = ref(null);
 const partyPlanFile: Ref<File | File[] | null | undefined> = ref(null);
+const partyFileInvalidSnackBar = ref(false);
 
 function loadSampleProgram() {
   partyPlanFile.value = null;
@@ -22,9 +24,15 @@ function loadSampleProgram() {
 }
 
 async function loadJSONCText(jsoncText: string) {
+  partyFileInvalidSnackBar.value = false;
   const loaded = await JSONCParse(jsoncText);
-  if (!isPartyPlans(loaded)) {
-    return alert("設定ファイルの形式に間違いがあります。");
+  try {
+    PartyPlans.parse(loaded);
+  } catch (e) {
+    if (e instanceof ZodError) {
+      partyFileInvalidSnackBar.value = true;
+    }
+    throw e;
   }
   settings.value = loaded;
 }
@@ -133,6 +141,9 @@ const sampleProgramUrl = computed(() => {
       }}</v-btn>
     </div>
   </div>
+  <v-snackbar v-model="partyFileInvalidSnackBar" color="red accent-2">
+    {{ $t("plan-file-invalid") }}
+  </v-snackbar>
 </template>
 
 <style scoped></style>

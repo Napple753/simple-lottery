@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { DisplayWinner, Candidate, WinnerLog } from "@/myTypes";
+import { Candidate, WinnerLog } from "@/myTypes";
+import { DisplayWinner } from "@/Schema";
 const emit = defineEmits<{
   (e: "finishProgram"): void;
 }>();
