@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, Ref } from "vue";
-import { PartyLog } from "@/myTypes";
+import { PartyLog } from "@/Schema";
 import { PartyLogControl } from "@/logic/PartyLogControl";
 
 const emit = defineEmits<{

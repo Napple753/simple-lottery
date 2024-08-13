@@ -23,6 +23,7 @@ export const en = {
   end: "End",
   "another-party": "Reset and draw for another party",
   "save-winners-csv": "Save winners CSV",
+  "plan-file-invalid": "Party plan file is invalid.",
 };
 
 export type message_list = Partial<typeof en>;

@@ -1,13 +1,8 @@
 const ENABLE_PARTY_LOG = false;
 
 import { digestMessage } from "@/logic/digestMessage";
-import {
-  PartyPlans,
-  Candidate,
-  DisplaySetting,
-  WinnerLog,
-  PartyLog,
-} from "@/myTypes";
+import { Candidate, DisplaySetting, WinnerLog } from "@/myTypes";
+import { PartyPlans, PartyLog } from "@/Schema";
 
 export class PartyLogControl {
   #partyId: string;

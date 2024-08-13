@@ -25,4 +25,5 @@ export const ja: message_list = {
   end: "終了",
   "another-party": "リセットしてもう一度抽選会を実施",
   "save-winners-csv": "当選者リストをCSVで保存",
+  "plan-file-invalid": "進行プログラムファイルに間違いがあります",
 };

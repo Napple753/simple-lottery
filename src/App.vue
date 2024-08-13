@@ -5,7 +5,8 @@ import CandidatesLoader from "@/views/CandidatesLoader.vue";
 import PartyPlansLoader from "@/views/PartyPlansLoader.vue";
 import PartyControl from "@/views/PartyControl.vue";
 import LanguageSwitch from "./components/LanguageSwitch.vue";
-import { Candidate, DisplaySetting, PartyPlans } from "@/myTypes.ts";
+import { Candidate, DisplaySetting } from "@/myTypes.ts";
+import { PartyPlans } from "@/Schema";
 
 const partyId: Ref<string | null> = ref(null);
 const partyPlans: Ref<PartyPlans | null> = ref(null);
