@@ -15,6 +15,15 @@ const displaySetting: Ref<DisplaySetting | null> = ref(null);
 
 const isLoadSetting = computed(() => partyId.value && !partyPlans.value);
 const isLoadCandidates = computed(() => partyPlans.value && !candidates.value);
+const stepperNumber = computed(() => {
+  if (isLoadSetting.value) {
+    return 1;
+  } else if (isLoadCandidates.value) {
+    return 2;
+  } else {
+    return 3;
+  }
+});
 
 const emit = defineEmits<{
   (
@@ -78,6 +87,24 @@ function startParty() {
     <h1 style="width: 100%">{{ $t("app-name") }}</h1>
     <language-switch />
   </header>
+  <v-stepper :model-value="stepperNumber">
+    <v-stepper-header>
+      <v-stepper-item
+        :title="$t('load-party-plan')"
+        :value="1"
+      ></v-stepper-item>
+      <v-divider></v-divider>
+      <v-stepper-item
+        :title="$t('load-candidate-list')"
+        :value="2"
+      ></v-stepper-item>
+      <v-divider></v-divider>
+      <v-stepper-item
+        :title="$t('execute-drawing')"
+        :value="3"
+      ></v-stepper-item>
+    </v-stepper-header>
+  </v-stepper>
   <SelectSavedParties
     v-if="!partyId"
     @select-party="initializeParty"
