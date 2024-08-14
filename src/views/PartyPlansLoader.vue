@@ -98,7 +98,7 @@ const sampleProgramUrl = computed(() => {
       </v-row>
     </div>
     <div class="programPreview">
-      <p>{{ settings?.program_name }}</p>
+      <p style="font-weight: 800">{{ settings?.program_name }}</p>
       <ul>
         <li v-for="(program, i) in settings?.program" :key="i">
           <template v-if="program.type == 'MESSAGE'">{{

@@ -158,7 +158,7 @@ function updateDisplaySetting(newDisplaySetting: DisplaySetting) {
   </div>
 </template>
 
-<style>
+<style scoped>
 .candidatesTable {
   border-collapse: collapse;
   border: 1px solid lightgray;
@@ -194,5 +194,16 @@ function updateDisplaySetting(newDisplaySetting: DisplaySetting) {
   box-sizing: border-box;
   overflow-y: scroll;
   padding: 1rem 2rem;
+}
+@media (max-width: 600px) {
+  .previewWrapper {
+    flex-direction: column;
+  }
+  .candidatesPreview {
+    width: 100%;
+  }
+  .displayPreview {
+    width: 100%;
+  }
 }
 </style>
