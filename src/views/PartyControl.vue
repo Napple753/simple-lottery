@@ -4,6 +4,7 @@ import ProgramMessage from "@/views/ProgramMessage.vue";
 import ProgramDisplayWinners from "@/views/ProgramDisplayWinners.vue";
 import ProgramPrizes from "@/views/ProgramPrizes.vue";
 import ProgramFinale from "@/views/ProgramFinale.vue";
+import FullScreenSwitch from "@/components/FullScreenSwitch.vue";
 import { Candidate, DisplaySetting, WinnerLog } from "@/myTypes.ts";
 import { PartyPlans } from "@/Schema";
 import { LotteryBox } from "@/logic/LotteryBox";
@@ -86,6 +87,9 @@ async function updatePartyLog() {
 </script>
 
 <template>
+  <div class="topRight">
+    <FullScreenSwitch></FullScreenSwitch>
+  </div>
   <ProgramMessage
     v-if="currentProgram?.type === 'MESSAGE'"
     :program="currentProgram"
@@ -118,6 +122,11 @@ async function updatePartyLog() {
 </template>
 
 <style>
+.topRight {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
 .program {
   display: flex;
   flex-direction: column;
