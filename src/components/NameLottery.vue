@@ -123,7 +123,7 @@ defineExpose({ draw });
 <style scoped>
 .lottery {
   height: 10rem;
-  width: 20rem;
+  max-width: 30rem;
   box-sizing: border-box;
   overflow: hidden;
   position: relative;

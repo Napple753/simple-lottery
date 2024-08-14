@@ -117,4 +117,23 @@ async function updatePartyLog() {
   ></ProgramFinale>
 </template>
 
-<style scoped></style>
+<style>
+.program {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: flex-start;
+
+  padding: 1rem 2rem;
+  box-sizing: border-box;
+  align-items: center;
+
+  flex-shrink: 1;
+  overflow: hidden;
+}
+.message {
+  font-size: 200%;
+  font-weight: bold;
+  margin: auto;
+}
+</style>

@@ -101,22 +101,6 @@ function updateDisplaySetting(newDisplaySetting: DisplaySetting) {
 
 <template>
   <div class="program">
-    <v-row style="height: 48px" justify="space-between" class="w-75">
-      <v-col cols="auto" style="opacity: 0.5">
-        <v-avatar color="black" size="24">1</v-avatar>
-        {{ $t("load-party-plan") }}
-      </v-col>
-      <v-spacer></v-spacer>
-      <v-col cols="auto">
-        <v-avatar color="black" size="24">2</v-avatar>
-        {{ $t("load-candidate-list") }}
-      </v-col>
-      <v-spacer></v-spacer>
-      <v-col cols="auto" style="opacity: 0.5">
-        <v-avatar color="black" size="24">3</v-avatar>
-        {{ $t("execute-drawing") }}
-      </v-col>
-    </v-row>
     <div class="loadingForm">
       <v-file-input
         :label="$t('candidate-list-file')"
@@ -210,5 +194,16 @@ function updateDisplaySetting(newDisplaySetting: DisplaySetting) {
   box-sizing: border-box;
   overflow-y: scroll;
   padding: 1rem 2rem;
+}
+@media (max-width: 600px) {
+  .previewWrapper {
+    flex-direction: column;
+  }
+  .candidatesPreview {
+    width: 100%;
+  }
+  .displayPreview {
+    width: 100%;
+  }
 }
 </style>

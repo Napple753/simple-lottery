@@ -31,6 +31,7 @@ async function loadJSONCText(jsoncText: string) {
   } catch (e) {
     if (e instanceof ZodError) {
       partyFileInvalidSnackBar.value = true;
+      partyPlanFile.value = null;
     }
     throw e;
   }
@@ -76,22 +77,6 @@ const sampleProgramUrl = computed(() => {
 
 <template>
   <div class="program">
-    <v-row style="height: 48px" justify="space-between" class="w-75">
-      <v-col cols="auto">
-        <v-avatar color="black" size="24">1</v-avatar>
-        {{ $t("load-party-plan") }}
-      </v-col>
-      <v-spacer></v-spacer>
-      <v-col cols="auto" style="opacity: 0.5">
-        <v-avatar color="black" size="24">2</v-avatar>
-        {{ $t("load-candidate-list") }}
-      </v-col>
-      <v-spacer></v-spacer>
-      <v-col cols="auto" style="opacity: 0.5">
-        <v-avatar color="black" size="24">3</v-avatar>
-        {{ $t("execute-drawing") }}
-      </v-col>
-    </v-row>
     <div class="loadingForm">
       <v-file-input
         :label="$t('party-plan-file')"
@@ -113,7 +98,7 @@ const sampleProgramUrl = computed(() => {
       </v-row>
     </div>
     <div class="programPreview">
-      <p>{{ settings?.program_name }}</p>
+      <p style="font-weight: 800">{{ settings?.program_name }}</p>
       <ul>
         <li v-for="(program, i) in settings?.program" :key="i">
           <template v-if="program.type == 'MESSAGE'">{{

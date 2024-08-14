@@ -97,10 +97,12 @@ function nextProgram() {
 .prizeImage {
   height: 100%;
   text-align: center;
+  overflow: hidden;
 }
 
 .prizeImage img {
   height: 100%;
+  width: 100%;
   object-fit: contain;
 }
 .lotteries {
@@ -115,7 +117,7 @@ function nextProgram() {
 
 .lotteries div {
   --length: v-bind(Math.min(winners.length, 5));
-  margin: auto;
+  margin: auto 0.5rem;
   width: calc(calc(100% / var(--length)) - 1rem);
 }
 </style>

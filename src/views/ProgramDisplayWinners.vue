@@ -54,4 +54,12 @@ td {
 td {
   padding: 0 1em;
 }
+
+@media (max-width: 800px) {
+  .winners_list {
+    column-count: 1;
+    display: flex;
+    flex-direction: column;
+  }
+}
 </style>
