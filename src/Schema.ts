@@ -10,6 +10,8 @@ export const Prize = ProgramBase.merge(
     prize_name: z.string(),
     img: z.string().optional(),
     winner_number: z.number(),
+    time_before_first_winner: z.number().nonnegative().optional(),
+    time_between_winners: z.number().nonnegative().optional(),
   }),
 );
 export type Prize = z.infer<typeof Prize>;
@@ -35,6 +37,14 @@ export type Program = z.infer<typeof Program>;
 export const PartyPlans = z.object({
   program_name: z.string(),
   program: z.array(Program),
+  time_before_first_winner: z
+    .number()
+    .nonnegative()
+    .default(5 * 1000),
+  time_between_winners: z
+    .number()
+    .nonnegative()
+    .default(2 * 1000),
 });
 export type PartyPlans = z.infer<typeof PartyPlans>;
 

@@ -27,15 +27,15 @@ async function loadJSONCText(jsoncText: string) {
   partyFileInvalidSnackBar.value = false;
   const loaded = await JSONCParse(jsoncText);
   try {
-    PartyPlans.parse(loaded);
+    settings.value = PartyPlans.parse(loaded);
   } catch (e) {
     if (e instanceof ZodError) {
       partyFileInvalidSnackBar.value = true;
       partyPlanFile.value = null;
+    } else {
+      throw e;
     }
-    throw e;
   }
-  settings.value = loaded;
 }
 async function loadProgramFile(e: Event) {
   const inputElement = e.target as HTMLInputElement;

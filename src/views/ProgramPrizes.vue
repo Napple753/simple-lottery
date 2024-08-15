@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, Ref, inject } from "vue";
 import { Candidate, DisplaySetting } from "@/myTypes";
-import { Prize } from "@/Schema";
+import { Prize, PartyPlans } from "@/Schema";
 import NameLottery from "@/components/NameLottery.vue";
 const emit = defineEmits<{
   (e: "finishProgram"): void;
@@ -13,6 +13,7 @@ const props = defineProps<{
   winners: Candidate[];
   candidates: Candidate[];
   displaySetting: DisplaySetting;
+  partyPlans: PartyPlans;
 }>();
 
 let lotteries: InstanceType<typeof NameLottery>[] = [];
@@ -33,7 +34,13 @@ function draw() {
   decidedCount = 0;
   status.value = "drawing";
 
-  let timing = 5 * 1000;
+  const time_before_first_winner =
+    props.program.time_before_first_winner ??
+    props.partyPlans.time_before_first_winner;
+  const time_between_winners =
+    props.program.time_between_winners ?? props.partyPlans.time_between_winners;
+
+  let timing = time_before_first_winner;
   lotteries.forEach((lottery) => {
     if (props.winners.length <= 5 && Math.random() < 0.2) {
       timing += 500;
@@ -41,7 +48,7 @@ function draw() {
     } else {
       lottery.draw(timing, 0);
     }
-    timing += 2 * 1000;
+    timing += time_between_winners;
   });
   rollingSoundSource = soundUtilities?.playRolling();
 }
