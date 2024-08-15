@@ -1,5 +1,9 @@
 {
     "program_name":"春の抽選会20xx",
+
+    "time_before_first_winner":5000,//最初の当選者までの時間[ms]
+    "time_between_winners":2000,//当選者間の時間[ms]
+
     "program":[
         {
             "type":"MESSAGE",
@@ -15,7 +19,9 @@
             "type":"PRIZE",
             "prize_name":"すごく運がいいで賞",
             "img":"https://napple753.github.io/simple-lottery/img/kaden_soujiki_cordless_stick.png",
-            "winner_number":2
+            "winner_number":2,
+            "time_before_first_winner":10000,//最初の当選者までの時間[ms](オプション)
+            "time_between_winners":10000//当選者間の時間[ms](オプション)
         },
         {
             "type":"DISPLAY_WINNERS" //当選者表示
@@ -24,7 +30,8 @@
             "type":"PRIZE",
             "prize_name":"一番運がいいで賞",
             "img":"https://napple753.github.io/simple-lottery/img/kaden_reizouko.png",
-            "winner_number":1
+            "winner_number":1,
+            "time_before_first_winner":20000//最初の当選者までの時間[ms](オプション)
         },
         {
             "type":"PRIZE",

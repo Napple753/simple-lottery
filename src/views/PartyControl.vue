@@ -103,6 +103,7 @@ async function updatePartyLog() {
     :program="currentProgram"
     :key="currentProgramId"
     :display-setting="displaySetting"
+    :party-plans="partyPlans"
     @finish-program="next"
   ></ProgramPrizes>
   <ProgramDisplayWinners
