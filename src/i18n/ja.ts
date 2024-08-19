@@ -10,7 +10,7 @@ export const ja: message_list = {
   "use-sample": "サンプルを使用する",
   "download-sample": "サンプルをダウンロードする",
   "candidate-list-file": "抽選対象リスト(.csv)",
-  "winner-count": "当選者{count}人",
+  "winner-s": "当選者",
   "list-up-winners": "当選者一覧表示",
   next: "次へ",
   "use-csv-header": "CSVファイルの見出し行を使用する",
@@ -26,4 +26,6 @@ export const ja: message_list = {
   "another-party": "リセットしてもう一度抽選会を実施",
   "save-winners-csv": "当選者リストをCSVで保存",
   "plan-file-invalid": "進行プログラムファイルに間違いがあります",
+  "time-before-first-winner-s": "最初の当選者までの時間[s]",
+  "time-between-winners-s": "当選者間の時間[s]",
 };

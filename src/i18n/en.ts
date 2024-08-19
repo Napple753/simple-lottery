@@ -8,7 +8,7 @@ export const en = {
   "use-sample": "use sample file",
   "download-sample": "download sample file",
   "candidate-list-file": "Candidate list file(.csv)",
-  "winner-count": "0 winners | 1 winner | {count} winners",
+  "winner-s": "Winner(s)",
   "list-up-winners": "List up winners",
   next: "Next",
   "use-csv-header": "Use CSV header",
@@ -24,6 +24,8 @@ export const en = {
   "another-party": "Reset and draw for another party",
   "save-winners-csv": "Save winners CSV",
   "plan-file-invalid": "Party plan file is invalid.",
+  "time-before-first-winner-s": "time until the first winner[s]",
+  "time-between-winners-s": "time between winners[s]",
 };
 
 export type message_list = Partial<typeof en>;

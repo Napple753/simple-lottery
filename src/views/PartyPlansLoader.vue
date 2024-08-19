@@ -97,28 +97,53 @@ const sampleProgramUrl = computed(() => {
         </v-col>
       </v-row>
     </div>
-    <div class="programPreview">
-      <p style="font-weight: 800">{{ settings?.program_name }}</p>
-      <ul>
-        <li v-for="(program, i) in settings?.program" :key="i">
-          <template v-if="program.type == 'MESSAGE'">{{
-            program.message
-          }}</template>
-          <template v-if="program.type == 'PRIZE'">
-            <img
-              v-if="program.img"
-              :src="program.img"
-              style="max-height: 2em"
-            />
-            {{ program.prize_name }} ({{
-              $t("winner-count", program.winner_number)
-            }})
-          </template>
-          <template v-if="program.type == 'DISPLAY_WINNERS'"
-            >({{ $t("list-up-winners") }})</template
-          >
-        </li>
-      </ul>
+    <div class="programPreview" v-if="settings">
+      <table>
+        <caption style="font-weight: 800">
+          {{
+            settings.program_name
+          }}
+        </caption>
+        <tr>
+          <th colspan="2"></th>
+          <th>{{ $t("winner-s") }}</th>
+          <th>{{ $t("time-before-first-winner-s") }}</th>
+          <th>{{ $t("time-between-winners-s") }}</th>
+        </tr>
+        <template v-for="(program, i) in settings?.program" :key="i">
+          <tr v-if="program.type == 'MESSAGE'">
+            <td colspan="5">{{ program.message }}</td>
+          </tr>
+          <tr v-if="program.type == 'PRIZE'">
+            <td>
+              <img
+                v-if="program.img"
+                :src="program.img"
+                style="max-height: 2em"
+              />
+            </td>
+            <td>
+              {{ program.prize_name }}
+            </td>
+            <td style="text-align: right">{{ program.winner_number }}</td>
+            <td style="text-align: right">
+              {{
+                (program.time_before_first_winner ??
+                  settings.time_before_first_winner) / 1000
+              }}
+            </td>
+            <td style="text-align: right">
+              {{
+                (program.time_between_winners ??
+                  settings.time_between_winners) / 1000
+              }}
+            </td>
+          </tr>
+          <tr v-if="program.type == 'DISPLAY_WINNERS'">
+            <td colspan="5">({{ $t("list-up-winners") }})</td>
+          </tr>
+        </template>
+      </table>
     </div>
     <div class="button_wrapper">
       <v-btn @click="nextProgram" v-show="settings !== null">{{
@@ -131,4 +156,26 @@ const sampleProgramUrl = computed(() => {
   </v-snackbar>
 </template>
 
-<style scoped></style>
+<style scoped>
+table {
+  border-collapse: collapse;
+  border: 1px solid lightgray;
+}
+
+tr,
+td,
+th {
+  border: 1px solid lightgray;
+}
+
+td,
+th {
+  padding: 0 1rem;
+}
+
+tr:first-of-type {
+  background: white;
+  position: sticky;
+  top: -1rem;
+}
+</style>
