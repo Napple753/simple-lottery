@@ -1,5 +1,7 @@
 export const en = {
-  "app-name": "Simple Lottery",
+  "app-short-name": "SEDERHANA",
+  "app-description":
+    "Simple Event Drawing Engine for Reliable and Honest Awarding with No Ambiguity",
   "load-party-plan": "Load Party Plan",
   "load-candidate-list": "Load candidate list",
   "execute-drawing": "Execute drawing",
@@ -20,7 +22,7 @@ export const en = {
   "prize-won": "Prize won",
   "winning-datetime": "Winning datetime",
   "is-cancelled": "is cancelled",
-  end: "End",
+  "end-message": "End",
   "another-party": "Reset and draw for another party",
   "save-winners-csv": "Save winners CSV",
   "plan-file-invalid": "Party plan file is invalid.",

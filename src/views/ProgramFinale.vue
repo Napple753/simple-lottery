@@ -19,16 +19,57 @@ function nextProgram() {
 
 <template>
   <div class="program">
-    <WinnerSaver
-      :party-name="partyName"
-      :winners-log="winnersLog"
-      :candidate-header="candidateHeader"
-    ></WinnerSaver>
-    <p class="message">{{ $t("end") }}</p>
+    <div class="main">
+      <hgroup>
+        <h1>{{ $t("app-short-name") }}</h1>
+        <h2>{{ $t("app-description") }}</h2>
+      </hgroup>
+      <div>
+        <WinnerSaver
+          :party-name="partyName"
+          :winners-log="winnersLog"
+          :candidate-header="candidateHeader"
+        ></WinnerSaver>
+      </div>
+    </div>
     <div class="button_wrapper">
       <v-btn @click="nextProgram">{{ $t("another-party") }}</v-btn>
     </div>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+hgroup {
+  width: 80%;
+  height: 80%;
+  padding-left: 1rem;
+  padding-bottom: 1rem;
+  text-align: center;
+  font-size: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.main div {
+  height: 20%;
+}
+h1 {
+  width: 100%;
+  font-size: 36px;
+  font-weight: bold;
+}
+h2 {
+  width: 100%;
+  font-size: 12px;
+  font-weight: normal;
+}
+</style>

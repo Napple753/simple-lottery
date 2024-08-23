@@ -31,4 +31,4 @@ createApp(App).use(i18n).use(vuetify).mount("#app");
 
 //eslint-disable-next-line
 //@ts-ignore
-document.title = i18n.global.t("app-name") || document.title;
+document.title = `${i18n.global.t("app-short-name")} - ${i18n.global.t("app-description")}`;

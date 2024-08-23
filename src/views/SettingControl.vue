@@ -84,7 +84,10 @@ function startParty() {
 
 <template>
   <header>
-    <h1 style="width: 100%">{{ $t("app-name") }}</h1>
+    <hgroup>
+      <h1>{{ $t("app-short-name") }}</h1>
+      <h2>{{ $t("app-description") }}</h2>
+    </hgroup>
     <language-switch />
   </header>
   <v-stepper :model-value="stepperNumber">
@@ -121,13 +124,23 @@ function startParty() {
 
 <style>
 header {
-  height: 48px;
+  height: 60px;
   width: 100%;
   display: flex;
 }
+header hgroup {
+  width: 100%;
+  padding-left: 1rem;
+  text-align: left;
+  font-size: 15px;
+}
 header h1 {
-  text-align: center;
-  font-size: 30px;
+  font-size: 24px;
+  font-weight: bold;
+}
+header h2 {
+  font-size: 12px;
+  font-weight: normal;
 }
 .programPreview {
   width: 100vw;

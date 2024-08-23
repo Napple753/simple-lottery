@@ -1,7 +1,9 @@
 import { message_list } from "./en";
 
 export const ja: message_list = {
-  "app-name": "シンプル抽選ツール",
+  "app-short-name": "SEDERHANA",
+  "app-description":
+    "Simple Event Drawing Engine for Reliable and Honest Awarding with No Ambiguity",
   "load-party-plan": "進行プログラムの読み込み",
   "load-candidate-list": "抽選対象の読み込み",
   "execute-drawing": "抽選実行",
@@ -22,7 +24,7 @@ export const ja: message_list = {
   "prize-won": "当選賞名",
   "winning-datetime": "当選時刻",
   "is-cancelled": "キャンセル済み",
-  end: "終了",
+  "end-message": "終了",
   "another-party": "リセットしてもう一度抽選会を実施",
   "save-winners-csv": "当選者リストをCSVで保存",
   "plan-file-invalid": "進行プログラムファイルに間違いがあります",
