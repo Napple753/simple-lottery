@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, Ref, provide } from "vue";
+import { computed, onMounted, ref, Ref, provide, onDeactivated } from "vue";
 import ProgramMessage from "@/views/ProgramMessage.vue";
 import ProgramDisplayWinners from "@/views/ProgramDisplayWinners.vue";
 import ProgramPrizes from "@/views/ProgramPrizes.vue";
@@ -10,6 +10,8 @@ import { PartyPlans } from "@/Schema";
 import { LotteryBox } from "@/logic/LotteryBox";
 import { PartyLogControl } from "@/logic/PartyLogControl";
 import { SoundUtilities } from "@/logic/SoundUtilities";
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 
 const props = defineProps<{
   /** パーティーID */
@@ -39,8 +41,12 @@ onMounted(() => {
   updatePartyLog();
   next();
   provide("soundUtilities", new SoundUtilities());
-});
 
+  window.addEventListener("beforeunload", confirmSave);
+});
+onDeactivated(() => {
+  window.removeEventListener("beforeunload", confirmSave);
+});
 /**
  * 現在のプログラム
  */
@@ -82,6 +88,12 @@ async function updatePartyLog() {
     partyLogControl.winnerIds = lotteryBox!.winnerLogIds;
     partyLogControl.currentProgramId = currentProgramId.value;
     partyLogControl.saveToLocalStorage();
+  }
+}
+
+function confirmSave(event: BeforeUnloadEvent) {
+  if (!confirm(t("app-short-name"))) {
+    event.preventDefault();
   }
 }
 </script>

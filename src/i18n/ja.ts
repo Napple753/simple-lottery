@@ -30,4 +30,5 @@ export const ja: message_list = {
   "plan-file-invalid": "進行プログラムファイルに間違いがあります",
   "time-before-first-winner-s": "最初の当選者までの時間[s]",
   "time-between-winners-s": "当選者間の時間[s]",
+  "before-leave": "ページを離脱しますか?",
 };
