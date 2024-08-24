@@ -28,6 +28,7 @@ export const en = {
   "plan-file-invalid": "Party plan file is invalid.",
   "time-before-first-winner-s": "time until the first winner[s]",
   "time-between-winners-s": "time between winners[s]",
+  "before-leave": "Are you sure you want to leave this page?",
 };
 
 export type message_list = Partial<typeof en>;
