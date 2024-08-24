@@ -85,17 +85,17 @@ export class LotteryBox {
 
   get winnerLogCandidates(): WinnerLog<Candidate>[] {
     return this.#winnerLogIds.map((log) => {
-      const selectedCandidates = log.selected.map((selectedId) => {
-        const candidate = this.#candidates.find(
-          (c) => c.id == selectedId,
-        ) as Candidate;
-        return candidate;
-      });
+      const selectedCandidates = log.selected
+        .map((selectedId) => this.#candidates.find((c) => c.id == selectedId))
+        .filter((c) => c !== undefined);
+      const canceledCandidates = log.cancelled
+        .map((selectedId) => this.#candidates.find((c) => c.id == selectedId))
+        .filter((c) => c !== undefined);
       return {
         programId: log.programId,
         prizeName: log.prizeName,
         selected: selectedCandidates,
-        cancelled: [],
+        cancelled: canceledCandidates,
         timestamp: log.timestamp,
       };
     });

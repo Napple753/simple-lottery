@@ -96,6 +96,16 @@ function confirmSave(event: BeforeUnloadEvent) {
     event.preventDefault();
   }
 }
+
+function redrawCurrentPrize(winner: Candidate) {
+  lotteryBox?.redraw(currentProgramId.value, winner.id);
+  updatePartyLog();
+
+  currentWinners.value =
+    lotteryBox?.winnerLogCandidates.find(
+      (log) => log.programId === currentProgramId.value,
+    )?.selected || [];
+}
 </script>
 
 <template>
@@ -117,6 +127,7 @@ function confirmSave(event: BeforeUnloadEvent) {
     :display-setting="displaySetting"
     :party-plans="partyPlans"
     @finish-program="next"
+    @redraw="(winner) => redrawCurrentPrize(winner)"
   ></ProgramPrizes>
   <ProgramDisplayWinners
     v-if="currentProgram?.type == 'DISPLAY_WINNERS' && winnersLogs"

@@ -22,8 +22,15 @@ function nextProgram() {
       <div v-for="(prize, i) in winnersLog" :key="i" class="prize">
         <h2>{{ prize.prizeName }}</h2>
         <table>
-          <tr v-for="(winner, j) in prize.selected" :key="j">
-            <td v-for="(cell, k) in winner.data" :key="k">{{ cell }}</td>
+          <tr v-for="winner in prize.selected" :key="winner.id">
+            <td v-for="(cell, k) in winner.data" :key="winner.id + '' + k">
+              {{ cell }}
+            </td>
+          </tr>
+          <tr v-for="winner in prize.cancelled" :key="winner.id">
+            <td v-for="(cell, k) in winner.data" :key="winner.id + '' + k">
+              <s>{{ cell }}</s>
+            </td>
           </tr>
         </table>
       </div>
@@ -53,6 +60,7 @@ td {
 }
 td {
   padding: 0 1em;
+  user-select: all;
 }
 
 @media (max-width: 800px) {

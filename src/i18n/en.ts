@@ -29,6 +29,11 @@ export const en = {
   "time-before-first-winner-s": "time until the first winner[s]",
   "time-between-winners-s": "time between winners[s]",
   "before-leave": "Are you sure you want to leave this page?",
+
+  redraw: "Redraw",
+  "redraw-confirmation":
+    "Are you sure you want to cancel this winner and redraw?",
+  "keep-winner": "Keep this winner",
 };
 
 export type message_list = Partial<typeof en>;

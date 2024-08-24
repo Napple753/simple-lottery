@@ -5,6 +5,7 @@ import { Prize, PartyPlans } from "@/Schema";
 import NameLottery from "@/components/NameLottery.vue";
 const emit = defineEmits<{
   (e: "finishProgram"): void;
+  (e: "redraw", winner: Candidate): void;
 }>();
 import { SoundUtilities } from "@/logic/SoundUtilities";
 
@@ -65,6 +66,16 @@ function nextProgram() {
   lotteries = [];
   emit("finishProgram");
 }
+
+const redrawing = ref(false);
+function redraw(winner: Candidate) {
+  emit("redraw", winner);
+  if (decidedCount.value === props.winners.length) {
+    rollingSoundSource = soundUtilities?.playRolling();
+  }
+  decidedCount.value--;
+  redrawing.value = true;
+}
 </script>
 
 <template>
@@ -87,7 +98,9 @@ function nextProgram() {
           :is-simple="winners.length > 5"
           :displaySetting="displaySetting"
           :ref="lotteryEls"
+          :immediate="redrawing"
           @finish-draw="decided"
+          @redraw="(winner) => redraw(winner)"
         ></NameLottery>
       </template>
     </div>

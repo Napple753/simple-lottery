@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { inject, ref, Ref } from "vue";
+import { inject, ref, Ref, onMounted } from "vue";
 import { Candidate, DisplaySetting } from "@/myTypes";
 import { wait } from "@/logic/wait";
 import { getDummyList } from "@/logic/getDummyList";
@@ -7,17 +7,20 @@ import CandidateViewer from "@/components/CandidateViewer.vue";
 import { SoundUtilities } from "@/logic/SoundUtilities";
 const emit = defineEmits<{
   (e: "finishDraw"): void;
+  (e: "redraw", winner: Candidate): void;
 }>();
 
 const props = defineProps<{
   /** 当選者 */
-  winner: Candidate | null;
+  winner: Candidate;
   /** ダミー当選者作成用の候補者 */
   candidates: Candidate[];
   /** ロールの省略 */
   isSimple?: boolean;
   /** 当選者の表示順設定 */
   displaySetting: DisplaySetting;
+  /** 読み込みと同時にロール開始 */
+  immediate?: boolean;
 }>();
 
 const bottom_pos: Ref<number> = ref(0);
@@ -30,6 +33,14 @@ const displayCandidates: Ref<Candidate[]> = ref([]);
 const soundUtilities = inject<SoundUtilities>("soundUtilities");
 
 const uniqueID = ref(Date.now());
+
+const redrawDialog = ref(false);
+
+onMounted(() => {
+  if (props.immediate) {
+    draw();
+  }
+});
 
 async function moveTo(pos: number, time: number = 0) {
   transition_duration.value = time;
@@ -85,38 +96,79 @@ async function draw(
   emit("finishDraw");
 }
 
+function redraw() {
+  redrawDialog.value = false;
+  emit("redraw", props.winner);
+}
+
 defineExpose({ draw });
 </script>
 
 <template>
-  <div class="lottery" :class="{ isDeciding: isDeciding }">
-    <div
-      class="inner"
-      :style="{
-        bottom: bottom_pos + '%',
-        transitionDuration: transition_duration + 'ms',
-      }"
-    >
+  <div style="max-width: 30rem">
+    <div class="lottery" :class="{ isDeciding: isDeciding }">
       <div
-        v-for="candidate in displayCandidates"
-        :key="uniqueID + candidate.id"
-        class="dummyCandidates"
+        class="inner"
+        :style="{
+          bottom: bottom_pos + '%',
+          transitionDuration: transition_duration + 'ms',
+        }"
       >
-        <CandidateViewer
-          :candidate="candidate"
-          :display-setting="displaySetting"
+        <div
+          v-for="candidate in displayCandidates"
           :key="uniqueID + candidate.id"
-        ></CandidateViewer>
+          class="dummyCandidates"
+        >
+          <CandidateViewer
+            :candidate="candidate"
+            :display-setting="displaySetting"
+            :key="uniqueID + candidate.id"
+          ></CandidateViewer>
+        </div>
+        <div v-if="displayWinner" class="winner">
+          <CandidateViewer
+            :candidate="displayWinner"
+            :display-setting="displaySetting"
+            :key="uniqueID + displayWinner.id"
+          ></CandidateViewer>
+        </div>
       </div>
-      <div v-if="displayWinner" class="winner">
-        <CandidateViewer
-          :candidate="displayWinner"
-          :display-setting="displaySetting"
-          :key="uniqueID + displayWinner.id"
-        ></CandidateViewer>
-      </div>
+      <div class="loader" v-show="displayCandidates.length === 0"></div>
     </div>
-    <div class="loader" v-show="displayCandidates.length === 0"></div>
+    <div style="display: flex; justify-content: end; height: 48px">
+      <v-btn
+        icon
+        class="reload"
+        v-show="isDeciding"
+        flat
+        @click="redrawDialog = true"
+      >
+        <v-icon size="small" icon="mdi-reload"></v-icon>
+      </v-btn>
+    </div>
+    <v-dialog v-model="redrawDialog" max-width="35rem" v-if="displayWinner">
+      <v-card
+        prepend-icon="mdi-alert-circle-outline"
+        :title="$t('redraw')"
+        :text="$t('redraw-confirmation')"
+        fill-height
+      >
+        <template v-slot:actions>
+          <v-btn @click="redrawDialog = false"> {{ $t("keep-winner") }} </v-btn>
+          <v-btn @click="redraw" color="warning">{{ $t("redraw") }}</v-btn>
+        </template>
+        <div style="width: 100%">
+          <div class="isDeciding" style="max-width: 30rem; margin: auto">
+            <CandidateViewer
+              class="winner"
+              :candidate="displayWinner"
+              :display-setting="displaySetting"
+              :key="uniqueID + displayWinner.id"
+            ></CandidateViewer>
+          </div>
+        </div>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 

@@ -17,9 +17,14 @@ function saveWinnersLog() {
   const data = props.winnersLog
     .map((log) => {
       const timeISOString = new Date(log.timestamp).toISOString();
-      return log.selected.map((c) => {
-        return [log.prizeName, timeISOString, "-", ...c.data];
-      });
+      return [
+        ...log.selected.map((c) => {
+          return [log.prizeName, timeISOString, "FALSE", ...c.data];
+        }),
+        ...log.cancelled.map((c) => {
+          return [log.prizeName, timeISOString, "TRUE", ...c.data];
+        }),
+      ];
     })
     .flat();
   const header = [
