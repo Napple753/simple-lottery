@@ -36,6 +36,37 @@ export class LotteryBox {
     return selected;
   }
 
+  /**
+   * キャンセルして再抽選する
+   * @param programId 記録用進行プログラム番号
+   * @param canceledId キャンセルする当選者のID
+   * @returns
+   */
+  redraw(programId: number, canceledId: number) {
+    const programLog = this.#winnerLogIds.find(
+      (log) => log.programId == programId,
+    );
+    if (!programLog) {
+      throw new Error("Specified program not found!");
+    }
+    const canceledIndex = programLog.selected.findIndex(
+      (id) => id == canceledId,
+    );
+    if (canceledIndex === -1) {
+      throw new Error("Specified winner not found!");
+    }
+
+    programLog.cancelled.push(canceledId);
+
+    const redrawWinner = this.#drawOne([
+      ...programLog.selected,
+      ...programLog.cancelled,
+    ]);
+    programLog.selected.splice(canceledIndex, 1, redrawWinner.id);
+
+    return redrawWinner;
+  }
+
   #drawMany(count: number): Candidate[] {
     if (count > this.#candidates.length) {
       const shuffled = shuffleArray(this.#candidates);
@@ -43,7 +74,7 @@ export class LotteryBox {
     }
     const selected: Candidate[] = [];
     for (let i = 0; i < count; i++) {
-      selected.push(this.#drawOne(selected));
+      selected.push(this.#drawOne(selected.map((c) => c.id)));
     }
     return selected;
   }
@@ -70,14 +101,21 @@ export class LotteryBox {
     });
   }
 
-  #drawOne(selected: Candidate[]): Candidate {
+  #drawOne(excludeIds: number[]): Candidate {
+    // 未選択がない場合は全員が選ばれたとみなして再度未選択を作成する
     if (this.#notSelected.length == 0) {
       this.#notSelected = [...this.#candidates];
     }
+
+    // 未選択からランダムに選ぶ
     const pickedId = Math.floor(Math.random() * this.#notSelected.length);
-    if (selected.map((c) => c.id).includes(this.#notSelected[pickedId].id)) {
-      return this.#drawOne(selected);
+
+    // 抽選対象外の場合は再度選ぶ
+    if (excludeIds.includes(this.#notSelected[pickedId].id)) {
+      return this.#drawOne(excludeIds);
     }
+
+    // 選ばれた候補を未選択から削除して返す
     return this.#notSelected.splice(pickedId, 1)[0];
   }
 }
