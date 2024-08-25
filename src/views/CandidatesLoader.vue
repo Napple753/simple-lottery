@@ -1,12 +1,17 @@
 <script setup lang="ts">
-import { ref, Ref, computed } from "vue";
+import { ref, Ref, computed, defineProps } from "vue";
 import { Candidate, DisplaySetting } from "@/myTypes";
+import { PartyPlans } from "@/Schema";
 import { readAnyEncoding } from "@/logic/readAnyEncoding";
 import CandidateViewer from "@/components/CandidateViewer.vue";
 import CandidateViewSetting from "@/components/CandidateViewSetting.vue";
 import Papa from "papaparse";
 import { useI18n } from "vue-i18n";
-const { locale } = useI18n();
+const { locale, t } = useI18n();
+
+const props = defineProps<{
+  partyPlans: PartyPlans;
+}>();
 
 const emit = defineEmits<{
   (
@@ -26,6 +31,9 @@ const displaySetting: Ref<DisplaySetting> = ref({
   main_pos: null,
   bottom_pos: null,
 });
+
+const candidateInvalidSnackBar = ref(false);
+const candidateErrorMessage = ref("");
 
 async function loadCSVFile(e: Event) {
   const inputElement = e.target as HTMLInputElement;
@@ -58,12 +66,24 @@ const sampleCSVUrl = computed(() => {
 function loadCSVText(csvText: string) {
   const rawData = Papa.parse(csvText).data as string[][];
   const columns = rawData[0].length;
-  candidates.value = rawData
+  const sanitizedData = rawData
     .filter((d) => d.length === columns && d.some((cell) => cell !== ""))
     .map((d, i) => ({
       id: i,
       data: d,
     }));
+
+  const { max_prize_name, max_winner_number } = getMaxWinnersPrize();
+  if (sanitizedData.length < max_winner_number) {
+    candidateInvalidSnackBar.value = true;
+    candidateErrorMessage.value = t("candidates-less-than-winners", {
+      prizeName: max_prize_name,
+    });
+    CandidateFile.value = null;
+    return;
+  }
+
+  candidates.value = sanitizedData;
 
   displaySetting.value = {
     top_pos: 0 >= columns ? null : 0,
@@ -96,6 +116,26 @@ const candidatesBody = computed(() => {
 
 function updateDisplaySetting(newDisplaySetting: DisplaySetting) {
   displaySetting.value = newDisplaySetting;
+}
+
+function getMaxWinnersPrize() {
+  return props.partyPlans.program.reduce(
+    (acc, prg) => {
+      if (prg.type === "PRIZE") {
+        if (acc.max_winner_number < prg.winner_number) {
+          return {
+            max_prize_name: prg.prize_name,
+            max_winner_number: prg.winner_number,
+          };
+        } else {
+          return acc;
+        }
+      } else {
+        return acc;
+      }
+    },
+    { max_prize_name: "", max_winner_number: 0 },
+  );
 }
 </script>
 
@@ -156,6 +196,9 @@ function updateDisplaySetting(newDisplaySetting: DisplaySetting) {
       }}</v-btn>
     </div>
   </div>
+  <v-snackbar v-model="candidateInvalidSnackBar" color="red accent-2">
+    {{ candidateErrorMessage }}
+  </v-snackbar>
 </template>
 
 <style scoped>

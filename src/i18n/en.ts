@@ -34,6 +34,8 @@ export const en = {
   "redraw-confirmation":
     "Are you sure you want to cancel this winner and redraw?",
   "keep-winner": "Keep this winner",
+
+  "candidates-less-than-winners": `The number of candidates is less than the number of "{prizeName}" winners.`,
 };
 
 export type message_list = Partial<typeof en>;

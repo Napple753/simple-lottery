@@ -35,4 +35,7 @@ export const ja: message_list = {
   redraw: "再抽選",
   "redraw-confirmation": "このユーザーの当選をキャンセルして再抽選しますか?",
   "keep-winner": "当選を維持する",
+
+  "candidates-less-than-winners":
+    "抽選対象者数が「{prizeName}」の当選者数より少ないです",
 };
