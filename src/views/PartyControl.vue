@@ -73,7 +73,7 @@ function next() {
 }
 
 function confirmSave(event: BeforeUnloadEvent) {
-  if (!confirm(t("app-short-name"))) {
+  if (!confirm(t("before-leave"))) {
     event.preventDefault();
   }
 }
