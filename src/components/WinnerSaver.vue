@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Candidate, WinnerLog } from "@/myTypes";
+import { WinnerCandidateLog } from "@/myTypes";
 import Papa from "papaparse";
 import { useI18n } from "vue-i18n";
 const { t } = useI18n();
@@ -10,19 +10,28 @@ const props = defineProps<{
   /** 候補者データのヘッダー(保存時に使用) */
   candidateHeader: string[];
   /** 当選者の記録 */
-  winnersLog: WinnerLog<Candidate>[];
+  winnersLog: WinnerCandidateLog[];
 }>();
 
 function saveWinnersLog() {
   const data = props.winnersLog
     .map((log) => {
-      const timeISOString = new Date(log.timestamp).toISOString();
       return [
         ...log.selected.map((c) => {
-          return [log.prizeName, timeISOString, "FALSE", ...c.data];
+          return [
+            log.prizeName,
+            new Date(c.selectTS).toISOString(),
+            "FALSE",
+            ...c.candidate.data,
+          ];
         }),
         ...log.cancelled.map((c) => {
-          return [log.prizeName, timeISOString, "TRUE", ...c.data];
+          return [
+            log.prizeName,
+            new Date(c.selectTS).toISOString(),
+            "TRUE",
+            ...c.candidate.data,
+          ];
         }),
       ];
     })

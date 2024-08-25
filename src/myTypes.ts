@@ -1,5 +1,7 @@
+export type CandidateId = number;
+
 export type Candidate = {
-  id: number;
+  id: CandidateId;
   data: string[];
 };
 
@@ -76,12 +78,24 @@ export type Candidate = {
 //   );
 // }
 
-export type WinnerLog<T> = {
+export type TimeStamp = number;
+
+export type WinnerIdLog = {
   programId: number;
   prizeName: string;
-  selected: T[];
-  cancelled: T[];
-  timestamp: number;
+  selected: { id: CandidateId; selectTS: TimeStamp }[];
+  cancelled: { id: CandidateId; selectTS: TimeStamp; cancelledTS: TimeStamp }[];
+};
+
+export type WinnerCandidateLog = {
+  programId: number;
+  prizeName: string;
+  selected: { candidate: Candidate; selectTS: TimeStamp }[];
+  cancelled: {
+    candidate: Candidate;
+    selectTS: TimeStamp;
+    cancelledTS: TimeStamp;
+  }[];
 };
 
 export type DisplaySetting = {

@@ -85,7 +85,7 @@ test("再抽選時に、記録が保持されていること", () => {
       const lotteryBox = new LotteryBox(candidates);
 
       const winner = lotteryBox.draw(PROGRAM_ID, "test prize", WINNER_COUNT);
-      console.log("original winner", winner);
+      // console.log("original winner", winner);
 
       const canceledWinner = winner[CANCELED_INDEX];
 
@@ -100,9 +100,9 @@ test("再抽選時に、記録が保持されていること", () => {
       if (log !== undefined) {
         // console.log("final winner", log.selected);
         // console.log("final canceled", log.cancelled);
-        expect(log.selected).toContain(redrawWinner.id);
-        expect(log.selected).not.toContain(canceledWinner.id);
-        expect(log.cancelled).toContain(canceledWinner.id);
+        expect(log.selected.map((s) => s.id)).toContain(redrawWinner.id);
+        expect(log.selected.map((s) => s.id)).not.toContain(canceledWinner.id);
+        expect(log.cancelled.map((s) => s.id)).toContain(canceledWinner.id);
       }
     });
   });

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, Ref } from "vue";
 import { PartyLog } from "@/Schema";
-import { PartyLogControl } from "@/logic/PartyLogControl";
 
 const emit = defineEmits<{
   (e: "selectParty", id: string | null): void;
@@ -11,9 +10,7 @@ function startNewParty() {
   emit("selectParty", null);
 }
 
-const savedPartyList: Ref<PartyLog[]> = ref(
-  PartyLogControl.getSavedPartyList(),
-);
+const savedPartyList: Ref<PartyLog[]> = ref([]);
 
 if (savedPartyList.value.length == 0) {
   emit("selectParty", null);

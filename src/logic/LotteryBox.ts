@@ -1,11 +1,17 @@
-import { WinnerLog, Candidate } from "@/myTypes";
+import {
+  WinnerIdLog,
+  Candidate,
+  CandidateId,
+  TimeStamp,
+  WinnerCandidateLog,
+} from "@/myTypes";
 import { shuffleArray } from "@/logic/shuffleArray";
 
 export class LotteryBox {
   #notSelected: Candidate[];
   #candidates: Candidate[];
 
-  #winnerLogIds: WinnerLog<number>[] = [];
+  #winnerLogIds: WinnerIdLog[] = [];
 
   /**
    * 抽選用クラスの作成
@@ -26,12 +32,12 @@ export class LotteryBox {
   draw(programId: number, prizeName: string, count: number) {
     const selected = this.#drawMany(count);
     const selectedIds = selected.map((c) => c.id);
+    const timestamp = Date.now();
     this.#winnerLogIds.push({
       programId,
       prizeName,
-      selected: selectedIds,
+      selected: selectedIds.map((id) => ({ id, selectTS: timestamp })),
       cancelled: [],
-      timestamp: Date.now(),
     });
     return selected;
   }
@@ -50,19 +56,33 @@ export class LotteryBox {
       throw new Error("Specified program not found!");
     }
     const canceledIndex = programLog.selected.findIndex(
-      (id) => id == canceledId,
+      (s) => s.id === canceledId,
     );
     if (canceledIndex === -1) {
       throw new Error("Specified winner not found!");
     }
 
-    programLog.cancelled.push(canceledId);
+    const timestamp = Date.now();
+
+    const cancelledLog: {
+      id: CandidateId;
+      selectTS: TimeStamp;
+      cancelledTS: TimeStamp;
+    } = {
+      ...programLog.selected[canceledIndex],
+      cancelledTS: timestamp,
+    };
 
     const redrawWinner = this.#drawOne([
-      ...programLog.selected,
-      ...programLog.cancelled,
+      ...programLog.selected.map((c) => c.id),
+      ...programLog.cancelled.map((c) => c.id),
+      cancelledLog.id,
     ]);
-    programLog.selected.splice(canceledIndex, 1, redrawWinner.id);
+    programLog.cancelled.push(cancelledLog);
+    programLog.selected.splice(canceledIndex, 1, {
+      id: redrawWinner.id,
+      selectTS: timestamp,
+    });
 
     return redrawWinner;
   }
@@ -79,24 +99,41 @@ export class LotteryBox {
     return selected;
   }
 
-  get winnerLogIds(): WinnerLog<number>[] {
+  get winnerLogIds(): WinnerIdLog[] {
     return this.#winnerLogIds;
   }
 
-  get winnerLogCandidates(): WinnerLog<Candidate>[] {
+  get winnerLogCandidates(): WinnerCandidateLog[] {
     return this.#winnerLogIds.map((log) => {
       const selectedCandidates = log.selected
-        .map((selectedId) => this.#candidates.find((c) => c.id == selectedId))
-        .filter((c) => c !== undefined);
+        .map((s) => ({
+          candidate: this.#candidates.find((c) => c.id == s.id),
+          selectTS: s.selectTS,
+        }))
+        .filter(
+          (c): c is { candidate: Candidate; selectTS: TimeStamp } =>
+            c.candidate !== undefined,
+        );
       const canceledCandidates = log.cancelled
-        .map((selectedId) => this.#candidates.find((c) => c.id == selectedId))
-        .filter((c) => c !== undefined);
+        .map((s) => ({
+          candidate: this.#candidates.find((c) => c.id == s.id),
+          selectTS: s.selectTS,
+          cancelledTS: s.cancelledTS,
+        }))
+        .filter(
+          (
+            c,
+          ): c is {
+            candidate: Candidate;
+            selectTS: TimeStamp;
+            cancelledTS: TimeStamp;
+          } => c.candidate !== undefined,
+        );
       return {
         programId: log.programId,
         prizeName: log.prizeName,
         selected: selectedCandidates,
         cancelled: canceledCandidates,
-        timestamp: log.timestamp,
       };
     });
   }

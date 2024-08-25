@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Candidate, WinnerLog } from "@/myTypes";
+import { WinnerCandidateLog } from "@/myTypes";
 import { DisplayWinner } from "@/Schema";
 const emit = defineEmits<{
   (e: "finishProgram"): void;
@@ -7,7 +7,7 @@ const emit = defineEmits<{
 
 defineProps<{
   program: DisplayWinner;
-  winnersLog: WinnerLog<Candidate>[];
+  winnersLog: WinnerCandidateLog[];
 }>();
 
 function nextProgram() {
@@ -22,13 +22,19 @@ function nextProgram() {
       <div v-for="(prize, i) in winnersLog" :key="i" class="prize">
         <h2>{{ prize.prizeName }}</h2>
         <table>
-          <tr v-for="winner in prize.selected" :key="winner.id">
-            <td v-for="(cell, k) in winner.data" :key="winner.id + '' + k">
+          <tr v-for="winner in prize.selected" :key="winner.candidate.id">
+            <td
+              v-for="(cell, k) in winner.candidate.data"
+              :key="winner.candidate.id + '' + k"
+            >
               {{ cell }}
             </td>
           </tr>
-          <tr v-for="winner in prize.cancelled" :key="winner.id">
-            <td v-for="(cell, k) in winner.data" :key="winner.id + '' + k">
+          <tr v-for="winner in prize.cancelled" :key="winner.candidate.id">
+            <td
+              v-for="(cell, k) in winner.candidate.data"
+              :key="winner.candidate.id + '' + k"
+            >
               <s>{{ cell }}</s>
             </td>
           </tr>
