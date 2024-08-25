@@ -38,7 +38,7 @@ const redrawDialog = ref(false);
 
 onMounted(() => {
   if (props.immediate) {
-    draw();
+    draw(5 * 1000, Math.floor(Math.random() * 2));
   }
 });
 
