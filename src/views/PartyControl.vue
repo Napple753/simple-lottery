@@ -86,6 +86,14 @@ function redrawCurrentPrize(winner: Candidate) {
       .find((log) => log.programId === currentProgramId.value)
       ?.selected.map((s) => s.candidate) || [];
 }
+
+function redraw(winner: Candidate, programId: number) {
+  const newWinner = lotteryBox?.redraw(programId, winner.id);
+
+  winnersCandidateLog.value = lotteryBox?.winnerLogCandidates || null;
+
+  console.log(newWinner);
+}
 </script>
 
 <template>
@@ -111,10 +119,13 @@ function redrawCurrentPrize(winner: Candidate) {
   ></ProgramPrizes>
   <ProgramDisplayWinners
     v-if="currentProgram?.type == 'DISPLAY_WINNERS' && winnersCandidateLog"
+    :candidates="candidates"
     :program="currentProgram"
     :key="currentProgramId"
     :winners-log="winnersCandidateLog"
+    :display-setting="displaySetting"
     @finish-program="next"
+    @redraw="(o) => redraw(o.winner, o.programId)"
   ></ProgramDisplayWinners>
   <ProgramFinale
     v-if="!currentProgram && winnersCandidateLog"

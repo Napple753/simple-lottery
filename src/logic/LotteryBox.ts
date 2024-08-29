@@ -36,7 +36,7 @@ export class LotteryBox {
     this.#winnerLogIds.push({
       programId,
       prizeName,
-      selected: selectedIds.map((id) => ({ id, selectTS: timestamp })),
+      selected: selectedIds.map((id, i) => ({ id, selectTS: timestamp + i })),
       cancelled: [],
     });
     return selected;
@@ -45,10 +45,10 @@ export class LotteryBox {
   /**
    * キャンセルして再抽選する
    * @param programId 記録用進行プログラム番号
-   * @param canceledId キャンセルする当選者のID
+   * @param canceledCandidateId キャンセルする当選者のID
    * @returns
    */
-  redraw(programId: number, canceledId: number) {
+  redraw(programId: number, canceledCandidateId: CandidateId) {
     const programLog = this.#winnerLogIds.find(
       (log) => log.programId == programId,
     );
@@ -56,7 +56,7 @@ export class LotteryBox {
       throw new Error("Specified program not found!");
     }
     const canceledIndex = programLog.selected.findIndex(
-      (s) => s.id === canceledId,
+      (s) => s.id === canceledCandidateId,
     );
     if (canceledIndex === -1) {
       throw new Error("Specified winner not found!");
