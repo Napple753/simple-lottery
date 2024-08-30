@@ -75,6 +75,39 @@ test("候補者より当選者が多いときに、全員１度当選するま�
   }
 });
 
+test("再抽選時に、記録が保持されていること", () => {
+  const CANDIDATE_TOTAL = 1000;
+  const WINNER_COUNT = 10;
+
+  [0, 1, 1000].forEach((PROGRAM_ID) => {
+    [0, 3, 5, 9].forEach((CANCELED_INDEX) => {
+      const { candidates } = prepareDummyData(CANDIDATE_TOTAL);
+      const lotteryBox = new LotteryBox(candidates);
+
+      const winner = lotteryBox.draw(PROGRAM_ID, "test prize", WINNER_COUNT);
+      // console.log("original winner", winner);
+
+      const canceledWinner = winner[CANCELED_INDEX];
+
+      const redrawWinner = lotteryBox.redraw(PROGRAM_ID, canceledWinner.id);
+
+      const log = lotteryBox.winnerLogIds.find(
+        (log) => log.programId === PROGRAM_ID,
+      );
+
+      expect(log).not.toBeUndefined();
+
+      if (log !== undefined) {
+        // console.log("final winner", log.selected);
+        // console.log("final canceled", log.cancelled);
+        expect(log.selected.map((s) => s.id)).toContain(redrawWinner.id);
+        expect(log.selected.map((s) => s.id)).not.toContain(canceledWinner.id);
+        expect(log.cancelled.map((s) => s.id)).toContain(canceledWinner.id);
+      }
+    });
+  });
+});
+
 // test("当選確率が偏っていないこと", () => {
 //   const CANDIDATE_TOTAL = 100;
 //   const CANDIDATE_EACH = 10;

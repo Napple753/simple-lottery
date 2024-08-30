@@ -5,6 +5,7 @@ import { Prize, PartyPlans } from "@/Schema";
 import NameLottery from "@/components/NameLottery.vue";
 const emit = defineEmits<{
   (e: "finishProgram"): void;
+  (e: "redraw", winner: Candidate): void;
 }>();
 import { SoundUtilities } from "@/logic/SoundUtilities";
 
@@ -25,14 +26,14 @@ const lotteryEls = (el: InstanceType<typeof NameLottery>) => {
   return "lotteryEls";
 };
 
-const status: Ref<"beforeDraw" | "drawing" | "afterDraw"> = ref("beforeDraw");
+const beforeDraw: Ref<boolean> = ref(true);
 
-let decidedCount = 0;
+const decidedCount = ref(0);
 let rollingSoundSource: AudioBufferSourceNode | undefined;
 
 function draw() {
-  decidedCount = 0;
-  status.value = "drawing";
+  decidedCount.value = 0;
+  beforeDraw.value = false;
 
   const time_before_first_winner =
     props.program.time_before_first_winner ??
@@ -54,17 +55,26 @@ function draw() {
 }
 
 function decided() {
-  decidedCount++;
-  if (decidedCount == props.winners.length) {
+  decidedCount.value++;
+  if (decidedCount.value === props.winners.length) {
     rollingSoundSource?.stop();
-    status.value = "afterDraw";
   }
 }
 
 function nextProgram() {
-  status.value = "beforeDraw";
+  beforeDraw.value = true;
   lotteries = [];
   emit("finishProgram");
+}
+
+const redrawing = ref(false);
+function redraw(winner: Candidate) {
+  emit("redraw", winner);
+  if (decidedCount.value === props.winners.length) {
+    rollingSoundSource = soundUtilities?.playRolling();
+  }
+  decidedCount.value--;
+  redrawing.value = true;
 }
 </script>
 
@@ -72,15 +82,15 @@ function nextProgram() {
   <div class="program programPrize">
     <h1>{{ program.prize_name }}</h1>
 
-    <div class="prizeImage" v-show="status == 'beforeDraw'">
+    <div class="prizeImage" v-show="beforeDraw">
       <img v-if="program.img" :src="program.img" />
     </div>
 
-    <div v-show="status == 'beforeDraw'" class="button_wrapper">
+    <div v-show="beforeDraw" class="button_wrapper">
       <v-btn @click="draw">{{ $t("start-drawing") }}</v-btn>
     </div>
 
-    <div v-show="status != 'beforeDraw'" class="lotteries">
+    <div v-show="!beforeDraw" class="lotteries">
       <template v-for="winner in winners" :key="winner.id">
         <NameLottery
           :winner="winner"
@@ -88,12 +98,14 @@ function nextProgram() {
           :is-simple="winners.length > 5"
           :displaySetting="displaySetting"
           :ref="lotteryEls"
+          :immediate="redrawing"
           @finish-draw="decided"
+          @redraw="(winner) => redraw(winner)"
         ></NameLottery>
       </template>
     </div>
-    <div class="button_wrapper" v-show="status != 'beforeDraw'">
-      <v-btn @click="nextProgram" v-show="status == 'afterDraw'">{{
+    <div class="button_wrapper" v-show="!beforeDraw">
+      <v-btn @click="nextProgram" v-show="decidedCount === winners.length">{{
         $t("next")
       }}</v-btn>
     </div>

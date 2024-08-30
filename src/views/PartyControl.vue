@@ -5,10 +5,9 @@ import ProgramDisplayWinners from "@/views/ProgramDisplayWinners.vue";
 import ProgramPrizes from "@/views/ProgramPrizes.vue";
 import ProgramFinale from "@/views/ProgramFinale.vue";
 import FullScreenSwitch from "@/components/FullScreenSwitch.vue";
-import { Candidate, DisplaySetting, WinnerLog } from "@/myTypes.ts";
+import { Candidate, DisplaySetting, WinnerCandidateLog } from "@/myTypes.ts";
 import { PartyPlans } from "@/Schema";
 import { LotteryBox } from "@/logic/LotteryBox";
-import { PartyLogControl } from "@/logic/PartyLogControl";
 import { SoundUtilities } from "@/logic/SoundUtilities";
 import { useI18n } from "vue-i18n";
 const { t } = useI18n();
@@ -27,9 +26,8 @@ const props = defineProps<{
 }>();
 
 let lotteryBox: LotteryBox | null = null;
-let partyLogControl: PartyLogControl | null = null;
 const currentWinners: Ref<Candidate[]> = ref([]);
-const winnersLogs: Ref<WinnerLog<Candidate>[] | null> = ref(null);
+const winnersCandidateLog: Ref<WinnerCandidateLog[] | null> = ref(null);
 
 /**
  * 現在のプログラム番号
@@ -38,7 +36,6 @@ const currentProgramId = ref(-1);
 
 onMounted(() => {
   lotteryBox = new LotteryBox(props.candidates);
-  updatePartyLog();
   next();
   provide("soundUtilities", new SoundUtilities());
 
@@ -71,30 +68,31 @@ function next() {
     !currentProgram.value ||
     currentProgram.value.type === "DISPLAY_WINNERS"
   ) {
-    winnersLogs.value = lotteryBox?.winnerLogCandidates || null;
-  }
-  updatePartyLog();
-}
-
-async function updatePartyLog() {
-  if (partyLogControl === null) {
-    partyLogControl = new PartyLogControl(
-      props.partyId,
-      props.partyPlans,
-      props.candidates,
-      props.displaySetting,
-    );
-  } else {
-    partyLogControl.winnerIds = lotteryBox!.winnerLogIds;
-    partyLogControl.currentProgramId = currentProgramId.value;
-    partyLogControl.saveToLocalStorage();
+    winnersCandidateLog.value = lotteryBox?.winnerLogCandidates || null;
   }
 }
 
 function confirmSave(event: BeforeUnloadEvent) {
-  if (!confirm(t("app-short-name"))) {
+  if (!confirm(t("before-leave"))) {
     event.preventDefault();
   }
+}
+
+function redrawCurrentPrize(winner: Candidate) {
+  lotteryBox?.redraw(currentProgramId.value, winner.id);
+
+  currentWinners.value =
+    lotteryBox?.winnerLogCandidates
+      .find((log) => log.programId === currentProgramId.value)
+      ?.selected.map((s) => s.candidate) || [];
+}
+
+function redraw(winner: Candidate, programId: number) {
+  const newWinner = lotteryBox?.redraw(programId, winner.id);
+
+  winnersCandidateLog.value = lotteryBox?.winnerLogCandidates || null;
+
+  console.log(newWinner);
 }
 </script>
 
@@ -117,20 +115,24 @@ function confirmSave(event: BeforeUnloadEvent) {
     :display-setting="displaySetting"
     :party-plans="partyPlans"
     @finish-program="next"
+    @redraw="(winner) => redrawCurrentPrize(winner)"
   ></ProgramPrizes>
   <ProgramDisplayWinners
-    v-if="currentProgram?.type == 'DISPLAY_WINNERS' && winnersLogs"
+    v-if="currentProgram?.type == 'DISPLAY_WINNERS' && winnersCandidateLog"
+    :candidates="candidates"
     :program="currentProgram"
     :key="currentProgramId"
-    :winners-log="winnersLogs"
+    :winners-log="winnersCandidateLog"
+    :display-setting="displaySetting"
     @finish-program="next"
+    @redraw="(o) => redraw(o.winner, o.programId)"
   ></ProgramDisplayWinners>
   <ProgramFinale
-    v-if="!currentProgram && winnersLogs"
+    v-if="!currentProgram && winnersCandidateLog"
     :key="currentProgramId"
     :party-name="partyPlans.program_name"
     :candidate-header="candidateHeader"
-    :winners-log="winnersLogs"
+    :winners-log="winnersCandidateLog"
   ></ProgramFinale>
 </template>
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { WinnerLog, Candidate } from "@/myTypes";
+import { WinnerCandidateLog } from "@/myTypes";
 import WinnerSaver from "@/components/WinnerSaver.vue";
 
 defineEmits<{
@@ -9,7 +9,7 @@ defineEmits<{
 defineProps<{
   partyName: string;
   candidateHeader: string[];
-  winnersLog: WinnerLog<Candidate>[];
+  winnersLog: WinnerCandidateLog[];
 }>();
 
 function nextProgram() {

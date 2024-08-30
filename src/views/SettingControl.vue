@@ -117,7 +117,8 @@ function startParty() {
     @load-settings="loadSetting"
   ></PartyPlansLoader>
   <CandidatesLoader
-    v-if="isLoadCandidates"
+    v-if="isLoadCandidates && partyPlans"
+    :party-plans="partyPlans"
     @load-candidates="setCandidates"
   ></CandidatesLoader>
 </template>
