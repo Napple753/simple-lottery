@@ -85,8 +85,11 @@ function startParty() {
 <template>
   <header>
     <hgroup>
-      <h1>{{ $t("app-short-name") }}</h1>
-      <h2>{{ $t("app-description") }}</h2>
+      <img src="/sederhana.svg" style="height: 100%" />
+      <div>
+        <h1>{{ $t("app-short-name") }}</h1>
+        <h2>{{ $t("app-description") }}</h2>
+      </div>
     </hgroup>
     <language-switch />
   </header>
@@ -134,6 +137,7 @@ header hgroup {
   padding-left: 1rem;
   text-align: left;
   font-size: 15px;
+  display: flex;
 }
 header h1 {
   font-size: 24px;

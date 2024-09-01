@@ -21,6 +21,7 @@ function nextProgram() {
   <div class="program">
     <div class="main">
       <hgroup>
+        <img src="/sederhana.svg" />
         <h1>{{ $t("app-short-name") }}</h1>
         <h2>{{ $t("app-description") }}</h2>
       </hgroup>
@@ -48,7 +49,7 @@ function nextProgram() {
   height: 100%;
 }
 hgroup {
-  width: 80%;
+  width: 100%;
   height: 80%;
   padding-left: 1rem;
   padding-bottom: 1rem;
@@ -62,14 +63,21 @@ hgroup {
 .main div {
   height: 20%;
 }
+hgroup img {
+  height: 400px;
+}
 h1 {
   width: 100%;
-  font-size: 36px;
+  font-size: 60px;
   font-weight: bold;
+}
+h1::first-letter {
+  font-size: 120%;
+  color: #ff5555;
 }
 h2 {
   width: 100%;
-  font-size: 12px;
+  font-size: 18px;
   font-weight: normal;
 }
 </style>
