@@ -156,8 +156,6 @@ function redraw(winner: Candidate, programId: number) {
   overflow: hidden;
 }
 .message {
-  font-size: 200%;
-  font-weight: bold;
   margin: auto;
 }
 </style>

@@ -6,7 +6,10 @@ import { parse as JSONCParse } from "jsonc-parser";
 import { VFileInput } from "vuetify/components";
 import { useI18n } from "vue-i18n";
 import { ZodError } from "zod";
+import MarkedText from "@/components/MarkedText.vue";
+import { useMarkdownStore } from "@/store/markdown";
 const { locale } = useI18n();
+const markdownStore = useMarkdownStore();
 
 const emit = defineEmits<{
   (e: "loadSettings", settings: PartyPlans): void;
@@ -35,6 +38,12 @@ async function loadJSONCText(jsoncText: string) {
     } else {
       throw e;
     }
+  }
+
+  if (settings.value?.markdown) {
+    markdownStore.enableMarkdown();
+  } else {
+    markdownStore.disableMarkdown();
   }
 }
 async function loadProgramFile(e: Event) {
@@ -112,7 +121,9 @@ const sampleProgramUrl = computed(() => {
         </tr>
         <template v-for="(program, i) in settings?.program" :key="i">
           <tr v-if="program.type == 'MESSAGE'">
-            <td colspan="5">{{ program.message }}</td>
+            <td colspan="5">
+              <MarkedText :markdown="program.message"></MarkedText>
+            </td>
           </tr>
           <tr v-if="program.type == 'PRIZE'">
             <td>
@@ -123,7 +134,7 @@ const sampleProgramUrl = computed(() => {
               />
             </td>
             <td>
-              {{ program.prize_name }}
+              <MarkedText :markdown="program.prize_name"></MarkedText>
             </td>
             <td style="text-align: right">{{ program.winner_number }}</td>
             <td style="text-align: right">

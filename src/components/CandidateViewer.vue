@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref, Ref } from "vue";
 import { Candidate, DisplaySetting } from "@/myTypes";
+import PreWrap from "./PreWrap.vue";
 
 defineProps<{
   /** 候補者 */
@@ -48,25 +49,34 @@ onMounted(() => {
   <div class="candidate_wrapper">
     <div class="candidate" ref="info_wrapper">
       <p class="top_info" ref="top_info">
-        {{
-          displaySetting.top_pos === null
-            ? ""
-            : candidate.data[displaySetting.top_pos]
-        }}
+        <PreWrap
+          :text="
+            displaySetting.top_pos === null
+              ? ''
+              : candidate.data[displaySetting.top_pos]
+          "
+        >
+        </PreWrap>
       </p>
       <p class="main_info" ref="main_info">
-        {{
-          displaySetting.main_pos === null
-            ? ""
-            : candidate.data[displaySetting.main_pos]
-        }}
+        <PreWrap
+          :text="
+            displaySetting.main_pos === null
+              ? ''
+              : candidate.data[displaySetting.main_pos]
+          "
+        >
+        </PreWrap>
       </p>
       <p class="bottom_info" ref="bottom_info">
-        {{
-          displaySetting.bottom_pos === null
-            ? ""
-            : candidate.data[displaySetting.bottom_pos]
-        }}
+        <PreWrap
+          :text="
+            displaySetting.bottom_pos === null
+              ? ''
+              : candidate.data[displaySetting.bottom_pos]
+          "
+        >
+        </PreWrap>
       </p>
     </div>
   </div>

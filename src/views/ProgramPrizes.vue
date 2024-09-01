@@ -1,8 +1,11 @@
 <script setup lang="ts">
-import { ref, Ref, inject } from "vue";
+import { ref, Ref, inject, computed } from "vue";
 import { Candidate, DisplaySetting } from "@/myTypes";
 import { Prize, PartyPlans } from "@/Schema";
 import NameLottery from "@/components/NameLottery.vue";
+import MarkedText from "@/components/MarkedText.vue";
+import { useMarkdownStore } from "@/store/markdown";
+const markdownStore = useMarkdownStore();
 const emit = defineEmits<{
   (e: "finishProgram"): void;
   (e: "redraw", winner: Candidate): void;
@@ -76,11 +79,27 @@ function redraw(winner: Candidate) {
   decidedCount.value--;
   redrawing.value = true;
 }
+
+/**
+ * 横に並べる抽選機の数
+ */
+const winnersPerRow = computed(() =>
+  Math.ceil(props.winners.length / Math.ceil(props.winners.length / 5)),
+);
+
+const prizeNameFontSize = computed(() =>
+  markdownStore.markdown ? "1.2rem" : "2rem",
+);
+const prizeNameFontWeight = computed(() =>
+  markdownStore.markdown ? "normal" : "bold",
+);
 </script>
 
 <template>
   <div class="program programPrize">
-    <h1>{{ program.prize_name }}</h1>
+    <h1>
+      <MarkedText :markdown="program.prize_name"></MarkedText>
+    </h1>
 
     <div class="prizeImage" v-show="beforeDraw">
       <img v-if="program.img" :src="program.img" />
@@ -113,6 +132,11 @@ function redraw(winner: Candidate) {
 </template>
 
 <style scoped>
+h1 {
+  text-align: center;
+  font-size: v-bind(prizeNameFontSize);
+  font-weight: v-bind(prizeNameFontWeight);
+}
 .prizeImage {
   height: 100%;
   text-align: center;
@@ -135,7 +159,7 @@ function redraw(winner: Candidate) {
 }
 
 .lotteries div {
-  --length: v-bind(Math.min(winners.length, 5));
+  --length: v-bind(winnersPerRow);
   margin: auto 0.5rem;
   width: calc(calc(100% / var(--length)) - 1rem);
 }

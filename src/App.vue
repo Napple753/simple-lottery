@@ -83,4 +83,9 @@ body {
   box-sizing: border-box;
   flex-shrink: 0;
 }
+
+h1 .markDownWrapper strong,
+.message .markDownWrapper strong {
+  font-size: 2rem;
+}
 </style>

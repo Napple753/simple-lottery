@@ -4,6 +4,10 @@ import { WinnerCandidateLog, Candidate, DisplaySetting } from "@/myTypes";
 import { DisplayWinner } from "@/Schema";
 import ConfirmRedraw from "@/components/ConfirmRedraw.vue";
 import NameLotteryCore from "@/components/NameLotteryCore.vue";
+import MarkedText from "@/components/MarkedText.vue";
+import PreWrap from "@/components/PreWrap.vue";
+import { useMarkdownStore } from "@/store/markdown";
+const markdownStore = useMarkdownStore();
 
 const emit = defineEmits<{
   (e: "finishProgram"): void;
@@ -107,6 +111,10 @@ function closeRedrawingDialog() {
 }
 
 const redrawing = ref(false);
+
+const prizeNameFontWeight = computed(() =>
+  markdownStore.markdown ? "normal" : "bold",
+);
 </script>
 
 <template>
@@ -115,7 +123,9 @@ const redrawing = ref(false);
     <div class="winners_list_wrapper">
       <div class="winners_list">
         <div v-for="(prize, i) in sortedWinnersLog" :key="i" class="prize">
-          <h2>{{ prize.prizeName }}</h2>
+          <h2>
+            <MarkedText :markdown="prize.prizeName"></MarkedText>
+          </h2>
           <table>
             <tr v-for="winner in prize.selected" :key="winner.candidate.id">
               <td>
@@ -132,8 +142,12 @@ const redrawing = ref(false);
                 v-for="(cell, k) in winner.candidate.data"
                 :key="winner.candidate.id + '' + k"
               >
-                <template v-if="!winner.cancelledTS">{{ cell }}</template>
-                <s v-else>{{ cell }}</s>
+                <template v-if="!winner.cancelledTS">
+                  <PreWrap :text="cell"></PreWrap>
+                </template>
+                <s v-else>
+                  <PreWrap :text="cell"></PreWrap>
+                </s>
               </td>
             </tr>
           </table>
@@ -159,17 +173,14 @@ const redrawing = ref(false);
     persistent
     max-width="35rem"
   >
-    <v-card
-      prepend-icon="mdi-reload"
-      :title="$t('redraw') + ': ' + redrawingPrizeName"
-      fill-height
-    >
+    <v-card prepend-icon="mdi-reload" :title="$t('redraw') + ': '" fill-height>
       <template v-slot:actions>
         <v-btn @click="closeRedrawingDialog" v-show="!redrawing">
           {{ $t("next") }}
         </v-btn>
       </template>
-      <div style="width: 100%">
+      <div style="width: 30rem; margin: auto">
+        <h2><MarkedText :markdown="redrawingPrizeName" /></h2>
         <NameLotteryCore
           style="margin: auto"
           ref="lotteryCore"
@@ -191,6 +202,10 @@ const redrawing = ref(false);
 </template>
 
 <style scoped>
+h2 {
+  font-size: 1.2rem;
+  font-weight: v-bind(prizeNameFontWeight);
+}
 .winners_list_wrapper {
   height: 100%;
   width: 100%;
@@ -217,10 +232,11 @@ td {
   white-space: nowrap;
 }
 td {
-  padding: 1rem 1rem;
+  padding: 1rem 0.5rem;
   user-select: all;
 }
 td:first-child {
+  width: 48px;
   padding: 0 0;
 }
 
