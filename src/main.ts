@@ -1,4 +1,5 @@
 import { createApp } from "vue";
+import { createPinia } from "pinia";
 
 // Vuetify
 import "vuetify/styles";
@@ -27,7 +28,7 @@ const i18n = createI18n({
   messages,
 });
 
-createApp(App).use(i18n).use(vuetify).mount("#app");
+createApp(App).use(i18n).use(vuetify).use(createPinia()).mount("#app");
 
 //eslint-disable-next-line
 //@ts-ignore
