@@ -6,6 +6,7 @@ import { readAnyEncoding } from "@/logic/readAnyEncoding";
 import CandidateViewer from "@/components/CandidateViewer.vue";
 import CandidateViewSetting from "@/components/CandidateViewSetting.vue";
 import Papa from "papaparse";
+import PreWrap from "@/components/PreWrap.vue";
 import { useI18n } from "vue-i18n";
 const { locale, t } = useI18n();
 
@@ -167,10 +168,14 @@ function getMaxWinnersPrize() {
         </p>
         <table class="candidatesTable">
           <tr>
-            <th v-for="(cell, i) in candidatesHeader" :key="i">{{ cell }}</th>
+            <th v-for="(cell, i) in candidatesHeader" :key="i">
+              <PreWrap :text="cell"></PreWrap>
+            </th>
           </tr>
           <tr v-for="candidate in candidatesBody" :key="candidate.id">
-            <td v-for="(cell, i) in candidate.data" :key="i">{{ cell }}</td>
+            <td v-for="(cell, i) in candidate.data" :key="i">
+              <PreWrap :text="cell"></PreWrap>
+            </td>
           </tr>
         </table>
       </div>

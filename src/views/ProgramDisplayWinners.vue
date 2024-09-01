@@ -5,6 +5,7 @@ import { DisplayWinner } from "@/Schema";
 import ConfirmRedraw from "@/components/ConfirmRedraw.vue";
 import NameLotteryCore from "@/components/NameLotteryCore.vue";
 import MarkedText from "@/components/MarkedText.vue";
+import PreWrap from "@/components/PreWrap.vue";
 import { useMarkdownStore } from "@/store/markdown";
 const markdownStore = useMarkdownStore();
 
@@ -141,8 +142,12 @@ const prizeNameFontWeight = computed(() =>
                 v-for="(cell, k) in winner.candidate.data"
                 :key="winner.candidate.id + '' + k"
               >
-                <template v-if="!winner.cancelledTS">{{ cell }}</template>
-                <s v-else>{{ cell }}</s>
+                <template v-if="!winner.cancelledTS">
+                  <PreWrap :text="cell"></PreWrap>
+                </template>
+                <s v-else>
+                  <PreWrap :text="cell"></PreWrap>
+                </s>
               </td>
             </tr>
           </table>
