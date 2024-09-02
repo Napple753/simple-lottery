@@ -48,6 +48,12 @@ function startParty(settings: {
     :party-plans="partyPlans!"
     :display-setting="displaySetting!"
   ></PartyControl>
+  <footer>
+    <a href="https://github.com/Napple753/simple-lottery" target="_blank">
+      SEDERHANA &copy;2024
+      <img src="/github-mark.svg" style="height: 14px" /> Napple753
+    </a>
+  </footer>
 </template>
 
 <style>
@@ -71,10 +77,14 @@ body {
 }
 
 .button_wrapper {
-  width: 80%;
+  width: 100%;
+  padding-right: 1em;
   height: 2rem;
   text-align: right;
   margin-bottom: 1rem;
+
+  position: relative;
+  z-index: 1000;
 }
 
 .loadingForm {
@@ -87,5 +97,26 @@ body {
 h1 .markDownWrapper strong,
 .message .markDownWrapper strong {
   font-size: 2rem;
+}
+
+footer {
+  height: 36px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #aaa;
+  position: absolute;
+  bottom: 0;
+}
+footer a {
+  display: block;
+  color: #aaa;
+  text-decoration: none;
+  break-inside: avoid;
+}
+footer a:hover {
+  color: #777;
+  text-decoration: underline;
 }
 </style>

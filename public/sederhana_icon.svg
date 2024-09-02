@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="188.97638"
+   height="188.97638"
+   viewBox="0 0 50 50"
+   version="1.1"
+   id="svg5"
+   sodipodi:docname="icon_small_output.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="px"
+     showgrid="false"
+     inkscape:zoom="2.457378"
+     inkscape:cx="84.032656"
+     inkscape:cy="86.474283"
+     inkscape:window-width="1440"
+     inkscape:window-height="755"
+     inkscape:window-x="0"
+     inkscape:window-y="1105"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1"
+     showguides="false"
+     width="50mm"
+     units="px" />
+  <defs
+     id="defs2">
+    <linearGradient
+       id="linearGradient2266"
+       inkscape:swatch="solid">
+      <stop
+         style="stop-color:#cccccc;stop-opacity:1;"
+         offset="0"
+         id="stop2264" />
+    </linearGradient>
+    <rect
+       x="101.81081"
+       y="231.08376"
+       width="144.67851"
+       height="95.782539"
+       id="rect26150" />
+    <rect
+       x="136.64082"
+       y="244.4799"
+       width="44.207329"
+       height="91.763695"
+       id="rect21936" />
+    <rect
+       x="114.01714"
+       y="281.64499"
+       width="92.874893"
+       height="53.61071"
+       id="rect1492" />
+    <rect
+       x="101.81081"
+       y="231.08376"
+       width="144.67851"
+       height="95.782539"
+       id="rect26150-5" />
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       sodipodi:type="star"
+       style="fill:#e6e6e6;fill-opacity:1;stroke-width:4.7811;stroke-linejoin:round"
+       id="path1271"
+       inkscape:flatsided="true"
+       sodipodi:sides="4"
+       sodipodi:cx="26.120728"
+       sodipodi:cy="29.852261"
+       sodipodi:r1="54.122662"
+       sodipodi:r2="38.2705"
+       sodipodi:arg1="0.78539816"
+       sodipodi:arg2="1.5707963"
+       inkscape:rounded="0.1"
+       inkscape:randomized="0"
+       transform="matrix(0.47248149,0,0,0.47248149,12.65844,10.895359)"
+       d="m 64.391229,68.122761 c -5.412266,5.412267 -71.1287362,5.412267 -76.541002,10e-7 -5.412267,-5.412266 -5.412267,-71.1287361 -1e-6,-76.5410023 5.4122665,-5.4122657 71.128736,-5.4122667 76.541002,-3e-7 5.412267,5.4122662 5.412267,71.1287356 10e-7,76.5410016 z" />
+    <g
+       aria-label="S"
+       transform="scale(1.0970302,0.91155193)"
+       id="text2789"
+       style="font-size:38.589px;line-height:1.25;stroke-width:0.241181">
+      <path
+         d="M 29.329634,20.325379 Q 28.094786,19.322065 26.859938,18.858997 25.62509,18.35734 24.46742,18.35734 q -1.466382,0 -2.392518,0.694602 -0.926136,0.694602 -0.926136,1.813683 0,0.77178 0.463068,1.273437 0.463068,0.501657 1.196259,0.887547 0.77178,0.347301 1.697916,0.617424 0.964725,0.270123 1.890861,0.578835 3.704544,1.234848 5.40246,3.318654 1.736505,2.045217 1.736505,5.363871 0,2.238162 -0.77178,4.051845 -0.733191,1.813683 -2.199573,3.125709 -1.427793,1.273437 -3.550188,1.968039 -2.083806,0.733191 -4.746447,0.733191 -5.518227,0 -10.226085,-3.280065 l 3.241476,-6.097062 q 1.697916,1.504971 3.357243,2.238162 1.659327,0.733191 3.280065,0.733191 1.852272,0 2.739819,-0.848958 0.926136,-0.848958 0.926136,-1.92945 0,-0.656013 -0.231534,-1.119081 -0.231534,-0.501657 -0.77178,-0.887547 -0.540246,-0.424479 -1.427793,-0.77178 -0.848958,-0.347301 -2.083806,-0.77178 -1.466382,-0.463068 -2.894175,-1.003314 -1.389204,-0.578835 -2.508285,-1.504971 -1.080492,-0.926136 -1.775094,-2.31534 -0.656013,-1.427793 -0.656013,-3.588777 0,-2.160984 0.694602,-3.897489 0.733191,-1.775094 2.006628,-3.009942 1.312026,-1.273437 3.164298,-1.968039 1.890861,-0.694602 4.206201,-0.694602 2.160984,0 4.514913,0.617424 2.353929,0.578835 4.514913,1.736505 z"
+         style="font-weight:bold;font-family:Futura;-inkscape-font-specification:'Futura Bold';fill:#ff5555"
+         id="path917" />
+    </g>
+  </g>
+</svg>
