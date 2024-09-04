@@ -31,10 +31,25 @@ async function loadJSONCText(jsoncText: string) {
   const loaded = await JSONCParse(jsoncText);
   try {
     settings.value = PartyPlans.parse(loaded);
+
+    settings.value.program.forEach((program) => {
+      if (program.type === "PRIZE") {
+        if (
+          program.sub_prize_names &&
+          program.sub_prize_names.length !== program.winner_number
+        ) {
+          throw new Error("sub_prize_names");
+        }
+      }
+    });
   } catch (e) {
-    if (e instanceof ZodError) {
+    if (
+      e instanceof ZodError ||
+      (e instanceof Error && e.message === "sub_prize_names")
+    ) {
       partyFileInvalidSnackBar.value = true;
       partyPlanFile.value = null;
+      settings.value = null;
     } else {
       throw e;
     }

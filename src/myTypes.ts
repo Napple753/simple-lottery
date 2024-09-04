@@ -83,18 +83,24 @@ export type TimeStamp = number;
 export type WinnerIdLog = {
   programId: number;
   prizeName: string;
-  selected: { id: CandidateId; selectTS: TimeStamp }[];
-  cancelled: { id: CandidateId; selectTS: TimeStamp; cancelledTS: TimeStamp }[];
+  selected: { id: CandidateId; selectTS: TimeStamp; prizeName: string }[];
+  cancelled: {
+    id: CandidateId;
+    selectTS: TimeStamp;
+    cancelledTS: TimeStamp;
+    prizeName: string;
+  }[];
 };
 
 export type WinnerCandidateLog = {
   programId: number;
   prizeName: string;
-  selected: { candidate: Candidate; selectTS: TimeStamp }[];
+  selected: { candidate: Candidate; selectTS: TimeStamp; prizeName: string }[];
   cancelled: {
     candidate: Candidate;
     selectTS: TimeStamp;
     cancelledTS: TimeStamp;
+    prizeName: string;
   }[];
 };
 

@@ -3,6 +3,7 @@ import { ref, Ref } from "vue";
 import { Candidate, DisplaySetting } from "@/myTypes";
 import ConfirmRedraw from "./ConfirmRedraw.vue";
 import NameLotteryCore from "./NameLotteryCore.vue";
+import MarkedText from "./MarkedText.vue";
 const emit = defineEmits<{
   (e: "finishDraw"): void;
   (e: "redraw", winner: Candidate): void;
@@ -23,6 +24,8 @@ const props = defineProps<{
   noRedraw?: boolean;
   /** ドラムロール音を再生 */
   playDrumRoll?: boolean;
+  /** sub_prize_name */
+  subPrizeName?: string;
 }>();
 
 const isDeciding: Ref<boolean> = ref(false);
@@ -53,6 +56,7 @@ defineExpose({ draw });
 
 <template>
   <div style="max-width: 30rem">
+    <MarkedText :markdown="subPrizeName" v-if="subPrizeName"></MarkedText>
     <NameLotteryCore
       ref="lotteryCore"
       :winner="winner"

@@ -57,8 +57,10 @@ function next() {
     const programId = currentProgramId.value;
     const prize_name = currentProgram.value.prize_name;
     const winner_number = currentProgram.value.winner_number;
+    const subPrizeName = currentProgram.value.sub_prize_names;
     const winners =
-      lotteryBox?.draw(programId, prize_name, winner_number) || null;
+      lotteryBox?.draw(programId, prize_name, winner_number, subPrizeName) ||
+      null;
     currentWinners.value = winners || [];
   } else {
     currentWinners.value = [];

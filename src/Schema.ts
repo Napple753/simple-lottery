@@ -12,6 +12,7 @@ export const Prize = ProgramBase.merge(
     winner_number: z.number(),
     time_before_first_winner: z.number().nonnegative().optional(),
     time_between_winners: z.number().nonnegative().optional(),
+    sub_prize_names: z.array(z.string()).optional(),
   }),
 );
 export type Prize = z.infer<typeof Prize>;

@@ -93,11 +93,18 @@ const prizeNameFontSize = computed(() =>
 const prizeNameFontWeight = computed(() =>
   markdownStore.markdown ? "normal" : "bold",
 );
+
+const winner_prize = computed(() =>
+  props.winners.map((winner, i) => ({
+    winner,
+    sub_prize_name: props.program.sub_prize_names?.[i] ?? undefined,
+  })),
+);
 </script>
 
 <template>
   <div class="program programPrize">
-    <h1>
+    <h1 v-show="beforeDraw || !program.sub_prize_names">
       <MarkedText :markdown="program.prize_name"></MarkedText>
     </h1>
 
@@ -110,11 +117,15 @@ const prizeNameFontWeight = computed(() =>
     </div>
 
     <div v-show="!beforeDraw" class="lotteries">
-      <template v-for="winner in winners" :key="winner.id">
+      <template
+        v-for="{ winner, sub_prize_name } in winner_prize"
+        :key="winner.id"
+      >
         <NameLottery
+          :subPrizeName="sub_prize_name"
           :winner="winner"
           :candidates="candidates"
-          :is-simple="winners.length > 5"
+          :isSimple="winners.length > 5"
           :displaySetting="displaySetting"
           :ref="lotteryEls"
           :immediate="redrawing"

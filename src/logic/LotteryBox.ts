@@ -29,14 +29,23 @@ export class LotteryBox {
    * @param count 当選者の数
    * @returns
    */
-  draw(programId: number, prizeName: string, count: number) {
+  draw(
+    programId: number,
+    prizeName: string,
+    count: number,
+    subPrizeName?: string[],
+  ) {
     const selected = this.#drawMany(count);
     const selectedIds = selected.map((c) => c.id);
     const timestamp = Date.now();
     this.#winnerLogIds.push({
       programId,
       prizeName,
-      selected: selectedIds.map((id, i) => ({ id, selectTS: timestamp + i })),
+      selected: selectedIds.map((id, i) => ({
+        id,
+        selectTS: timestamp + i,
+        prizeName: subPrizeName ? subPrizeName[i] : prizeName,
+      })),
       cancelled: [],
     });
     return selected;
@@ -68,6 +77,7 @@ export class LotteryBox {
       id: CandidateId;
       selectTS: TimeStamp;
       cancelledTS: TimeStamp;
+      prizeName: string;
     } = {
       ...programLog.selected[canceledIndex],
       cancelledTS: timestamp,
@@ -82,6 +92,7 @@ export class LotteryBox {
     programLog.selected.splice(canceledIndex, 1, {
       id: redrawWinner.id,
       selectTS: timestamp,
+      prizeName: cancelledLog.prizeName,
     });
 
     return redrawWinner;
@@ -109,16 +120,23 @@ export class LotteryBox {
         .map((s) => ({
           candidate: this.#candidates.find((c) => c.id == s.id),
           selectTS: s.selectTS,
+          prizeName: s.prizeName,
         }))
         .filter(
-          (c): c is { candidate: Candidate; selectTS: TimeStamp } =>
-            c.candidate !== undefined,
+          (
+            c,
+          ): c is {
+            candidate: Candidate;
+            selectTS: TimeStamp;
+            prizeName: string;
+          } => c.candidate !== undefined,
         );
       const canceledCandidates = log.cancelled
         .map((s) => ({
           candidate: this.#candidates.find((c) => c.id == s.id),
           selectTS: s.selectTS,
           cancelledTS: s.cancelledTS,
+          prizeName: s.prizeName,
         }))
         .filter(
           (
@@ -127,6 +145,7 @@ export class LotteryBox {
             candidate: Candidate;
             selectTS: TimeStamp;
             cancelledTS: TimeStamp;
+            prizeName: string;
           } => c.candidate !== undefined,
         );
       return {
