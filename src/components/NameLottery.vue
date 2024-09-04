@@ -38,7 +38,6 @@ function draw(
   drawingTime = 10 * 1000,
   teasing: number | undefined = undefined,
 ) {
-  console.log(props.subPrizeName);
   lotteryCore.value?.draw(drawingTime, teasing);
 }
 

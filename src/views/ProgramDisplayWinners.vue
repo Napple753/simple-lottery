@@ -23,8 +23,8 @@ const props = defineProps<{
 const redrawDialog = ref(false);
 const cancelledWinner = ref<Candidate | null>(null);
 
-const sortedWinnersLog = computed(() =>
-  props.winnersLog.map((log) => ({
+const displayWinnersLog = computed(() => {
+  const sortedWinnersLog = props.winnersLog.map((log) => ({
     ...log,
     selected: [
       ...log.selected.map((s) => ({ ...s, cancelledTS: undefined })),
@@ -33,8 +33,39 @@ const sortedWinnersLog = computed(() =>
       .filter((c) => c.candidate.id !== newCandidate.value?.id)
       .sort((a, b) => a.selectTS - b.selectTS),
     cancelled: undefined,
-  })),
-);
+  }));
+  const prizeNames: { programId: number; prizeName: string }[] =
+    uniqueObjectArray(
+      sortedWinnersLog
+        .map((prize) =>
+          prize.selected.map((s) => ({
+            programId: prize.programId,
+            prizeName: s.prizeName,
+          })),
+        )
+        .flat(),
+    );
+
+  return prizeNames
+    .map(({ programId, prizeName }) => {
+      const prize = sortedWinnersLog.find(
+        (prize) => prize.programId === programId,
+      );
+      if (!prize) return false;
+      return {
+        ...prize,
+        prizeName,
+        selected: prize.selected.filter((s) => s.prizeName === prizeName),
+      };
+    })
+    .filter((prize) => prize !== false);
+});
+
+function uniqueObjectArray<T>(inputArray: T[]): T[] {
+  const inputJSONArrray = inputArray.map((i) => JSON.stringify(i));
+  const uniqueJSONArray = Array.from(new Set(inputJSONArrray));
+  return uniqueJSONArray.map((u) => JSON.parse(u) as T);
+}
 
 function nextProgram() {
   emit("finishProgram");
@@ -43,9 +74,10 @@ function nextProgram() {
 const redrawingProgramId: Ref<number | null> = ref(null);
 const redrawingPrizeName = computed(
   () =>
-    props.winnersLog.find(
-      (prize) => prize.programId === redrawingProgramId.value,
-    )?.prizeName || "",
+    props.winnersLog
+      .find((prize) => prize.programId === redrawingProgramId.value)
+      ?.selected.find((s) => s.candidate.id === newCandidate.value?.id)
+      ?.prizeName || "",
 );
 
 function redrawConfirm(programId: number, candidateId: number) {
@@ -122,7 +154,7 @@ const prizeNameFontWeight = computed(() =>
     <h1>{{ $t("winners-so-far") }}</h1>
     <div class="winners_list_wrapper">
       <div class="winners_list">
-        <div v-for="(prize, i) in sortedWinnersLog" :key="i" class="prize">
+        <div v-for="(prize, i) in displayWinnersLog" :key="i" class="prize">
           <h2>
             <MarkedText :markdown="prize.prizeName"></MarkedText>
           </h2>

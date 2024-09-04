@@ -19,7 +19,7 @@ function saveWinnersLog() {
       return [
         ...log.selected.map((c) => {
           return [
-            log.prizeName,
+            c.prizeName,
             new Date(c.selectTS).toISOString(),
             "FALSE",
             ...c.candidate.data,
@@ -27,7 +27,7 @@ function saveWinnersLog() {
         }),
         ...log.cancelled.map((c) => {
           return [
-            log.prizeName,
+            c.prizeName,
             new Date(c.selectTS).toISOString(),
             "TRUE",
             ...c.candidate.data,
