@@ -100,6 +100,17 @@ const winner_prize = computed(() =>
     sub_prize_name: props.program.sub_prize_names?.[i] ?? undefined,
   })),
 );
+
+const LotterySize = computed(() => {
+  switch (props.winners.length) {
+    case 1:
+      return 60;
+    case 2:
+      return 45;
+    default:
+      return 30;
+  }
+});
 </script>
 
 <template>
@@ -129,6 +140,7 @@ const winner_prize = computed(() =>
           :displaySetting="displaySetting"
           :ref="lotteryEls"
           :immediate="redrawing"
+          :lotterySize="LotterySize"
           @finish-draw="decided"
           @redraw="(winner) => redraw(winner)"
         ></NameLottery>
