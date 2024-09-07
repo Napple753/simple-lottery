@@ -1,14 +1,21 @@
 <script setup lang="ts">
-import { onMounted, ref, Ref } from "vue";
+import { onMounted, ref, Ref, computed } from "vue";
 import { Candidate, DisplaySetting } from "@/myTypes";
 import PreWrap from "./PreWrap.vue";
 
-defineProps<{
-  /** 候補者 */
-  candidate: Candidate;
-  /** 当選者の表示順設定 */
-  displaySetting: DisplaySetting;
-}>();
+const props = withDefaults(
+  defineProps<{
+    /** 候補者 */
+    candidate: Candidate;
+    /** 当選者の表示順設定 */
+    displaySetting: DisplaySetting;
+    /** 横幅[rem] */
+    lotterySize?: number;
+  }>(),
+  {
+    lotterySize: 30,
+  },
+);
 
 const top_info: Ref<HTMLElement | null> = ref(null);
 const topScale = ref(1);
@@ -43,6 +50,10 @@ onMounted(() => {
     bottomScale.value = baseW / bottomW;
   }
 });
+
+const LotteryHeight = computed(() => `${props.lotterySize / 3}rem`);
+const mainFontSize = computed(() => `${(props.lotterySize / 30) * 2}rem`);
+const normalFontSize = computed(() => `${(props.lotterySize / 30) * 1}rem`);
 </script>
 
 <template>
@@ -88,7 +99,7 @@ onMounted(() => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 10rem;
+  height: v-bind(LotteryHeight);
   width: 100%;
   box-sizing: border-box;
   border: 1px solid grey;
@@ -115,16 +126,16 @@ onMounted(() => {
 }
 
 .top_info {
-  font-size: 1rem;
+  font-size: v-bind(normalFontSize);
   --scale: v-bind(topScale);
 }
 .main_info {
-  font-size: 2rem;
+  font-size: v-bind(mainFontSize);
   font-weight: 800;
   --scale: v-bind(mainScale);
 }
 .bottom_info {
-  font-size: 1rem;
+  font-size: v-bind(normalFontSize);
   --scale: v-bind(bottomScale);
 }
 </style>

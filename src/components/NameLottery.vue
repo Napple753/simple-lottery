@@ -11,24 +11,31 @@ const emit = defineEmits<{
   (e: "redraw", winner: Candidate): void;
 }>();
 
-const props = defineProps<{
-  /** 当選者 */
-  winner: Candidate;
-  /** ダミー当選者作成用の候補者 */
-  candidates: Candidate[];
-  /** ロールの省略 */
-  isSimple?: boolean;
-  /** 当選者の表示順設定 */
-  displaySetting: DisplaySetting;
-  /** 読み込みと同時にロール開始 */
-  immediate?: boolean;
-  /**再抽選 */
-  noRedraw?: boolean;
-  /** ドラムロール音を再生 */
-  playDrumRoll?: boolean;
-  /** sub_prize_name */
-  subPrizeName?: string;
-}>();
+const props = withDefaults(
+  defineProps<{
+    /** 当選者 */
+    winner: Candidate;
+    /** ダミー当選者作成用の候補者 */
+    candidates: Candidate[];
+    /** ロールの省略 */
+    isSimple?: boolean;
+    /** 当選者の表示順設定 */
+    displaySetting: DisplaySetting;
+    /** 読み込みと同時にロール開始 */
+    immediate?: boolean;
+    /**再抽選 */
+    noRedraw?: boolean;
+    /** ドラムロール音を再生 */
+    playDrumRoll?: boolean;
+    /** sub_prize_name */
+    subPrizeName?: string;
+    /** 横幅[rem] */
+    lotterySize?: number;
+  }>(),
+  {
+    lotterySize: 30,
+  },
+);
 
 const isDeciding: Ref<boolean> = ref(false);
 
@@ -55,10 +62,17 @@ function redraw() {
 
 defineExpose({ draw });
 
+const prizeNameFontSize = computed(() => (props.lotterySize / 30) * 1 + "rem");
+
 const prizeNameFontWeight = computed(() =>
   markdownStore.markdown ? "normal" : "bold",
 );
-const wrapperMaxWidth = computed(() => (props.subPrizeName ? "100%" : "30rem"));
+
+const LotteryWidth = computed(() => `${props.lotterySize}rem`);
+const wrapperMaxWidth = computed(() =>
+  props.subPrizeName ? "100%" : LotteryWidth.value,
+);
+const controlHeight = computed(() => `${(props.lotterySize / 30) * 48}px`);
 </script>
 
 <template>
@@ -68,7 +82,7 @@ const wrapperMaxWidth = computed(() => (props.subPrizeName ? "100%" : "30rem"));
       v-if="subPrizeName"
       class="subPrizeName"
     ></MarkedText>
-    <div style="max-width: 30rem; width: 100%">
+    <div class="innerWrapper">
       <NameLotteryCore
         ref="lotteryCore"
         :winner="winner"
@@ -78,8 +92,9 @@ const wrapperMaxWidth = computed(() => (props.subPrizeName ? "100%" : "30rem"));
         :immediate="immediate"
         :playDrumRoll="playDrumRoll"
         @finishDraw="finishDraw"
+        :lotterySize="lotterySize"
       ></NameLotteryCore>
-      <div style="display: flex; justify-content: end; height: 48px">
+      <div class="reloadControl">
         <v-btn
           icon
           class="reload"
@@ -110,7 +125,7 @@ const wrapperMaxWidth = computed(() => (props.subPrizeName ? "100%" : "30rem"));
   align-items: center;
 }
 .subPrizeName {
-  font-size: 1em;
+  font-size: v-bind(prizeNameFontSize);
   font-weight: v-bind(prizeNameFontWeight);
   text-align: center;
   display: flex;
@@ -118,5 +133,14 @@ const wrapperMaxWidth = computed(() => (props.subPrizeName ? "100%" : "30rem"));
   flex-direction: column;
   align-items: center;
   justify-content: end;
+}
+.innerWrapper {
+  width: 100%;
+  max-width: v-bind(LotteryWidth);
+}
+.reloadControl {
+  display: flex;
+  justify-content: end;
+  height: v-bind(controlHeight);
 }
 </style>
