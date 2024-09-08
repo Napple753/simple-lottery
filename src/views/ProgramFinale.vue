@@ -65,13 +65,12 @@ hgroup {
   color: #333333;
 }
 h1 {
-  height: 100%;
   display: flex;
   justify-content: end;
   flex-direction: column;
 }
 h1 img {
-  width: 420px;
+  width: 280px;
   max-width: 100%;
   max-height: 100%;
   user-select: none;
