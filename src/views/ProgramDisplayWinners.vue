@@ -211,7 +211,7 @@ const prizeNameFontWeight = computed(() =>
           {{ $t("next") }}
         </v-btn>
       </template>
-      <div style="width: 30rem; margin: auto">
+      <div style="max-width: 30rem; width: 100%; margin: auto">
         <h2><MarkedText :markdown="redrawingPrizeName" /></h2>
         <NameLotteryCore
           style="margin: auto"

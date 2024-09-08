@@ -67,7 +67,9 @@ function saveWinnersLog() {
 </script>
 
 <template>
-  <v-btn @click="saveWinnersLog">{{ $t("save-winners-csv") }}</v-btn>
+  <v-btn @click="saveWinnersLog" prepend-icon="mdi-content-save">{{
+    $t("save-winners-csv")
+  }}</v-btn>
 </template>
 
 <style scoped>

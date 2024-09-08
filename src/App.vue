@@ -105,18 +105,20 @@ footer {
   display: flex;
   justify-content: center;
   align-items: center;
-  color: #aaa;
+  color: #000000;
   position: absolute;
   bottom: 0;
 }
 footer a {
   display: block;
-  color: #aaa;
+  color: #000000;
   text-decoration: none;
   break-inside: avoid;
+  opacity: 0.15;
 }
 footer a:hover {
   color: #777;
   text-decoration: underline;
+  opacity: 0.4;
 }
 </style>

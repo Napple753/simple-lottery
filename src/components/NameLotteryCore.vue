@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { inject, ref, Ref, onMounted } from "vue";
+import { inject, ref, Ref, onMounted, computed } from "vue";
 import { Candidate, DisplaySetting } from "@/myTypes";
 import { wait } from "@/logic/wait";
 import { getDummyList } from "@/logic/getDummyList";
@@ -10,20 +10,27 @@ const emit = defineEmits<{
   (e: "redraw", winner: Candidate): void;
 }>();
 
-const props = defineProps<{
-  /** 当選者 */
-  winner: Candidate;
-  /** ダミー当選者作成用の候補者 */
-  candidates: Candidate[];
-  /** ロールの省略 */
-  isSimple?: boolean;
-  /** 当選者の表示順設定 */
-  displaySetting: DisplaySetting;
-  /** 読み込みと同時にロール開始 */
-  immediate?: boolean;
-  /** ドラムロール音を再生 */
-  playDrumRoll?: boolean;
-}>();
+const props = withDefaults(
+  defineProps<{
+    /** 当選者 */
+    winner: Candidate;
+    /** ダミー当選者作成用の候補者 */
+    candidates: Candidate[];
+    /** ロールの省略 */
+    isSimple?: boolean;
+    /** 当選者の表示順設定 */
+    displaySetting: DisplaySetting;
+    /** 読み込みと同時にロール開始 */
+    immediate?: boolean;
+    /** ドラムロール音を再生 */
+    playDrumRoll?: boolean;
+    /** 横幅[rem] */
+    lotterySize?: number;
+  }>(),
+  {
+    lotterySize: 30,
+  },
+);
 
 const bottom_pos: Ref<number> = ref(0);
 const transition_duration: Ref<number> = ref(0);
@@ -103,6 +110,9 @@ async function draw(
 }
 
 defineExpose({ draw });
+
+const LotteryWidth = computed(() => `${props.lotterySize}rem`);
+const LotteryHeight = computed(() => `${props.lotterySize / 3}rem`);
 </script>
 
 <template>
@@ -123,6 +133,7 @@ defineExpose({ draw });
           :candidate="candidate"
           :display-setting="displaySetting"
           :key="uniqueID + candidate.id"
+          :lotterySize="lotterySize"
         ></CandidateViewer>
       </div>
       <div v-if="displayWinner" class="winner">
@@ -130,6 +141,7 @@ defineExpose({ draw });
           :candidate="displayWinner"
           :display-setting="displaySetting"
           :key="uniqueID + displayWinner.id"
+          :lotterySize="lotterySize"
         ></CandidateViewer>
       </div>
     </div>
@@ -139,8 +151,8 @@ defineExpose({ draw });
 
 <style scoped>
 .lottery {
-  height: 10rem;
-  max-width: 30rem;
+  height: v-bind(LotteryHeight);
+  max-width: v-bind(LotteryWidth);
   box-sizing: border-box;
   overflow: hidden;
   position: relative;

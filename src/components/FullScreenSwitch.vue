@@ -11,6 +11,10 @@ function switchFullScreen() {
   }
 }
 const isFullScreen = ref(false);
+
+document.addEventListener("fullscreenchange", () => {
+  isFullScreen.value = !!document.fullscreenElement;
+});
 </script>
 <template>
   <v-btn icon flat @click="switchFullScreen">
