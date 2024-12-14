@@ -8,8 +8,10 @@ import { useI18n } from "vue-i18n";
 import { ZodError } from "zod";
 import MarkedText from "@/components/MarkedText.vue";
 import { useMarkdownStore } from "@/store/markdown";
+import { useReviveCancelledStore } from "@/store/reviveCancelled";
 const { locale } = useI18n();
 const markdownStore = useMarkdownStore();
+const redrawCancelled = useReviveCancelledStore();
 
 const emit = defineEmits<{
   (e: "loadSettings", settings: PartyPlans): void;
@@ -59,6 +61,12 @@ async function loadJSONCText(jsoncText: string) {
     markdownStore.enableMarkdown();
   } else {
     markdownStore.disableMarkdown();
+  }
+
+  if (settings.value?.revive_cancelled) {
+    redrawCancelled.enableReviveCancelled();
+  } else {
+    redrawCancelled.disableReviveCancelled();
   }
 }
 async function loadProgramFile(e: Event) {
