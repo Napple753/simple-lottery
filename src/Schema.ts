@@ -47,6 +47,7 @@ export const PartyPlans = z.object({
     .nonnegative()
     .default(2 * 1000),
   markdown: z.boolean().default(false),
+  revive_cancelled: z.boolean().default(false),
 });
 export type PartyPlans = z.infer<typeof PartyPlans>;
 

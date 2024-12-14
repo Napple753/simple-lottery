@@ -57,7 +57,11 @@ export class LotteryBox {
    * @param canceledCandidateId キャンセルする当選者のID
    * @returns
    */
-  redraw(programId: number, canceledCandidateId: CandidateId) {
+  redraw(
+    programId: number,
+    canceledCandidateId: CandidateId,
+    reviveCancelled = false,
+  ) {
     const programLog = this.#winnerLogIds.find(
       (log) => log.programId == programId,
     );
@@ -94,6 +98,19 @@ export class LotteryBox {
       selectTS: timestamp,
       prizeName: cancelledLog.prizeName,
     });
+
+    if (reviveCancelled) {
+      if (this.#notSelected.map((c) => c.id).includes(canceledCandidateId)) {
+        // キャンセルされた候補が未選択に含まれているので処理不要(すでに全員当選しているなど)
+      } else {
+        const revivedCandidate = this.#candidates.find(
+          (c) => c.id == canceledCandidateId,
+        );
+        if (revivedCandidate) {
+          this.#notSelected.push(revivedCandidate);
+        }
+      }
+    }
 
     return redrawWinner;
   }

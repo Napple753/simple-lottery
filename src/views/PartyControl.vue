@@ -10,7 +10,10 @@ import { PartyPlans } from "@/Schema";
 import { LotteryBox } from "@/logic/LotteryBox";
 import { SoundUtilities } from "@/logic/SoundUtilities";
 import { useI18n } from "vue-i18n";
+import { useReviveCancelledStore } from "@/store/reviveCancelled";
 const { t } = useI18n();
+
+const reviveCancelled = useReviveCancelledStore();
 
 const props = defineProps<{
   /** パーティーID */
@@ -81,7 +84,11 @@ function confirmSave(event: BeforeUnloadEvent) {
 }
 
 function redrawCurrentPrize(winner: Candidate) {
-  lotteryBox?.redraw(currentProgramId.value, winner.id);
+  lotteryBox?.redraw(
+    currentProgramId.value,
+    winner.id,
+    reviveCancelled.reviveCancelled,
+  );
 
   currentWinners.value =
     lotteryBox?.winnerLogCandidates
@@ -90,7 +97,11 @@ function redrawCurrentPrize(winner: Candidate) {
 }
 
 function redraw(winner: Candidate, programId: number) {
-  const newWinner = lotteryBox?.redraw(programId, winner.id);
+  const newWinner = lotteryBox?.redraw(
+    programId,
+    winner.id,
+    reviveCancelled.reviveCancelled,
+  );
 
   winnersCandidateLog.value = lotteryBox?.winnerLogCandidates || null;
 
