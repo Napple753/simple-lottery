@@ -38,4 +38,8 @@ export const ja: message_list = {
 
   "candidates-less-than-winners":
     "抽選対象者数が「{prizeName}」の当選者数より少ないです",
+
+  "plan-file-needed": "進行プログラムファイルが必要です",
+  "plan-file-must-be-only-one":
+    "進行プログラムファイルは1つだけ読み込むことができます",
 };

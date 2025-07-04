@@ -36,6 +36,10 @@ export const en = {
   "keep-winner": "Keep this winner",
 
   "candidates-less-than-winners": `The number of candidates is less than the number of "{prizeName}" winners.`,
+
+  "plan-file-needed": "A party plan file is needed.",
+  "plan-file-must-be-only-one":
+    "Only one party plan file can be loaded at a time.",
 };
 
 export type message_list = Partial<typeof en>;
