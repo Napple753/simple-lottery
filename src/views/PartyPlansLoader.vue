@@ -108,6 +108,7 @@ async function loadProgramFile(e: Event) {
   const inputElement = e.target as HTMLInputElement;
   if (inputElement.files === null || inputElement.files.length === 0) {
     partyPlanFile.value = null;
+    settings.value = null;
     return;
   }
   const setting_files = Array.from(inputElement.files).filter(
@@ -120,10 +121,12 @@ async function loadProgramFile(e: Event) {
   if (setting_files.length === 0) {
     errorMessage.value = t("plan-file-needed");
     partyPlanFile.value = null;
+    settings.value = null;
     return;
   } else if (setting_files.length > 1) {
     errorMessage.value = t("plan-file-must-be-only-one");
     partyPlanFile.value = null;
+    settings.value = null;
     return;
   }
 
@@ -132,8 +135,6 @@ async function loadProgramFile(e: Event) {
   const reader = new FileReader();
   reader.addEventListener("load", async () => {
     const res = readAnyEncoding(reader);
-
-    inputElement.value = "";
 
     loadPartyPlan(res as string, image_files);
   });
