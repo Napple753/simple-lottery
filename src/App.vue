@@ -50,7 +50,7 @@ function startParty(settings: {
   ></PartyControl>
   <footer>
     <a href="https://github.com/Napple753/simple-lottery" target="_blank">
-      SEDERHANA &copy;2024
+      SEDERHANA &copy;2025
       <img src="/github-mark.svg" style="height: 14px" /> Napple753
     </a>
   </footer>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, Ref, watch } from "vue";
+import { ref, Ref, watch } from "vue";
 import { PartyPlans } from "@/Schema";
 import { readAnyEncoding } from "@/logic/readAnyEncoding";
 import { parse as JSONCParse } from "jsonc-parser";
@@ -28,7 +28,12 @@ watch(errorMessage, (newValue) => {
 function loadSampleProgram() {
   partyPlanFile.value = null;
 
-  fetch(sampleProgramUrl.value)
+  const sampleProgramUrl =
+    locale.value === "ja"
+      ? import.meta.env.BASE_URL + "sample_setting_url.ja.jsonc"
+      : import.meta.env.BASE_URL + "sample_setting_url.jsonc";
+
+  fetch(sampleProgramUrl)
     .then((res) => res.text())
     .then((res) => loadPartyPlan(res));
 }
@@ -149,17 +154,13 @@ function nextProgram() {
 function downloadSample() {
   const link = document.createElement("a");
   link.download = "sample_setting.jsonc"; //filename for download dialog
-  link.href = sampleProgramUrl.value;
+  if (locale.value === "ja") {
+    link.href = import.meta.env.BASE_URL + "sample_setting.ja.jsonc";
+  } else {
+    link.href = import.meta.env.BASE_URL + "sample_setting.jsonc";
+  }
   link.click();
 }
-
-const sampleProgramUrl = computed(() => {
-  if (locale.value === "ja") {
-    return import.meta.env.BASE_URL + "sample_setting.ja.jsonc";
-  } else {
-    return import.meta.env.BASE_URL + "sample_setting.jsonc";
-  }
-});
 </script>
 
 <template>
