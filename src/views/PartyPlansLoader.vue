@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, Ref } from "vue";
+import { ref, Ref, watch } from "vue";
 import { PartyPlans } from "@/Schema";
 import { readAnyEncoding } from "@/logic/readAnyEncoding";
 import { parse as JSONCParse } from "jsonc-parser";
@@ -9,7 +9,7 @@ import { ZodError } from "zod";
 import MarkedText from "@/components/MarkedText.vue";
 import { useMarkdownStore } from "@/store/markdown";
 import { useReviveCancelledStore } from "@/store/reviveCancelled";
-const { locale } = useI18n();
+const { t, locale } = useI18n();
 const markdownStore = useMarkdownStore();
 const redrawCancelled = useReviveCancelledStore();
 
@@ -18,38 +18,55 @@ const emit = defineEmits<{
 }>();
 const settings: Ref<PartyPlans | null> = ref(null);
 const partyPlanFile: Ref<File | File[] | null | undefined> = ref(null);
-const partyFileInvalidSnackBar = ref(false);
+const errorMessage: Ref<string | null> = ref(null);
+const displayingErrorMessage: Ref<boolean> = ref(false);
+
+watch(errorMessage, (newValue) => {
+  displayingErrorMessage.value = newValue !== null;
+});
 
 function loadSampleProgram() {
   partyPlanFile.value = null;
 
-  fetch(sampleProgramUrl.value)
+  const sampleProgramUrl =
+    locale.value === "ja"
+      ? import.meta.env.BASE_URL + "sample_setting_url.ja.jsonc"
+      : import.meta.env.BASE_URL + "sample_setting_url.jsonc";
+
+  fetch(sampleProgramUrl)
     .then((res) => res.text())
-    .then((res) => loadJSONCText(res));
+    .then((res) => loadPartyPlan(res));
 }
 
-async function loadJSONCText(jsoncText: string) {
-  partyFileInvalidSnackBar.value = false;
-  const loaded = await JSONCParse(jsoncText);
-  try {
-    settings.value = PartyPlans.parse(loaded);
+async function parsePartyPlanFile(jsoncText: string): Promise<PartyPlans> {
+  const jsoncObj = await JSONCParse(jsoncText);
+  const partyPlan = PartyPlans.parse(jsoncObj);
 
-    settings.value.program.forEach((program) => {
-      if (program.type === "PRIZE") {
-        if (
-          program.sub_prize_names &&
-          program.sub_prize_names.length !== program.winner_number
-        ) {
-          throw new Error("sub_prize_names");
-        }
+  partyPlan.program.forEach((program) => {
+    if (program.type === "PRIZE") {
+      if (
+        program.sub_prize_names &&
+        program.sub_prize_names.length !== program.winner_number
+      ) {
+        throw new Error("sub_prize_names");
       }
-    });
+    }
+  });
+
+  return partyPlan;
+}
+
+async function loadPartyPlan(jsoncText: string, files?: File[]) {
+  errorMessage.value = null;
+  try {
+    const partyPlan = await parsePartyPlanFile(jsoncText);
+    settings.value = await replaceFileNameToDataURL(partyPlan, files || []);
   } catch (e) {
     if (
       e instanceof ZodError ||
       (e instanceof Error && e.message === "sub_prize_names")
     ) {
-      partyFileInvalidSnackBar.value = true;
+      errorMessage.value = t("plan-file-invalid");
       partyPlanFile.value = null;
       settings.value = null;
     } else {
@@ -69,19 +86,62 @@ async function loadJSONCText(jsoncText: string) {
     redrawCancelled.disableReviveCancelled();
   }
 }
+
+async function replaceFileNameToDataURL(
+  setting: PartyPlans,
+  files: File[],
+): Promise<PartyPlans> {
+  const replacedSetting = JSON.parse(JSON.stringify(setting)) as PartyPlans;
+
+  for (const program of replacedSetting.program) {
+    if (program.type === "PRIZE" && program.img) {
+      const file = files.find((f) => f.name === program.img);
+      if (file) {
+        const reader = new FileReader();
+        const dataURL = await new Promise<string>((resolve, reject) => {
+          reader.onload = () => resolve(reader.result as string);
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+        program.img = dataURL;
+      }
+    }
+  }
+  return replacedSetting;
+}
 async function loadProgramFile(e: Event) {
   const inputElement = e.target as HTMLInputElement;
-  const file = inputElement.files?.[0];
-  if (!file) {
+  if (inputElement.files === null || inputElement.files.length === 0) {
+    partyPlanFile.value = null;
+    settings.value = null;
+    return;
+  }
+  const setting_files = Array.from(inputElement.files).filter(
+    (f) => f.name.endsWith(".jsonc") || f.name.endsWith(".json"),
+  );
+  const image_files = Array.from(inputElement.files).filter(
+    (f) => !(f.name.endsWith(".jsonc") || f.name.endsWith(".json")),
+  );
+
+  if (setting_files.length === 0) {
+    errorMessage.value = t("plan-file-needed");
+    partyPlanFile.value = null;
+    settings.value = null;
+    return;
+  } else if (setting_files.length > 1) {
+    errorMessage.value = t("plan-file-must-be-only-one");
+    partyPlanFile.value = null;
+    settings.value = null;
     return;
   }
 
+  const file = setting_files[0];
+
   const reader = new FileReader();
-  reader.addEventListener("load", () => {
+  reader.addEventListener("load", async () => {
     const res = readAnyEncoding(reader);
 
-    inputElement.value = "";
-    loadJSONCText(res as string);
+    loadPartyPlan(res as string, image_files);
   });
   reader.readAsArrayBuffer(file);
 }
@@ -94,17 +154,13 @@ function nextProgram() {
 function downloadSample() {
   const link = document.createElement("a");
   link.download = "sample_setting.jsonc"; //filename for download dialog
-  link.href = sampleProgramUrl.value;
+  if (locale.value === "ja") {
+    link.href = import.meta.env.BASE_URL + "sample_setting.ja.jsonc";
+  } else {
+    link.href = import.meta.env.BASE_URL + "sample_setting.jsonc";
+  }
   link.click();
 }
-
-const sampleProgramUrl = computed(() => {
-  if (locale.value === "ja") {
-    return import.meta.env.BASE_URL + "sample_setting.ja.jsonc";
-  } else {
-    return import.meta.env.BASE_URL + "sample_setting.jsonc";
-  }
-});
 </script>
 
 <template>
@@ -112,10 +168,11 @@ const sampleProgramUrl = computed(() => {
     <div class="loadingForm">
       <v-file-input
         :label="$t('party-plan-file')"
-        accept=".jsonc,.json"
+        accept=".jsonc,.json,image/*"
         v-model="partyPlanFile"
         @change="loadProgramFile"
         ref="inputPartyPlan"
+        multiple
       ></v-file-input>
       <v-row justify="start">
         <v-col cols="auto">{{ $t("or-you-can") }}</v-col>
@@ -185,8 +242,8 @@ const sampleProgramUrl = computed(() => {
       }}</v-btn>
     </div>
   </div>
-  <v-snackbar v-model="partyFileInvalidSnackBar" color="red accent-2">
-    {{ $t("plan-file-invalid") }}
+  <v-snackbar v-model="displayingErrorMessage" color="red accent-2">
+    {{ errorMessage }}
   </v-snackbar>
 </template>
 

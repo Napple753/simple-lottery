@@ -12,13 +12,13 @@
         {
             "type":"PRIZE",
             "prize_name":"Lucky Prize",
-            "img":"present_box.png",//image to display. select this image at the same time as this setting file.
+            "img":"https://napple753.github.io/simple-lottery/img/present_box.png",//image to display
             "winner_number":3
         },
         {
             "type":"PRIZE",
             "prize_name":"Very Lucky Prize",
-            "img":"kaden_soujiki_cordless_stick.png",
+            "img":"https://napple753.github.io/simple-lottery/img/kaden_soujiki_cordless_stick.png",
             "winner_number":2,
             "time_before_first_winner":10000,//time until the first winner[ms](optional)
             "time_between_winners":10000//time between winners[ms](optional)
@@ -29,14 +29,14 @@
         {
             "type":"PRIZE",
             "prize_name":"The Luckiest Prize",
-            "img":"kaden_reizouko.png",
+            "img":"https://napple753.github.io/simple-lottery/img/kaden_reizouko.png",
             "winner_number":1,
             "time_before_first_winner":20000//time until the first winner[ms](optional)
         },
         {
             "type":"PRIZE",
             "prize_name":"A Little Lucky Prize",
-            "img":"pocket_tissue.png",
+            "img":"https://napple753.github.io/simple-lottery/img/pocket_tissue.png",
             "winner_number":10
         },
         {

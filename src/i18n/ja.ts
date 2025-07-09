@@ -7,7 +7,8 @@ export const ja: message_list = {
   "load-party-plan": "進行プログラムの読み込み",
   "load-candidate-list": "抽選対象の読み込み",
   "execute-drawing": "抽選実行",
-  "party-plan-file": "進行プログラムファイル(.json/.jsonc)",
+  "party-plan-file":
+    "進行プログラムファイル(.json/.jsonc) & 画像ファイル(オプション)",
   "or-you-can": "または ",
   "use-sample": "サンプルを使用する",
   "download-sample": "サンプルをダウンロードする",
@@ -28,8 +29,8 @@ export const ja: message_list = {
   "another-party": "リセットしてもう一度抽選会を実施",
   "save-winners-csv": "当選者リストをCSVで保存",
   "plan-file-invalid": "進行プログラムファイルに間違いがあります",
-  "time-before-first-winner-s": "最初の当選者までの時間[s]",
-  "time-between-winners-s": "当選者間の時間[s]",
+  "time-before-first-winner-s": "抽選時間[s]",
+  "time-between-winners-s": "発表間隔[s]",
   "before-leave": "ページを離脱しますか?",
 
   redraw: "再抽選",
@@ -38,4 +39,8 @@ export const ja: message_list = {
 
   "candidates-less-than-winners":
     "抽選対象者数が「{prizeName}」の当選者数より少ないです",
+
+  "plan-file-needed": "進行プログラムファイルが必要です",
+  "plan-file-must-be-only-one":
+    "進行プログラムファイルは1つだけ読み込むことができます",
 };

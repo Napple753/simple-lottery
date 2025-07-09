@@ -5,7 +5,7 @@ export const en = {
   "load-party-plan": "Load Party Plan",
   "load-candidate-list": "Load candidate list",
   "execute-drawing": "Execute drawing",
-  "party-plan-file": "Party Plan file(.json/.jsonc)",
+  "party-plan-file": "Party Plan file(.json/.jsonc) and optional images",
   "or-you-can": "Or you can ",
   "use-sample": "use sample file",
   "download-sample": "download sample file",
@@ -26,8 +26,8 @@ export const en = {
   "another-party": "Reset and draw for another party",
   "save-winners-csv": "Save winners CSV",
   "plan-file-invalid": "Party plan file is invalid.",
-  "time-before-first-winner-s": "time until the first winner[s]",
-  "time-between-winners-s": "time between winners[s]",
+  "time-before-first-winner-s": "Drawing time[s]",
+  "time-between-winners-s": "Interval[s]",
   "before-leave": "Are you sure you want to leave this page?",
 
   redraw: "Redraw",
@@ -36,6 +36,10 @@ export const en = {
   "keep-winner": "Keep this winner",
 
   "candidates-less-than-winners": `The number of candidates is less than the number of "{prizeName}" winners.`,
+
+  "plan-file-needed": "A party plan file is needed.",
+  "plan-file-must-be-only-one":
+    "Only one party plan file can be loaded at a time.",
 };
 
 export type message_list = Partial<typeof en>;
