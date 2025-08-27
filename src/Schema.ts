@@ -20,6 +20,7 @@ export type Prize = z.infer<typeof Prize>;
 export const Message = ProgramBase.merge(
   z.object({
     type: z.literal("MESSAGE"),
+    img: z.string().optional(),
     message: z.string({ invalid_type_error: "Message must be a string." }),
   }),
 );

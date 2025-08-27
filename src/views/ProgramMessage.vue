@@ -27,6 +27,9 @@ const messageFontWeight = computed(() =>
     <p class="message">
       <MarkedText :markdown="program.message"></MarkedText>
     </p>
+    <div class="prizeImage">
+      <img v-if="program.img" :src="program.img" />
+    </div>
     <div class="button_wrapper">
       <v-btn @click="nextProgram">{{ $t("next") }}</v-btn>
     </div>
@@ -38,5 +41,16 @@ const messageFontWeight = computed(() =>
   text-align: center;
   font-size: v-bind(messageFontSize);
   font-weight: v-bind(messageFontWeight);
+}
+.prizeImage {
+  height: 100%;
+  text-align: center;
+  overflow: hidden;
+}
+
+.prizeImage img {
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
 }
 </style>

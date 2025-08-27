@@ -94,7 +94,7 @@ async function replaceFileNameToDataURL(
   const replacedSetting = JSON.parse(JSON.stringify(setting)) as PartyPlans;
 
   for (const program of replacedSetting.program) {
-    if (program.type === "PRIZE" && program.img) {
+    if ("img" in program && program.img) {
       const file = files.find((f) => f.name === program.img);
       if (file) {
         const reader = new FileReader();
@@ -201,7 +201,14 @@ function downloadSample() {
         </tr>
         <template v-for="(program, i) in settings?.program" :key="i">
           <tr v-if="program.type == 'MESSAGE'">
-            <td colspan="5">
+            <td>
+              <img
+                v-if="program.img"
+                :src="program.img"
+                style="max-height: 2em"
+              />
+            </td>
+            <td colspan="4">
               <MarkedText :markdown="program.message"></MarkedText>
             </td>
           </tr>
