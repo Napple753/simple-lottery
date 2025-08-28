@@ -27,8 +27,8 @@ const messageFontWeight = computed(() =>
     <p class="message">
       <MarkedText :markdown="program.message"></MarkedText>
     </p>
-    <div class="prizeImage">
-      <img v-if="program.img" :src="program.img" />
+    <div class="prizeImage" v-if="program.img">
+      <img :src="program.img" />
     </div>
     <div class="button_wrapper">
       <v-btn @click="nextProgram">{{ $t("next") }}</v-btn>
