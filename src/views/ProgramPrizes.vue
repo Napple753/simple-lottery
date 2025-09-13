@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, Ref, inject, computed } from "vue";
+import { ref, Ref, inject, computed, useTemplateRef } from "vue";
 import { Candidate, DisplaySetting } from "@/myTypes";
 import { Prize, PartyPlans } from "@/Schema";
 import NameLottery from "@/components/NameLottery.vue";
@@ -20,14 +20,9 @@ const props = defineProps<{
   partyPlans: PartyPlans;
 }>();
 
-let lotteries: InstanceType<typeof NameLottery>[] = [];
+const lotteryRef = useTemplateRef("lotteries");
 
 const soundUtilities = inject<SoundUtilities>("soundUtilities");
-
-const lotteryEls = (el: InstanceType<typeof NameLottery>) => {
-  lotteries.push(el);
-  return "lotteryEls";
-};
 
 const beforeDraw: Ref<boolean> = ref(true);
 
@@ -45,7 +40,9 @@ function draw() {
     props.program.time_between_winners ?? props.partyPlans.time_between_winners;
 
   let timing = time_before_first_winner;
-  lotteries.forEach((lottery) => {
+  lotteryRef.value!.forEach((lottery) => {
+    if (!lottery) return;
+
     if (props.winners.length <= 5 && Math.random() < 0.2) {
       timing += 500;
       lottery.draw(timing, 1);
@@ -66,7 +63,6 @@ function decided() {
 
 function nextProgram() {
   beforeDraw.value = true;
-  lotteries = [];
   emit("finishProgram");
 }
 
@@ -138,7 +134,7 @@ const LotterySize = computed(() => {
           :candidates="candidates"
           :isSimple="winners.length > 5"
           :displaySetting="displaySetting"
-          :ref="lotteryEls"
+          ref="lotteries"
           :immediate="redrawing"
           :lotterySize="LotterySize"
           @finish-draw="decided"
