@@ -1,28 +1,25 @@
-# Simple workflow for deploying static content to GitHub Pages
-name: Deploy static content to Pages
+# Simple workflow for deploying static content to GitHub Pages + Staging to FTP
+name: Deploy static content to Pages / Staging to FTP
 
 on:
-  # Runs on pushes targeting the default branch
   push:
-    branches: ["main"]
-
-  # Allows you to run this workflow manually from the Actions tab
+    branches: ["main", "develop"] # ← develop を追加
   workflow_dispatch:
 
-# Sets the GITHUB_TOKEN permissions to allow deployment to GitHub Pages
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# Allow one concurrent deployment
+# GitHub Pages 用の同時実行制御（本番）
 concurrency:
   group: "pages"
   cancel-in-progress: true
 
 jobs:
-  # Single deploy job since we're just deploying
+  # ===== 本番（main → GitHub Pages） =====
   deploy:
+    if: github.ref == 'refs/heads/main'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -44,8 +41,62 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Upload dist folder
           path: "./dist"
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  # ===== ステージング（develop → FTP） =====
+  deploy-staging:
+    if: github.ref == 'refs/heads/develop'
+    # Pages の concurrency とは分離（並行しても干渉しないように）
+    concurrency:
+      group: "staging-ftp"
+      cancel-in-progress: true
+    environment:
+      name: staging
+      url: ${{ steps.announce.outputs.staging_url || '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build (staging)
+        run: npm run build
+        # 必要なら Vite の環境変数をここで渡す:
+        # env:
+        #   VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL_STAGING }}
+
+      # 代表例: SamKirkland/FTP-Deploy-Action を使用
+      - name: Deploy to FTP (staging)
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ${{ secrets.FTP_PROTOCOL || 'ftps' }} # ftps/ftp
+          server-dir: ${{ secrets.FTP_REMOTE_DIR }} # 例: /public_html/staging/
+          local-dir: dist
+          # 既存ファイルの削除を避けたいなら false（既定は差分アップロード）
+          dangerous-clean-slate: false
+          # 除外したいものがあれば:
+          exclude: |
+            **/.git*
+            **/.github/**
+            node_modules/**
+            **/README.md
+
+      # 任意: 成果URLをログ/Environmentに出す（固定のステージングURLがある場合）
+      - name: Announce URL
+        id: announce
+        run: |
+          echo "staging_url=https://staging.example.com/" >> $GITHUB_OUTPUT
